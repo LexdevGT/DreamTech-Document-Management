@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="base-uri 'self'">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!--<link rel="shortcut icon" href="imgs/logo/UTZ-Box-09.png" type="image/x-icon">-->
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+
+    <!-- Libreria JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- font awesome -->
+    <link href="assets/fontawesome-free-5/css/all.css" rel="stylesheet"> <!--load all styles -->
+    <link href="assets/fontawesome-free-5/css/fontawesome.min.css" rel="stylesheet">
+
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="htmls/vendors/feather/feather.css">
+    <link rel="stylesheet" href="htmls/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="htmls/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="htmls/vendors/typicons/typicons.css">
+    <link rel="stylesheet" href="htmls/vendors/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="htmls/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="htmls/vendors/select2/select2.min.css">
+    <link rel="stylesheet" href="htmls/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="htmls/css/vertical-layout-light/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="htmls/images/favicon.png" />
+
+    <title>PATSY</title>
+</head>
+<body>
+    <div class="container-fluid"> <!-- *** INICIO DEL CONTENEDOR PRINCIPAL *** -->
+        <div class="navigation-bar row"> <!-- *** INICIO DEL NAV BAR *** -->
+            <nav class="navbar navbar-expand-lg navbar-light col justify-content-between">
+                <span class="navbar-brand">
+                    <img src="assets/images/logo-patsy.png" alt="" width="80" height="74">
+                    
+                </span>
+                <a class="nav-link" href="htmls/">
+              <img class="img-xs rounded-circle" src="htmls/images/faces/face8.jpg" alt="Profile image"> </a>
+            </nav>          
+        </div> <!-- *** FIN DEL NAV BAR *** -->
+         
+        <div class="premium row" style="position: relative;"> <!-- *** INICIO DE IMAGEN PREMIUM Y BUSQUEDA *** -->
+            <div class="col-sm">
+                <div class="row" > <!-- *** INICIO DE IMAGEN *** -->
+                    <div class="col-sm">
+                        <img src="" class="img-fluid rounded" id="slider_principal">
+                    </div>
+                </div> <!-- *** FIN DE IMAGEN *** -->
+                <div class="row d-flex justify-content-center overlap"> <!-- *** INICIO DE BUSQUEDA *** -->
+                    <div class="col-sm-10 search-premium-landing pt-3 pb-2 rounded" >
+                        <div class="row">
+                            <div class="col-sm-6 input-icons">
+                                <!--<i class="fas fa-search icon"></i>
+                                <input type="text" class="input-field form-control " placeholder="Palabra Clave">-->
+                                <label>Palabra Clave</label>
+                                <select class="js-example-basic-multiple w-100" multiple="multiple" placeholder="Palabra Clave" id="select_palabra_clave" name="">
+                                  <!--<option value="AL">Operativa</option>
+                                  <option value="WY">Administrativa</option>-->
+                                </select>
+                            </div>
+                            <div class="col-sm-6 input-icons">
+                                <label>Localidad</label>
+                                <!--<i class="fas fa-map-marker-alt icon"></i>-->
+                                <select class="js-example-basic-multiple w-100" multiple="multiple" placeholder="Localidad" id="select_localidad" name="">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- *** FIN DE BUSQUEDA *** -->
+            </div> 
+        </div><!-- *** FIN DE IMAGEN PREMIUM Y BUSQUEDA *** -->
+        <div class="row paragraph d-flex justify-content-center mt-4"> <!-- *** INICIO PARRAFO LANDING *** -->
+            <div class="col-sm-10">
+                <span class="paragraph-heading" id="title_com_interna"><b></b></span>
+                <p class="paragraph-content" id="com_interna"></p>
+
+            </div>
+        </div> <!-- *** FIN PARRAFO LANDING *** -->
+        <div class="row d-flex justify-content-center mt-3"> <!-- *** INICIO TARJETAS *** -->
+            <div class="col-sm-10" id="index_plazas_iniciales">
+              <!--  <div class="row">
+                    
+                    <div class="col-sm">
+                        <div class="card redondo">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <img src="assets/images/photos/Ellipse.png" class="img-card">
+                                    </div>
+                                    <div class="col-sm">
+                                        <h5 class="card-title">PATSY</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Cocina</h6>
+                                    </div>
+                                    <div class="col-sm">
+                                        <span class="badge rounded-pill bg-operativos">Operativos</span>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <strong><h5 class="card-title">Cocinero</h5></strong>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <h6 class="card-subtitle mb-2 text-muted">Fulltime</h6>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequat nunc ac a magna at elementum. Cras arcu varius in aliquam habitant fermentum. Mi sit lorem mollis vitae quis curabitur vestibulim.</p>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 ">
+                                   
+                                    <div class="col-sm">
+                                        <h5>$2500/month</h5>
+                                    </div>
+                                    <div class="col-sm d-flex justify-content-end">
+                                        <a href="#" class="btn btn-card" onclick="aplicar()">Aplica</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm">
+                        <div class="card redondo">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <img src="assets/images/photos/Ellipse.png" class="img-card">
+                                    </div>
+                                    <div class="col-sm">
+                                        <h5 class="card-title">PATSY</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Cocina</h6>
+                                    </div>
+                                    <div class="col-sm">
+                                        <span class="badge rounded-pill bg-operativos">Operativos</span>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <strong><h5 class="card-title">Cocinero</h5></strong>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <h6 class="card-subtitle mb-2 text-muted">Fulltime</h6>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequat nunc ac a magna at elementum. Cras arcu varius in aliquam habitant fermentum. Mi sit lorem mollis vitae quis curabitur vestibulim.</p>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 ">
+                                   
+                                    <div class="col-sm">
+                                        <h5>$2500/month</h5>
+                                    </div>
+                                    <div class="col-sm d-flex justify-content-end">
+                                        <a href="#" class="btn btn-card" onclick="aplicar()">Aplica</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm">
+                        <div class="card redondo">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <img src="assets/images/photos/Ellipse.png" class="img-card">
+                                    </div>
+                                    <div class="col-sm">
+                                        <h5 class="card-title">PATSY</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Cocina</h6>
+                                    </div>
+                                    <div class="col-sm">
+                                        <span class="badge rounded-pill bg-operativos">Operativos</span>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <strong><h5 class="card-title">Cocinero</h5></strong>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <h6 class="card-subtitle mb-2 text-muted">Fulltime</h6>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequat nunc ac a magna at elementum. Cras arcu varius in aliquam habitant fermentum. Mi sit lorem mollis vitae quis curabitur vestibulim.</p>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 ">
+                                    <div class="col-sm">
+                                        <h5>$2500/month</h5>
+                                    </div>
+                                    <div class="col-sm d-flex justify-content-end">
+                                        <a href="#" class="btn btn-card" onclick="aplicar()">Aplica</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6"> 
+                        <img src="assets/images/facts.png" class="img-fluid" id="img_com_interna">  
+                    </div>
+                </div>-->
+                <div class="row mt-4">
+                    <div class="col-sm d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-primary btn-redondo">Encuentra más</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div> <!-- *** FIN TARJETAS *** -->
+        <div class="row mt-4 d-flex justify-content-center align-items-center"> <!-- *** INICIO IMAGIEN FINAL -->
+            <div class="col-sm-10 d-flex justify-content-center">
+                
+                <div class="card text-white redondo ">
+                  <img src="assets/images/Group_388.png" class="img-fluid" id="img_news">
+                  <div class="card-img-overlay align-items-center row ">
+                    <div class="col-sm mt-5 offset-md-8">
+                        <button class="btn btn-white" data-bs-toggle="modal" data-bs-target="#modal_hoja_vida" id="hoja_de_vida">Subir hoja de vida</button>
+                    </div>
+                        
+                  </div>
+                </div>
+            </div>
+        </div> <!-- *** FIN IMAGIEN FINAL -->
+        <!-- *** INICIO MODAL HOJA DE VIDA *** -->
+        <div class="modal fade" id="modal_hoja_vida" tabindex="-1" aria-labelledby="modal_hoja_vida_label" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modal_hoja_vida_label">Subir hoja de vida</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm">
+                        <p>Por favor elíge tu sucursal más cercana.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <select class="form-control" id="select_modal_sucursales">
+                            <option></option>
+                            <option>Plaza el Ahorro (Boca del Monte)</option>
+                            <option>Parque Central de Mixco</option>
+                            <option>Zona 12</option>
+                            <option>C.C. Pradera Escuintla</option>
+                            <option>Plaza 22 (Condado Naranjo)</option>
+                            <option>Plaza San Rafael (Zona 18)</option>
+                            <option>C.C. Vilaflor</option>
+                            <option>Plaza Atanasio Tzul</option>
+                            <option>Zona 4</option>
+                            <option>Zona 10</option>
+                            <option>C.C. San Cristóbal</option>
+                            <option>Zonal 6</option>
+                            <option>C.C. Santa Clara</option>
+                            <option>San Juan Sacatepéquez</option>
+                            <option>Plaza Américas Mazatenango</option>
+                            <option>Parque Central de Amatitlán</option>
+                            <option>C.C Plaza Madero Roosevelth</option>
+                            <option>C.C. Pradera Chimaltenango</option>
+                            <option>C.C. El Frutal</option>
+                            <option>C.C. Plaza Florida</option>
+                            <option>Zona 11</option>
+                            <option>Zona 1</option>
+                            <option>C.C. Plaza San Fernando</option>
+                            <option>C.C. La Quinta</option>
+                            <option>C.C. La Trinidad Retalhuleu</option>
+                            <option>C.C. Bosques de San Nicolás</option>
+                            <option>Vista Hermosa (Zona 15)</option>
+                            <option>C.C Plaza Madero Atanasio Tzul</option>
+                            <option>C.C. Metrocentro Villa Nueva</option>
+                            <option>C.C. Metronorte</option>
+                            <option>C.C. Mega 6</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <p>Para poder cargar tu hoja de vida por favor elije una plaza a la cual aplicar.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <select class="form-control" id="select_modal_plazas">
+                            <option>Cocinero</option>
+                            <option>Supervisor de restaurante</option>
+                        </select>
+                    </div>
+                    <div class="col-sm">
+                        <!--<input type="file" class="form-control" id="customFile" value="hoja de vida" />-->
+                        <input type="file" class="form-control" id="modal_hoja_de_vida" name="modal_hoja_de_vida[]" multiple>
+                    </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="enviar-hojadevida">Enviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- *** INICIO FIN HOJA DE VIDA *** -->
+        <div class="row d-flex justify-content-center mt-4">
+            <div class="col-sm-6 ">
+                <div class="card redondo">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm d-flex justify-content-center final-content">
+                                <h4>
+                                    No te pierdas ninguna noticia de puestos!
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm d-flex justify-content-center final-content">
+                                <input type="text" class="form-control" id="suscribete_input" placeholder="Ingresa tu correo!">
+                            </div>
+                            <div class="col-sm d-flex justify-content-center align-items-center">
+                                <button class="btn btn-primary" id="suscripcion_landingpage">Suscríbete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- *** FIN DEL CONTENEDOR PRINCIPAL *** -->
+   
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="assets/js/core.js"></script>
+    <script >
+        load_index(1);
+    </script>
+
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="htmls/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="htmls/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <script src="htmls/vendors/select2/select2.min.js"></script>
+    <script src="htmls/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="htmls/js/off-canvas.js"></script>
+    <script src="htmls/js/hoverable-collapse.js"></script>
+    
+    <script src="htmls/js/settings.js"></script>
+    <script src="htmls/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src="htmls/js/file-upload.js"></script>
+    <script src="htmls/js/typeahead.js"></script>
+    <script src="htmls/js/select2.js"></script>
+    <!-- End custom js for this page-->
+</body>
+</html>
