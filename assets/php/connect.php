@@ -1,9 +1,9 @@
 <?php
 
-$hostname = '161.35.13.96';
-$username = 'streamline_urs';
-$password = 'YgoMmj_mXP1ajdjB5PCy.a';
-$db_name  = 'streamline';
+$hostname = 'localhost';
+$username = 'root';
+$password = '';
+$db_name  = 'lex';
 
 $conn = new mysqli($hostname, $username, $password, $db_name);
 

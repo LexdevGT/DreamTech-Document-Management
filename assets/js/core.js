@@ -2150,19 +2150,19 @@ function load_sidebar(){
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="catalogo.html">'+
                                   '<i class="mdi mdi-briefcase menu-icon"></i>'+
-                                  '<span class="menu-title">CATALOGO</span>'+
+                                  '<span class="menu-title">Documentos</span>'+
                                 '</a>'+
                               '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="procesos.html">'+
                                   '<i class="mdi mdi-cube-unfolded menu-icon"></i>'+
-                                  '<span class="menu-title">PROCESOS</span>'+
+                                  '<span class="menu-title">Ajustes</span>'+
                                 '</a>'+
                               '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="candidatos.html">'+
                                   '<i class="mdi mdi-folder-account menu-icon"></i>'+
-                                  '<span class="menu-title">CANDIDATOS</span>'+
+                                  '<span class="menu-title">Seguridad</span>'+
                                 '</a>'+
                               '</li>'+
                               '<li class="nav-item">'+
