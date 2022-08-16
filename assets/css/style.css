@@ -111,6 +111,19 @@
 	font-size: 2em;
 }
 
+.form-control.form-control-border,
+.custom-select.form-control-border {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  box-shadow: inherit;
+}
+
+.form-control.form-control-border.border-width-2,
+.custom-select.form-control-border.border-width-2 {
+  border-bottom-width: 2px;
+}
 
 
 @media screen and (min-width: 405px) {
