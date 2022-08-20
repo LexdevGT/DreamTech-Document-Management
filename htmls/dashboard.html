@@ -171,7 +171,7 @@
                             <h3 class="card-subtitle"><b>Mis Archivos</b></h3>
                             </div>
                             <div class="col-md-2 col-lg-2 ">
-                            <h2><b><span>Ver todo<i class="menu-icon mdi mdi-chevron-right "></i></span></b></h2>
+                            <h4 ><b><span>Ver todo<i class="menu-icon mdi mdi-chevron-right "></i></span></b></h4>
                             </div>
 
                           </div>
@@ -536,7 +536,7 @@ previewNode.parentNode.removeChild(previewNode);
 var myDropzone = new Dropzone(document.body, {
     url: "vendors/dropzone/upload.php",
     paramName: "file",
-    acceptedFiles: 'application/pdf',
+    acceptedFiles: 'application/*',
     maxFilesize: 10,
     maxFiles: 3,
     thumbnailWidth: 160,
