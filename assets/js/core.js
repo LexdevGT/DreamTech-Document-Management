@@ -415,6 +415,22 @@ function load_procesos(){
     });
 }
 
+
+function standar_display(){
+
+    $('#standar').show();
+    $('#avanzado').hide();
+    $('#avanzado1').hide();
+}
+
+function avanzado_display(){
+
+    $('#standar').hide();
+    $('#avanzado').show();
+    $('#avanzado1').show();
+
+}
+
 function change_etapa(id_etapa){
 
     $.ajax({
@@ -2152,6 +2168,29 @@ function load_sidebar(){
                                   '<i class="mdi mdi-briefcase menu-icon"></i>'+
                                   '<span class="menu-title">Documentos</span>'+
                                 '</a>'+
+                              '</li>'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">'+
+                                  '<i class="menu-icon mdi mdi-folder "></i>'+
+                                  '<span class="menu-title">Biblioteca</span>'+
+                                  '<i class="menu-arrow"></i> '+
+                                '</a>'+
+                                '<div class="collapse" id="ui-basic">'+
+                                  '<ul class="nav flex-column sub-menu">'+
+                                    '<li class="nav-item">'+
+                                        '<a class="nav-link" href="biblioteca.html">'+
+                                          '<i class="mdi mdi-folder-multiple-outline menu-icon"></i>'+
+                                          '<span class="menu-title">Explorador</span>'+
+                                        '</a>'+
+                                      '</li>'+
+                                    '<li class="nav-item">'+
+                                        '<a class="nav-link" href="biblioteca.html">'+
+                                          '<i class="mdi mdi-magnify menu-icon"></i>'+
+                                          '<span class="menu-title">Buscador</span>'+
+                                        '</a>'+
+                                      '</li>'+
+                                  '</ul>'+
+                                '</div>'+
                               '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="procesos.html">'+

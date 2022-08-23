@@ -1,0 +1,289 @@
+d<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>MARN</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="vendors/feather/feather.css">
+  <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!--<link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">-->
+  <link rel="stylesheet" href="js/select.dataTables.min.css">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <!--<link rel="shortcut icon" href="images/favicon.png" />-->
+</head>
+<body>
+  <div class="container-scroller">
+    
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+        <div class="me-3">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+            <span class="icon-menu"></span>
+            
+          </button>
+
+        </div>
+        <img src="images/dashboard/LogoMARN.png" width="100%">
+        <!--h3 class="welcome-text">
+              <span class="text-black fw-bold headerbar_user_name"></span>
+            </h3-->
+        </div>
+      <div class="navbar-menu-wrapper d-flex align-items-top"> 
+        <ul class="navbar-nav">
+          <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+            <!--h1 class="welcome-text">Bienvenido a OWL ATS </h1-->
+            <!--img src="images/dashboard/LogoMARN.png" width="30%"-->
+            
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          
+          <li class="nav-item">
+            <!--form class="search-form" action="#">
+              <i class="icon-search"></i>
+              <input type="search" class="form-control" placeholder="Search Here" title="Search here">
+            </form-->
+          </li>
+          <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+            <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+              <img class="img-xs rounded-circle" src="images/faces/face8.jpg" alt="Profile image"> </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+              <div class="dropdown-header text-center">
+                <img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
+                <p class="mb-1 mt-3 font-weight-semibold headerbar_user_name">Juan Perez</p>
+                <p class="fw-light text-muted mb-0  headerbar_email">juanperez@gmail.com</p>
+              </div>
+              <!--
+              <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Perfil <span class="badge badge-pill badge-danger">1</span></a>-->
+              <a class="dropdown-item"href="#" id="log_out"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Salir</a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+       
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="home-tab">
+              <div class="navbar-menu-wrapper d-flex align-items-top"> 
+                  <ul class="navbar-nav">
+                    <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                      <h3 class="welcome-text"><span class="text-black fw-bold">Búsqueda avanzada</span> </h3>
+                    </li>
+                  </ul>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-3">
+              <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
+                  <ul  style="width: 100%; height: 100%;" class="navbar-nav">
+                    <li  style="width: 100%; height: 100%;" class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                      <button class="btn btn-light" style="width: 100%; height: 100%;" onclick="standar_display();"><span>Estándar</span> </button>
+                    </li>
+                  </ul>
+              </div>
+            </div>
+             <div class="col-sm-3">
+              <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
+                  <ul style="width: 100%; height: 100%;" class="navbar-nav">
+                    <li style="width: 100%; height: 100%;" class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                      <button class="btn btn-light" style="width: 100%; height: 100%;" onclick="avanzado_display();"><span>Avanzado</span> </button>
+                    </li>
+                  </ul>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div id="standar" style="display: none;" class="row">
+
+                  <div class="col-sm">
+                    <div class="row">
+                    <div id="nuevo" class="input-group">
+                        <div id="search-autocomplete" class="form-outline">
+                          
+                          <input type="search" id="form1" class="form-control" />
+                          <label class="form-label" for="form1">Búsqueda Rápida</label>
+                        </div>
+                        <div id="search-autocomplete" class="form-outline">
+                        <label class="form-label" for="form1"><br></label>
+                        <button class="btn-dark">
+                            <i class="mdi mdi-magnify menu-icon"></i>
+                          </button>
+                        </div>
+                    </div>
+                    </div>
+                    <p> <br></p>
+
+                    <div id="nuevo" class="input-group">
+                       <div class="row">
+                        <label class="form-label" for="form1">Ordenar por:</label>
+                        </div>
+                        <div class="row">
+                         <input type="radio" id="contactChoice3"
+                         name="contact" value="mail">
+                        <label for="contactChoice3">Fecha de publicación</label>
+                        </div>
+                        <div class="row">
+                         <input type="radio" id="contactChoice3"
+                         name="contact" value="mail">
+                        <label for="contactChoice3">Autor</label>
+                      </div>
+                      <div class="row">
+                         <input type="radio" id="contactChoice3"
+                         name="contact" value="mail">
+                        <label for="contactChoice3">Todo</label>
+                        </div>
+                    </div>
+
+                  </div>
+
+
+            </div>
+
+             <div id="avanzado" style="display: none;" class="row">
+
+
+                  <div class="col-sm">
+                     <h5 class="welcome-text"><span class="text-black fw-bold">Tipo de documento</span> </h5>
+                      <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
+                                <option selected value="AL">Todo</option>
+                      </select>
+                  </div>
+                  <div class="col-sm">
+                    <h5 class="welcome-text"><span class="text-black fw-bold">Nombre de documento</span> </h5>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
+                                <option selected value="AL">Ambiental</option>
+                      </select>
+                  </div>
+                  <div class="col-sm">
+                    <h5 class="welcome-text"><span class="text-black fw-bold">Categoría</span> </h5>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
+                                <option selected value="AL">Manuales</option>
+                      </select>
+                  </div>
+                  <div class="col-sm">
+                    <h5 class="welcome-text"><span class="text-black fw-bold">Fecha de publicación</span> </h5>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
+                                <option selected value="AL">01/2021 - 07/2022</option>
+                      </select>
+                  </div>
+                  <div class="col-sm">
+                    <h5 class="welcome-text"><span class="text-black fw-bold">Autor</span> </h5>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
+                                <option selected value="AL">MARN</option>
+                      </select>
+                  </div>
+
+
+            </div>
+            <div class="row">
+              <span class="text-black fw-bold">
+                <br>
+              </span>
+            </div>
+
+            <div  id="avanzado1" style="display: none;" class="row" style="background-color: #ffffff !important;">
+              <div class="col-sm">
+                <i style="width: 100%; height: 100%; color: green;" class="mdi mdi-plus-circle-outline menu-icon"></i>
+                <i style="width: 100%; height: 100%; color: red;" class="mdi mdi-minus-circle-outline menu-icon"></i>
+              </div>
+              <div class="col-sm"></div>
+              <div class="col-sm"></div>
+              <div class="col-sm"></div>
+              <div class="col-sm">
+                <button type="button" class="btn btn-dark">
+                        Reiniciar
+                </button>
+                <button type="button" class="btn btn-dark">
+                        Buscar
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+
+
+
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center">
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">© 2021 All rights reserved to OWL ATS | Version 0.1</span>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- plugins:js -->
+  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="vendors/chart.js/Chart.min.js"></script>
+  <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="vendors/progressbar.js/progressbar.min.js"></script>
+
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="js/off-canvas.js"></script>
+  <script src="js/hoverable-collapse.js"></script>
+  <script src="js/template.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="js/jquery.cookie.js" type="text/javascript"></script>
+  <script src="../assets/js/chart.funnel.bundled.js"></script>
+  
+  <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-pyramid-funnel.min.js"></script>
+
+  <script src="js/dashboard.js"></script>
+
+  <script src="../assets/js/core.js"></script>
+  <script src="js/Chart.roundedBarCharts.js"></script>
+  
+  <script >
+    /*security(5);*/
+    load_dashboard();
+  </script>
+
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+
