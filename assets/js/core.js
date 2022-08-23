@@ -415,6 +415,22 @@ function load_procesos(){
     });
 }
 
+
+function standar_display(){
+
+    $('#standar').show();
+    $('#avanzado').hide();
+    $('#avanzado1').hide();
+}
+
+function avanzado_display(){
+
+    $('#standar').hide();
+    $('#avanzado').show();
+    $('#avanzado1').show();
+
+}
+
 function change_etapa(id_etapa){
 
     $.ajax({
@@ -2164,6 +2180,18 @@ function load_sidebar(){
                                 '<a class="nav-link" href="#">'+
                                   '<i class="mdi mdi-chart-pie menu-icon"></i>'+
                                   '<span class="menu-title">Reportes</span>'+
+                              '</li>'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" href="procesos.html">'+
+                                  '<i class="mdi mdi-cube-unfolded menu-icon"></i>'+
+                                  '<span class="menu-title">Ajustes</span>'+
+                                '</a>'+
+                              '</li>'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" href="candidatos.html">'+
+                                  '<i class="mdi mdi-folder-account menu-icon"></i>'+
+                                  '<span class="menu-title">Seguridad</span>'+
+
                                 '</a>'+
                               '</li>'+
                               
