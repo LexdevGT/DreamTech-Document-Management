@@ -421,6 +421,8 @@ function standar_display(){
     $('#standar').show();
     $('#avanzado').hide();
     $('#avanzado1').hide();
+    $('#avanzado2').hide();
+    $('#avanzado3').hide();
 }
 
 function avanzado_display(){
@@ -428,6 +430,8 @@ function avanzado_display(){
     $('#standar').hide();
     $('#avanzado').show();
     $('#avanzado1').show();
+    $('#avanzado2').show();
+    $('#avanzado3').show();
 
 }
 
@@ -2171,7 +2175,7 @@ function load_sidebar(){
                                 '</a>'+
                                 '<div class="collapse" id="documents">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
+                                    '<li class="item"><a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
                                     '<li class="item"> <a class="nav-link" href="#"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
                                   '</ul>'+
                                 '</div>'+
