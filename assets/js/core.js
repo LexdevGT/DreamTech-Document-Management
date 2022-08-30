@@ -1588,6 +1588,7 @@ function load_etapas(){
 }
 
 function load_index(company){
+    window.location.replace('htmls/');
     var c = company
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
