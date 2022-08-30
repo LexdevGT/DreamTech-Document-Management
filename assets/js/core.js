@@ -421,8 +421,10 @@ function standar_display(){
     $('#standar').show();
     $('#avanzado').hide();
     $('#avanzado1').hide();
+
     $('#avanzado2').hide();
     $('#avanzado3').hide();
+
 }
 
 function avanzado_display(){
@@ -430,8 +432,10 @@ function avanzado_display(){
     $('#standar').hide();
     $('#avanzado').show();
     $('#avanzado1').show();
+
     $('#avanzado2').show();
     $('#avanzado3').show();
+
 
 }
 
@@ -2124,7 +2128,7 @@ function security(access=0){
                 /* No code */
             }else{
                 alert(r.error);
-                window.location.replace('/streamline/');
+                window.location.replace('./');
             }
         }    
     });
@@ -2181,23 +2185,13 @@ function load_sidebar(){
                                 '</div>'+
                               '</li>'+
                               '<li class="nav-item">'+
-                                '<a class="nav-link" href="#">'+
+                                '<a class="nav-link" href="reportes.html">'+
                                   '<i class="mdi mdi-chart-pie menu-icon"></i>'+
                                   '<span class="menu-title">Reportes</span>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="procesos.html">'+
-                                  '<i class="mdi mdi-cube-unfolded menu-icon"></i>'+
-                                  '<span class="menu-title">Ajustes</span>'+
-                                '</a>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="candidatos.html">'+
-                                  '<i class="mdi mdi-folder-account menu-icon"></i>'+
-                                  '<span class="menu-title">Seguridad</span>'+
 
-                                '</a>'+
                               '</li>'+
+                             
+                              
                               
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">'+

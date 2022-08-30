@@ -23621,6 +23621,10 @@ code {
   font-weight: bold;
 }
 
+.archivos{
+  padding-bottom: 3% ;
+}
+
 .dropdown .dropdown-menu {
   margin-top: 2px;
   font-size: 0.812rem;
