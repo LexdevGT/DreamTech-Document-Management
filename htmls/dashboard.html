@@ -1,4 +1,4 @@
-d<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,6 +14,15 @@ d<!DOCTYPE html>
   <link rel="stylesheet" href="vendors/typicons/typicons.css">
   <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="vendors/dropzone/css/dropzone.css">
+  <link rel="stylesheet" href="vendors/dropzone/css/style.css">
+  <script src="vendors/mdb-ui-kit-master/css/mdb.min.css"></script>
+  <script src="vendors/mdb-ui-kit-master/css/mdb.dark.rtl.min.css"></script>
+  <script src="vendors/mdb-ui-kit-master/css/mdb.dark.min.css"></script>
+  <script src="vendors/mdb-ui-kit-master/css/mdb.rtl.min.css"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.0-beta.3/iconify-icon.min.js"></script>
+  
   <!-- endinject -->
   <!-- Plugin css for this page -->
   <!--<link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">-->
@@ -23,21 +32,36 @@ d<!DOCTYPE html>
   <link rel="stylesheet" href="css/vertical-layout-light/style.css">
   <!-- endinject -->
   <!--<link rel="shortcut icon" href="images/favicon.png" />-->
+
+  <style type="text/css">
+    .file-upload-wrapper .card.card-body input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 5;
+    }
+  </style>
 </head>
 <body>
   <div class="container-scroller">
     
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-        <div class="me-3">
+      <div class="text-left navbar-brand-wrapper d-flex align-items-left justify-content-start">
+        <!--div class="me-3">
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
             <span class="icon-menu"></span>
             
           </button>
 
-        </div>
-        <img src="images/dashboard/LogoMARN.png" width="100%">
+        </div-->
+        <img src="images/dashboard/LogoMARN.png" width="120%">
         <!--h3 class="welcome-text">
               <span class="text-black fw-bold headerbar_user_name"></span>
             </h3-->
@@ -97,6 +121,7 @@ d<!DOCTYPE html>
           </li>
         -->
           <li class="nav-item">
+            <i class="mdi mdi-bell mdi-24px"></i>
             <!--form class="search-form" action="#">
               <i class="icon-search"></i>
               <input type="search" class="form-control" placeholder="Search Here" title="Search here">
@@ -140,76 +165,252 @@ d<!DOCTYPE html>
                     <div class="row">
                       <div class="col-sm-12 ">
                         <div class="statistics-details align-items-center ">
+                          <h2 class="card-title"><b>Dashboard</b></h2>
                           <div class="row">
-                            <div class="col-md-4 col-lg-4 row-eq-height ">
+                            <div class="col-md-10 col-lg-10 ">
+                            <h3 class="card-subtitle"><b>Mis Archivos</b></h3>
+                            </div>
+                            <div class="col-md-2 col-lg-2 ">
+                            <h4 ><b><span>Ver todo<i class="menu-icon mdi mdi-chevron-right "></i></span></b></h4>
+                            </div>
+
+                          </div>
+
+                            <div class="row">
+
+
+                            <div class="col-md-3 col-lg-3 row-eq-height ">
                               <div class="card  w-100 ">
                                 <div class="card-body pb-0">
-                                  <h4 class="card-title card-title-dash ">Plazas Activas</h4>
-                                  <div class="row">
-                                    <div class="col-sm-4">
-                                      <h2 class="" id="plazas_activas_conteo">0</h2>
-                                    </div>
-                                    <div class="col-sm-8">
-                                      <div class="status-summary-chart-wrapper pb-4">
-                                        <canvas id="plazas-activas"></canvas>
+                                  <div class="row justify-content-end">
+                                    <div class="col-1">
+                                      <div class="dropdown">
+                                       
+                                      <iconify-icon icon="feather:more-vertical" type="button" id="dropdownMenuIconButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton1">
+                                          
+                                          <a class="dropdown-item" href="#">Descargar</a>
+                                          <a class="dropdown-item" href="#">Compartir Link</a>
+                                          
+                                        </div>
                                       </div>
                                     </div>
+                                  </div>
+                                  <img src="images/folder/folder_azul.png" width="40%">
+                                  <h4 class="card-title card-title-dash ">Manuales</h4>
+                                  
+                                </div>
+                                <div class="card-footer pb-0">
+                                  <div class="row">
+                                    <div class="col-sm-6">
+                                      <p class="" id="manual_conteo">12 Archivos</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <h5><b>150 MB</b></h5>
+                                    </div>
+                                    
                                   </div>
                                 </div>
                               </div>
                             </div>
 
                             <!--<div class="col-md-4 col-lg-4 grid-margin row-eq-height stretch-card m-1">-->
-                            <div class="col-md-4 col-lg-4 row-eq-height " >
+                            <div class="col-md-3 col-lg-3 row-eq-height " >
                               <div class="card  w-100 ">
                                 <div class="card-body pb-0">
-                                  <h4 class="card-title card-title-dash ">Total de Aplicantes</h4>
-                                  <div class="row">
-                                    <div class="col-sm-4">
-                                      <h2 class="" id="total_aplicantes_conteo">0</h2>
-                                    </div>
-                                    <div class="col-sm-8">
-                                      <div class="status-summary-chart-wrapper pb-4">
-                                        <canvas id="total-de-aplicantes"></canvas>
+                                  <div class="row justify-content-end">
+                                    <div class="col-1">
+                                      <div class="dropdown">
+                                       
+                                      <iconify-icon icon="feather:more-vertical" type="button" id="dropdownMenuIconButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton2">
+                                          
+                                          <a class="dropdown-item" href="#">Descargar</a>
+                                          <a class="dropdown-item" href="#">Compartir Link</a>
+                                          
+                                        </div>
                                       </div>
                                     </div>
+                                  </div>
+                                  <img src="images/folder/folder_celeste.png" width="40%">
+                                  <h4 class="card-title card-title-dash ">Institucional</h4>
+                                  
+                                </div>
+                                <div class="card-footer pb-0">
+                                  <div class="row">
+                                    <div class="col-sm-6">
+                                      <p class="" id="manual_conteo">12 Archivos</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <h5><b>150 MB</b></h5>
+                                    </div>
+                                    
                                   </div>
                                 </div>
                               </div>
                             </div>
 
-                            <div class="col-md-4 col-lg-4 row-eq-height " >
+                            <div class="col-md-3 col-lg-3 row-eq-height " >
                               <div class="card  w-100  ">
                                 <div class="card-body pb-0 ">
-                                  <h4 class="card-title card-title-dash ">Tiempo medio de contratación</h4>
-                                  <div class="row ">
-                                    <div class="col-sm ">
-                                      <h2 class="" id="tiempo_contratacion">0</h2>
+                                  <div class="row justify-content-end">
+                                    <div class="col-1">
+                                      <div class="dropdown">
+                                       
+                                      <iconify-icon icon="feather:more-vertical" type="button" id="dropdownMenuIconButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton3">
+                                          
+                                          <a class="dropdown-item" href="#">Descargar</a>
+                                          <a class="dropdown-item" href="#">Compartir Link</a>
+                                          
+                                        </div>
+                                      </div>
                                     </div>
+                                  </div>
+                                  <img src="images/folder/folder_gris.png" width="40%">
+                                  <h4 class="card-title card-title-dash ">Facturas</h4>
+                                  
+                                </div>
+                                <div class="card-footer pb-0">
+                                  <div class="row">
+                                    <div class="col-sm-6">
+                                      <p class="" id="manual_conteo">12 Archivos</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <h5><b>150 MB</b></h5>
+                                    </div>
+                                    
                                   </div>
                                 </div>
                               </div>
                             </div>
+
+                            <div class="col-md-3 col-lg-3 row-eq-height ">
+                              <div class="card  w-100 ">
+                                
+                                <div class="card-body pb-0">
+                                  <div class="row justify-content-end">
+                                    <div class="col-1">
+                                      <div class="dropdown">
+                                       
+                                      <iconify-icon icon="feather:more-vertical" type="button" id="dropdownMenuIconButton4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton4">
+                                          
+                                          <a class="dropdown-item" href="#">Descargar</a>
+                                          <a class="dropdown-item" href="#">Compartir Link</a>
+                                          
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <img src="images/folder/folder_verde.png" width="40%">
+                                  <h4 class="card-title card-title-dash ">MARN</h4>
+                                  
+                                </div>
+                                <div class="card-footer pb-0">
+                                  <div class="row">
+                                    <div class="col-sm-6">
+                                      <p class="" id="manual_conteo">12 Archivos</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                      <h5><b>150 MB</b></h5>
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
                            </div>
                         </div>
                       </div>
                     </div> 
+                  
 
-                    <div class="row ">
-                      <div class="col-sm-12 stretch-card ">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="home-tab">
+                
+                <div class="tab-content tab-content-basic">
+                  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
+                    <div class="row">
+                      <div class="col-sm-12 ">
+                        <div class="statistics-details align-items-center ">
+                          <div class="row">
+
+                    
+                      <div class="col-sm-4 stretch-card ">
                         <div class="card card-rounded">
+                          <div class="card-head p-3" >
+                            <div class="row justify-content-end">
+                              <div class="col-6">
+                            <h4><b>Archivos recientes</b></h4>
+                            </div>
+                            <div class="col-3">
+                            </div>
+                                    <div class="col-3">
+                                      <span>Ver todo<i class="menu-icon mdi mdi-chevron-right "></i></span>
+                                    </div>
+                                  </div>
+                          </div>
+
                           <div class="card-body">
                             <div class="row " >
-                              <div class="col-lg-2">
+                              <div class="col-lg-12">
                                 
-                              </div>
-                              <div class="col-lg-8">
-                                <div id="chart-area" style="height: 300px;">
-                                <!--<div id="canvas-holder" >-->
-                                  <!--<canvas id="chart-area"></canvas>-->
-                                </div>
-                              </div>
-                              <div class="col-lg-2">
+                              <ul class="list-group list-group-flush nav">
+                                <li class="item">
+                                  <iconify-icon icon="feather:more-vertical" style="padding-bottom: 3%;" type="button" id="archivosRecientes1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes1">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-word menu-icon mdi-48px mdi-set"></i> <b>Estrategia Nacional.doc</b>
+                                </li>
+
+                                <li class="item">
+                                  <iconify-icon icon="feather:more-vertical" style="padding-bottom: 3%;" type="button" id="archivosRecientes2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes2">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-excel menu-icon mdi-48px mdi-set"></i>   <b>Manual2020costo.xlsx</b>
+                                </li>
+
+                                <li class="item">
+                                  <iconify-icon icon="feather:more-vertical" style="padding-bottom: 3%;" type="button" id="archivosRecientes3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes3">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  Manual de Procedimiento para Optar a los incentivos.pdf</b>
+                                </li>
+
+                                <li class="item">
+                                  <iconify-icon icon="feather:more-vertical" style="padding-bottom: 3%;" type="button" id="archivosRecientes4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes4">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-image menu-icon mdi-48px mdi-set"></i>   <b>Recursos_genet.jpg</b>
+                                </li>
+
+                                <li class="item">
+                                  <iconify-icon icon="feather:more-vertical" style="padding-bottom: 3%;" type="button" id="archivosRecientes5" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes5">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  Manual de Educacion  Ambiental sobre el recurso hibrido Br1.pdf</b>
+                                </li>
+                                
+                              </ul>
                                 
                               </div>
                             </div>
@@ -217,150 +418,168 @@ d<!DOCTYPE html>
                         </div>
                       </div>
                      
-                      <!--
-                      <div class="col-sm-4 stretch-card">
+                
+                    <!--  LADO DERECHO TERCER PANEL --->
+
+                    
+                    <div class="col-sm-4 stretch-card ">
+                      <div class="card card-rounded">
+                        <div class="card-head p-3" >
+                          <div class="row justify-content-end">
+                            <div class="col-6">
+                              <h4><b>Categorias y archivos</b></h4>
+                            </div>
+                            <div class="col-3">
+                            </div>
+                            <div class="col-3">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-body p-6">
+                          <canvas id="pieChart"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col-sm-4 stretch-card ">
                         <div class="card card-rounded">
-                          <div class="card-body">
-                            <div class="row">
-                              <div class="col-lg-12">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                  <h4 class="card-title card-title-dash">Resultado</h4>
+                          <div class="card-head p-3" >
+                            <div class="row justify-content-end">
+                              <div class="col-6">
+                                <h4><b>Subir archivo</b></h4>
+                              </div>
+                              <div class="col-3">
+                              </div>
+                              <div class="col-3">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-body p-6">
+                            <div class="col-lg-12 border border-primary border-2 rounded-3 text-center">
+                              <div class="row">
+                                <div id="content" class="col-lg-12 p-3">
+                                  <form action="#" method="post" enctype="multipart/form-data">
+                                    <div class="fallback">
+                                      <input name="file" type="file" multiple />
+                                    </div>
+                                    <div class="table table-striped files" id="previews">
+                                      <div id="template" class="file-row row">
+                                        <!-- This is used as the file preview template -->
+                                        <div class="col-xs-12 col-lg-3">
+                                          <span class="preview" style="width:160px;height:160px;">
+                                            <img data-dz-thumbnail />
+                                          </span>
+                                            <br/>
+                                          <button class="btn btn-primary start" style="display:none;">
+                                            <i class="mdi mdi-upload"></i>
+                                            <span>Empezar</span>
+                                          </button>
+                                          <button data-dz-remove class="btn btn-warning cancel">
+                                            <i class="mdi mdi-cancel"></i> 
+                                            <span>Cancelar</span>
+                                          </button>
+                                          <button data-dz-remove class="btn btn-danger delete">
+                                            <i class="icon-trash fa fa-trash"></i> 
+                                            <span>Eliminar</span>
+                                          </button>
+                                        </div>
+                                        <div class="col-xs-12 col-lg-9">
+                                          <p class="name" data-dz-name></p>
+                                          <p class="size" data-dz-size></p>
+                                          <div>
+                                            <strong class="error text-danger" data-dz-errormessage></strong>
+                                          </div>
+                                          <div>
+                                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress>
+                                            </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                        <br><br>
+                                    <div class="dropzone-here"><span><i class="mdi mdi-cloud-upload mdi-48px"></i></span><br><b>Arrastra los archivos aquí para subirlos.</b>
+                                    </div><br><br>
+                                    <center>
+                                      <div id="actions" class="row">
+                                        <div class="col-lg-7">
+                                                <!-- The fileinput-button span is used to style the file input field as button -->
+                                          <span class="btn btn-info fileinput-button">
+                                            <i class="mdi mdi-plus"></i>
+                                            <span>Añadir imágenes...</span>
+                                          </span>
+                                          <button type="submit" class="btn btn-primary start" style="display: none;">
+                                            <i class="mdi mdi-upload"></i>
+                                            <span>Start upload</span>
+                                          </button>
+                                          <button type="reset" class="btn btn-warning cancel" style="display: none;">
+                                            <i class="mdi mdi-cancel"></i>
+                                            <span>Cancel upload</span>
+                                          </button>
+                                        </div>
+                                        <div class="col-lg-5">
+                                                <!-- The global file processing state -->
+                                          <span class="fileupload-process">
+                                            <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                              <div class="progress-bar progress-bar-info" style="width:0%;" data-dz-uploadprogress>
+                                                
+                                              </div>
+                                            </div>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </center>
+                                  </form>  
                                 </div>
-                                <canvas class="my-auto" id="dona-resultado" height="200"></canvas>
-                                <div id="dona-resultado-legend" class="mt-5 text-center"></div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div class="col-sm-8 stretch-card">
-                            <div class="card card-rounded">
-                              <div class="card-body">
-                                <div class="d-sm-flex justify-content-between align-items-start">
-                                  <div>
-                                    <h4 class="card-title card-title-dash">Recientes</h4>
-                                  </div>
-                                  
-                                </div>
-                                <div class="table-responsive  mt-1">
-                                  <table class="table select-table">
-                                    <thead>
-                                      <tr>
-                                        
-                                        <th>Título</th>
-                                        <th>Categoría</th>
-                                        <th>Plazas</th>
-                                        <th>Aplicantes</th>
-                                        <th>Status</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <td>
-                                          <h6>UI UX Designer</h6>
-                                        </td>
-                                        <td>
-                                          <h6>Full Time</h6>
-                                        </td>
-                                        <td>
-                                          <h6>12</h6>
-                                        </td>
-                                        <td>
-                                          <h6>135</h6>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-success">Activo</button>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          <h6>Full Stack Dev</h6>
-                                        </td>
-                                        <td>
-                                          <h6>Full Time</h6>
-                                        </td>
-                                        <td>
-                                          <h6>8</h6>
-                                        </td>
-                                        <td>
-                                          <h6>100</h6>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-danger">Inactivo</button>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          <h6>DevOps</h6>
-                                        </td>
-                                        <td>
-                                          <h6>Intership</h6>
-                                        </td>
-                                        <td>
-                                          <h6>12</h6>
-                                        </td>
-                                        <td>
-                                          <h6>5</h6>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-success">Activo</button>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          <h6>Android Dev</h6>
-                                        </td>
-                                        <td>
-                                          <h6>Full Time</h6>
-                                        </td>
-                                        <td>
-                                          <h6>4</h6>
-                                        </td>
-                                        <td>
-                                          <h6>45</h6>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-success">Activo</button>
-                                        </td>
-                                      </tr>
-                                      <tr>
-                                        <td>
-                                          <h6>IOS Developer</h6>
-                                        </td>
-                                        <td>
-                                          <h6>Full Time</h6>
-                                        </td>
-                                        <td>
-                                          <h6>18</h6>
-                                        </td>
-                                        <td>
-                                          <h6>96</h6>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-danger">Inactivo</button>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        -->
-                    </div>
-                   
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="home-tab">
+        <div class="tab-content tab-content-basic">
+          <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
+            <div class="row">
+              <div class="col-sm-12 ">
+                <div class="statistics-details align-items-center ">
+                  <div class="row">
+
+                      
+
+
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+                  
+        </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center">
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">© 2021 All rights reserved to OWL ATS | Version 0.1</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">© 2022 Biblioteca Virtual MARN | Version 0.1</span>
           </div>
         </footer>
         <!-- partial -->
@@ -378,7 +597,7 @@ d<!DOCTYPE html>
   <script src="vendors/chart.js/Chart.min.js"></script>
   <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
   <script src="vendors/progressbar.js/progressbar.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <!-- End plugin js for this page -->
   <!-- inject:js -->
   <script src="js/off-canvas.js"></script>
@@ -398,13 +617,95 @@ d<!DOCTYPE html>
 
   <script src="../assets/js/core.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
+  <script src="vendors/uploader-master/dist/js/jquery.dm-uploader.min.js"></script>
+  <script src="vendors/mdb-ui-kit-master/js/mdb.min.js"></script>
+  <script src="vendors/dropzone/js/dropzone.js"></script>
+  <script src="vendors/dropzone/js/jquery-ui.min.js"></script>
   
+  <!-- Custom js for this page-->
+  <script src="./js/chart.js"></script>
+  <!-- End custom js for this page-->
+<script src="../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+ 
+
   <script >
     /*security(5);*/
     load_dashboard();
   </script>
 
   <!-- End custom js for this page-->
+
+
+  <script type="text/javascript">
+    $('.file-upload').file_upload();
+
+  </script>
+  <script>
+// Get the template HTML and remove it from the doument
+var previewNode = document.querySelector("#template");
+previewNode.id = "";
+var previewTemplate = previewNode.parentNode.innerHTML;
+previewNode.parentNode.removeChild(previewNode);
+
+var myDropzone = new Dropzone(document.body, {
+    url: "vendors/dropzone/upload.php",
+    paramName: "file",
+    acceptedFiles: 'application/*',
+    maxFilesize: 10,
+    maxFiles: 3,
+    thumbnailWidth: 160,
+    thumbnailHeight: 160,
+    thumbnailMethod: 'contain',
+    previewTemplate: previewTemplate,
+    autoQueue: true,
+    previewsContainer: "#previews",
+    clickable: ".fileinput-button"
+});
+
+myDropzone.on("addedfile", function(file) {
+    $('.dropzone-here').hide();
+    // Hookup the start button
+    file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+});
+
+// Update the total progress bar
+myDropzone.on("totaluploadprogress", function(progress) {
+    document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+});
+
+myDropzone.on("sending", function(file) {
+    // Show the total progress bar when upload starts
+    document.querySelector("#total-progress").style.opacity = "1";
+    // And disable the start button
+    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+});
+
+// Hide the total progress bar when nothing's uploading anymore
+myDropzone.on("queuecomplete", function(progress) {
+    //document.querySelector("#total-progress").style.opacity = "0";
+});
+
+// Setup the buttons for all transfers
+// The "add files" button doesn't need to be setup because the config
+// `clickable` has already been specified.
+document.querySelector("#actions .start").onclick = function() {
+    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
+};
+
+$('#previews').sortable({
+    items:'.file-row',
+    cursor: 'move',
+    opacity: 0.5,
+    containment: "parent",
+    distance: 20,
+    tolerance: 'pointer',
+    update: function(e, ui){
+        //actions when sorting
+    }
+});
+</script>
+
 </body>
 
 </html>

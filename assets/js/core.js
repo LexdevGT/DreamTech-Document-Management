@@ -421,6 +421,10 @@ function standar_display(){
     $('#standar').show();
     $('#avanzado').hide();
     $('#avanzado1').hide();
+
+    $('#avanzado2').hide();
+    $('#avanzado3').hide();
+
 }
 
 function avanzado_display(){
@@ -428,6 +432,10 @@ function avanzado_display(){
     $('#standar').hide();
     $('#avanzado').show();
     $('#avanzado1').show();
+
+    $('#avanzado2').show();
+    $('#avanzado3').show();
+
 
 }
 
@@ -1580,6 +1588,7 @@ function load_etapas(){
 }
 
 function load_index(company){
+    window.location.replace('htmls/');
     var c = company
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2120,7 +2129,7 @@ function security(access=0){
                 /* No code */
             }else{
                 alert(r.error);
-                window.location.replace('/streamline/');
+                window.location.replace('./');
             }
         }    
     });
@@ -2159,85 +2168,52 @@ function load_sidebar(){
     var sidebar_text = '    <ul class="nav">'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="dashboard.html">'+
-                                  '<i class="mdi mdi-grid-large menu-icon"></i>'+
+                                  '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
                                   '<span class="menu-title">DASHBOARD</span>'+
                                 '</a>'+
                               '</li>'+
                               '<li class="nav-item">'+
-                                '<a class="nav-link" href="catalogo.html">'+
-                                  '<i class="mdi mdi-briefcase menu-icon"></i>'+
+                                '<a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">'+
+                                  '<i class="mdi mdi-folder-open menu-icon"></i>'+
                                   '<span class="menu-title">Documentos</span>'+
+                                '<i class="menu-arrow"></i> '+
                                 '</a>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">'+
-                                  '<i class="menu-icon mdi mdi-folder "></i>'+
-                                  '<span class="menu-title">Biblioteca</span>'+
-                                  '<i class="menu-arrow"></i> '+
-                                '</a>'+
-                                '<div class="collapse" id="ui-basic">'+
+                                '<div class="collapse" id="documents">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="nav-item">'+
-                                        '<a class="nav-link" href="biblioteca.html">'+
-                                          '<i class="mdi mdi-folder-multiple-outline menu-icon"></i>'+
-                                          '<span class="menu-title">Explorador</span>'+
-                                        '</a>'+
-                                      '</li>'+
-                                    '<li class="nav-item">'+
-                                        '<a class="nav-link" href="biblioteca.html">'+
-                                          '<i class="mdi mdi-magnify menu-icon"></i>'+
-                                          '<span class="menu-title">Buscador</span>'+
-                                        '</a>'+
-                                      '</li>'+
+                                    '<li class="item"><a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
+                                    '<li class="item"> <a class="nav-link" href="#"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
                                   '</ul>'+
                                 '</div>'+
                               '</li>'+
                               '<li class="nav-item">'+
-                                '<a class="nav-link" href="procesos.html">'+
-                                  '<i class="mdi mdi-cube-unfolded menu-icon"></i>'+
-                                  '<span class="menu-title">Ajustes</span>'+
-                                '</a>'+
+                                '<a class="nav-link" href="reportes.html">'+
+                                  '<i class="mdi mdi-chart-pie menu-icon"></i>'+
+                                  '<span class="menu-title">Reportes</span>'+
+
                               '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="candidatos.html">'+
-                                  '<i class="mdi mdi-folder-account menu-icon"></i>'+
-                                  '<span class="menu-title">Seguridad</span>'+
-                                '</a>'+
-                              '</li>'+
+                             
+                              
+                              
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">'+
-                                  '<i class="mdi mdi-chart-bar menu-icon"></i>'+
-                                  '<span class="menu-title">REPORTES</span>'+
+                                  '<i class="menu-icon mdi mdi-settings "></i>'+
+                                  '<span class="menu-title">Ajustes</span>'+
                                   '<i class="menu-arrow"></i> '+
                                 '</a>'+
                                 '<div class="collapse" id="reports-menu">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="nav-item"> <a class="nav-link" href="reportes_hojas_vida.html">Hojas de vida</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="reportes_suscripciones.html">Suscripciones</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="reportes_filtros.html">Reporte</a></li>'+
+                                    '<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>'+
+                                    '<li class="item"> <a class="nav-link" href="#"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
+                                    
                                   '</ul>'+
                                 '</div>'+
                               '</li>'+
+                              '</li>'+
                               '<li class="nav-item">'+
-                                '<a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">'+
-                                  '<i class="menu-icon mdi mdi-settings "></i>'+
-                                  '<span class="menu-title">MANTENIMIENTO</span>'+
-                                  '<i class="menu-arrow"></i> '+
+                                '<a class="nav-link" href="#">'+
+                                  '<i class="mdi mdi-shield-key menu-icon"></i>'+
+                                  '<span class="menu-title">Seguridad</span>'+
                                 '</a>'+
-                                '<div class="collapse" id="ui-basic">'+
-                                  '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_etiquetas.html">Etiquetas</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_etapas.html">Etapas</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_tareas_etapa.html">Tareas de etapas</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_empresas.html">Empresas</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_roles.html">Roles</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_usuarios.html">Usuarios</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_privilegios.html">Privilegios</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_formulario_inicial.html">Formulario inicial</a></li>'+
-                                    '<li class="nav-item"> <a class="nav-link" href="manto_diseno.html">Diseño</a></li>'+
-
-                                  '</ul>'+
-                                '</div>'+
                               '</li>'+
                             '</ul>';
     $('#sidebar').html(sidebar_text);

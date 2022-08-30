@@ -1,4 +1,4 @@
-d<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -101,8 +101,9 @@ d<!DOCTYPE html>
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-sm-3">
+
+          <div class="row stretch-card ">
+            <div class="col-sm-3 stretch-card ">
               <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
                   <ul  style="width: 100%; height: 100%;" class="navbar-nav">
                     <li  style="width: 100%; height: 100%;" class="nav-item font-weight-semibold d-none d-lg-block ms-0">
@@ -125,51 +126,130 @@ d<!DOCTYPE html>
           <div class="row">
             <div id="standar" style="display: none;" class="row">
 
-                  <div class="col-sm">
+                  <div class="col-sm-3 card card-rounded">
+                    <div class="row"><b><label class="form-label" for="form1"><br>
+                    Búsqueda Rápida
+                    <br>
+                  </label></b></div>
+                  <div class="col-sm-12">
                     <div class="row">
-                    <div id="nuevo" class="input-group">
-                        <div id="search-autocomplete" class="form-outline">
-                          
-                          <input type="search" id="form1" class="form-control" />
-                          <label class="form-label" for="form1">Búsqueda Rápida</label>
-                        </div>
-                        <div id="search-autocomplete" class="form-outline">
-                        <label class="form-label" for="form1"><br></label>
-                        <button class="btn-dark">
-                            <i class="mdi mdi-magnify menu-icon"></i>
-                          </button>
-                        </div>
-                    </div>
+                      <div id="nuevo1" class="input-group">
+                          <div id="search-autocomplete" class="form-outline">
+                            
+                            <input type="search" value="Factura" id="form1" class="form-control" />
+                            
+                          </div>
+                          <div id="search-autocomplete" class="form-outline">
+                          <label class="form-label" for="form1"><br></label>
+                          <button class="btn-dark">
+                              <i class="mdi mdi-magnify menu-icon"></i>
+                            </button>
+                          </div>
+                      </div>
                     </div>
                     <p> <br></p>
+                    <div id="nuevo2" class="input-group">
+                        <ul class="list-group list-group-flush nav">
+                        <li class="item">
+                            <label class="form-label" for="form1">Ordenar por:</label>
+                        </li>
+                        <li class="item">
+                            <input type="radio" id="contactChoice3"name="contact" value="mail">
+                            <label for="contactChoice3">Fecha de publicación</label>
+                        </li>
+                        <li class="item">
+                          <input type="radio" id="contactChoice3"name="contact" value="mail">
+                          <label for="contactChoice3">Autor</label>
+                        </li>
+                        <li>
+                          <input type="radio" id="contactChoice3"name="contact" value="mail">
+                          <label for="contactChoice3">Todo</label>
+                        </li>
+                        <li><br></li>
+                        <div class="row"><b><label class="form-label" for="form1"><br>
+                          Búsqueda Avanzada
+                          <br>
+                        </label></b></div>
+                        <a onclick="avanzado_display();"><li ><i class="mdi mdi mdi-plus-box menu-icon mdi-set"></i><b>Agregar filtro</b></li></a>
+                        <li><br></li>
+                       </ul>
 
-                    <div id="nuevo" class="input-group">
-                       <div class="row">
-                        <label class="form-label" for="form1">Ordenar por:</label>
-                        </div>
-                        <div class="row">
-                         <input type="radio" id="contactChoice3"
-                         name="contact" value="mail">
-                        <label for="contactChoice3">Fecha de publicación</label>
-                        </div>
-                        <div class="row">
-                         <input type="radio" id="contactChoice3"
-                         name="contact" value="mail">
-                        <label for="contactChoice3">Autor</label>
-                      </div>
-                      <div class="row">
-                         <input type="radio" id="contactChoice3"
-                         name="contact" value="mail">
-                        <label for="contactChoice3">Todo</label>
-                        </div>
+
                     </div>
 
                   </div>
 
+<!--/*<<<<<<< Benito
 
             </div>
 
              <div id="avanzado" style="display: none;" class="row">
+
+=======*/ -->
+                </div>
+                <div class="col-sm-1"></div>
+                <div class="col-sm-8 card card-rounded">
+                    <div class="card-body text-center">
+                        <div class="row " >
+                          <div class="col-lg-3">
+                            
+                            <ul class="list-group list-group-flush nav">
+
+                                <i class="mdi mdi-file-document-box mdi-48px"></i>
+                                
+                            </ul>
+                            <br><br><br>
+                            <h4>48.6 KB</h4>
+                            <h6><b>Facturas de servicios.pdf</b></h6>
+                          </div>
+                          <div class="col-lg-2 text-center">
+                            <i class="mdi mdi-file-document-box mdi-24px"></i>
+                            <i >Nombre</i>
+                            <i ><b>Humberto López</b></i>
+                            <i><br></i>
+                            <i><br></i>
+                            <i class="mdi mdi-file-document-box mdi-24px"></i>
+                            <i >Empresa</i>
+                            <i ><b>Patsy</b></i>
+                            <i><br></i>
+                            <i><br></i>
+                            <i >Fecha de factura</i>
+                            <i ><b>20/10/2021</b></i>
+                          </div>
+                          <div class="col-lg-1"></div>
+                          <div class="col-lg-3">
+                            
+                            <ul class="list-group list-group-flush nav">
+
+                                <i class="mdi mdi-file-document-box mdi-48px"></i>
+                                
+                            </ul>
+                            <br><br><br>
+                            <h4>35.2 KB</h4>
+                            <h6><b>pago_22_521385.pdf</b></h6>
+                          </div>
+                           <div class="col-lg-2 text-center">
+                            <i class="mdi mdi-file-document-box mdi-24px"></i>
+                            <i >Nombre de pago</i>
+                            <i ><b>Andrea Mejía</b></i>
+                            <i><br></i>
+                            <i><br></i>
+                            <i class="mdi mdi-file-document-box mdi-24px"></i>
+                            <i >Banco</i>
+                            <i ><b>BAM</b></i>
+                            <i><br></i>
+                            <i><br></i>
+                            <i >Fecha de pagp</i>
+                            <i ><b>12/05/2021</b></i>
+                          </div>
+                        </div>
+                      </div>
+
+                </div>
+            </div>
+
+             <div id="avanzado" style="display: none;" class="row stretch-card ">
+                 
 
 
                   <div class="col-sm">
@@ -203,8 +283,12 @@ d<!DOCTYPE html>
                       </select>
                   </div>
 
+        
 
             </div>
+
+           
+
             <div class="row">
               <span class="text-black fw-bold">
                 <br>
@@ -229,6 +313,114 @@ d<!DOCTYPE html>
               </div>
             </div>
 
+<!-- inicio aca -->
+            <div class="row">
+              <span class="text-black fw-bold">
+                <br>
+              </span>
+            </div>
+
+
+             <div div id="avanzado2" style="display: none;" class="row">
+                    <div class="col-sm-6 stretch-card ">
+                        <div class="card card-rounded">
+                          <div class="card-head p-3" >
+                            <div class="row justify-content-end">
+                                <div class="col-6">
+                              <h4><b>Resultado de la búsqueda</b></h4>
+                              </div>
+                              <div class="col-3">
+                              </div>
+                              <div class="col-3">
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card-body">
+                            <div class="row " >
+                              <div class="col-lg-12">
+                                
+                                <ul class="list-group list-group-flush nav">
+
+                                    <a class="selected"><li class="item"><i class="mdi mdi-file-excel menu-icon mdi-48px mdi-set"></i> <b>Facturas2020.xlsx</b></li></a>
+                                    <li class="item"><i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i>   <b>Factura de servicios.pdf</b></li>
+                                    <li class="item"><i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  Por cobrar.doc</b></li>
+                                    <li class="item"><i class="mdi mdi-file-image menu-icon mdi-48px mdi-set"></i>   <b>Fact_23_4331.jpg</b></li>
+                                    <li class="item"><i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  pago_22_521385.pdf</b></li>
+                                    
+                              </ul>
+                                
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="col-sm-1 stretch-card "></div>
+                      <div class="col-sm-5 stretch-card ">
+                        <div class="card card-rounded">
+                          <div class="card-head p-3" >
+                            <div class="row justify-content-end">
+                              <div class="row stretch-card ">
+                                <div class="col-sm stretch-card ">
+                                  <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
+                                      <ul  style="width: 100%; height: 100%;" class="navbar-nav">
+                                        <li  style="width: 100%; height: 100%;" class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                                          <button class="btn btn-light" style="width: 100%; height: 100%;" onclick="standar_display();"><span>Propiedades</span> </button>
+                                        </li>
+                                      </ul>
+                                  </div>
+                                </div>
+                                 <div class="col-sm">
+                                  <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
+                                      <ul style="width: 100%; height: 100%;" class="navbar-nav">
+                                        <li style="width: 100%; height: 100%;" class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                                          <button class="btn btn-light" style="width: 100%; height: 100%;" onclick="avanzado_display();"><span>Atributos</span> </button>
+                                        </li>
+                                      </ul>
+                                  </div>
+                                </div>
+                                <div class="col-sm">
+                                  <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
+                                      <ul style="width: 100%; height: 100%;" class="navbar-nav">
+                                        <li style="width: 100%; height: 100%;" class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                                          <button class="btn btn-light" style="width: 100%; height: 100%;" onclick="avanzado_display();"><span>Comentarios</span> </button>
+                                        </li>
+                                      </ul>
+                                  </div>
+                                </div>
+                              </div>
+                             
+                            </div>
+                          </div>
+
+                          <div class="card-body text-center">
+                            <div class="row " >
+                              <div class="col-lg-12">
+                                
+                                <ul class="list-group list-group-flush nav">
+
+                                    <i class="mdi mdi-file-document-box mdi-36px"></i>
+                                    
+                                </ul>
+                                <h4>48.6 KB</h4>
+                                <h6><b>Facturas2020.xlsx</b></h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+            </div>
+
+             <div div id="avanzado3" style="display: none;" class="row">
+                
+            </div>
+
+<!-- termino aca -->
           </div>
         </div>
         <!-- content-wrapper ends -->
@@ -238,7 +430,7 @@ d<!DOCTYPE html>
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center">
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">© 2021 All rights reserved to OWL ATS | Version 0.1</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">© 2022 Biblioteca Virtual MARN | Version 0.1</span>
           </div>
         </footer>
         <!-- partial -->
