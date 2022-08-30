@@ -80,7 +80,8 @@ $(function() {
   };
   var doughnutPieData = {
     datasets: [{
-      data: [30, 40, 30],
+      label:'Prueba',
+      data: [12, 12, 12, 12],
       backgroundColor: [
         'rgba(255, 99, 132, 0.5)',
         'rgba(54, 162, 235, 0.5)',
@@ -101,9 +102,10 @@ $(function() {
 
     // These labels appear in the legend and in the tooltips when hovering different arcs
     labels: [
-      'Pink',
-      'Blue',
-      'Yellow',
+      'Manual',
+      'Institucional',
+      'Facturacion',
+      'MARN',
     ]
   };
   var doughnutPieOptions = {
@@ -114,9 +116,9 @@ $(function() {
     }
   };
   var areaData = {
-    labels: ["2013", "2014", "2015", "2016", "2017"],
+    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
     datasets: [{
-      label: '# of Votes',
+      label: 'horas de descarga',
       data: [12, 19, 3, 5, 2, 3],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',

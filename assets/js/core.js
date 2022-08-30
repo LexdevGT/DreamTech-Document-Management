@@ -415,6 +415,22 @@ function load_procesos(){
     });
 }
 
+
+function standar_display(){
+
+    $('#standar').show();
+    $('#avanzado').hide();
+    $('#avanzado1').hide();
+}
+
+function avanzado_display(){
+
+    $('#standar').hide();
+    $('#avanzado').show();
+    $('#avanzado1').show();
+
+}
+
 function change_etapa(id_etapa){
 
     $.ajax({
@@ -2104,7 +2120,7 @@ function security(access=0){
                 /* No code */
             }else{
                 alert(r.error);
-                window.location.replace('/streamline/');
+                window.location.replace('./');
             }
         }    
     });
@@ -2161,11 +2177,12 @@ function load_sidebar(){
                                 '</div>'+
                               '</li>'+
                               '<li class="nav-item">'+
-                                '<a class="nav-link" href="#">'+
+                                '<a class="nav-link" href="reportes.html">'+
                                   '<i class="mdi mdi-chart-pie menu-icon"></i>'+
                                   '<span class="menu-title">Reportes</span>'+
-                                '</a>'+
                               '</li>'+
+                             
+                              
                               
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">'+
