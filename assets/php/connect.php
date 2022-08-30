@@ -1,10 +1,10 @@
 <?php
 
+$hostname = '161.35.13.96';
+$username = 'documentmng5';
+$password = 'cKS5QdvU5.0GnXYtG53ON_5';
+$db_name  = 'docummng';
 
-$hostname = 'localhost';
-$username = 'root';
-$password = '';
-$db_name  = 'lex';
 
 $conn = new mysqli($hostname, $username, $password, $db_name);
 
