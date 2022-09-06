@@ -2204,7 +2204,7 @@ function load_sidebar(){
                                   '<ul class="nav flex-column sub-menu">'+
                                     '<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>'+
                                     '<li class="item"> <a class="nav-link" href="#"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
-                                    
+                                    '<li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>'+
                                   '</ul>'+
                                 '</div>'+
                               '</li>'+
