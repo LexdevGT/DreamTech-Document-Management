@@ -2214,12 +2214,12 @@ function load_sidebar(){
                                 '</div>'+
                               '</li>'+
                               '</li>'+
-                              '<li class="nav-item">'+
+                              '<!--<li class="nav-item">'+
                                 '<a class="nav-link" href="#">'+
                                   '<i class="mdi mdi-shield-key menu-icon"></i>'+
                                   '<span class="menu-title">Seguridad</span>'+
                                 '</a>'+
-                              '</li>'+
+                              '</li>-->'+
                             '</ul>';
     $('#sidebar').html(sidebar_text);
 }
