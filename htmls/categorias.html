@@ -60,7 +60,12 @@
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
-          
+          <li class="nav-item">
+            <form class="search-form" action="#">
+              <i class="icon-search"></i>
+              <input type="search" class="form-control" placeholder="Search Here" title="Search here">
+            </form>
+          </li>
           <li class="nav-item dropdown d-none d-lg-block user-dropdown">
             <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
               <img class="img-xs rounded-circle" src="images/faces/face8.jpg" alt="Profile image"> </a>
@@ -117,13 +122,13 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                       </div>
                                       <div class="modal-body">
-                                        <input type="radio" class="btn-check" name="options" id="btncategoria" autocomplete="off" checked>
-                                        <label class="btn btn-outline-info" for="option1">Categoria</label>
+                                        <input type="radio" class="btn-check" onclick="crear_categoria('categoria')" name="options" id="btncategoria" autocomplete="off" >
+                                        <label class="btn btn-outline-info" for="btncategoria">Categoria</label>
 
-                                        <input type="radio" class="btn-check" name="options" id="btnsubcategoria" autocomplete="off">
-                                        <label class="btn btn-outline-info" for="option2">Sub-Categoria</label>
-                                        <div class="form-group">
-                                        <input type="text" class="form-control"/>
+                                        <input type="radio" class="btn-check" name="options" id="btnsubcategoria" onclick="crear_categoria('subcategoria')" autocomplete="off">
+                                        <label class="btn btn-outline-info" for="btnsubcategoria">Sub-Categoria</label>
+                                        <div class="datos_categoria">
+                                          
                                         </div>
                                         <!--<div class="form-group">
                                         <button type="submit" class="form-control btn btn-outline-info"><i class="ti ti-plus"></i> Agregar SubCategoria</button>
@@ -133,8 +138,7 @@
                                         </div>-->
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-outline-success">Crear</button>
+                                        
                                       </div>
                                     </div>
                                   </div>

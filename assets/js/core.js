@@ -2245,3 +2245,61 @@ function load_headbar(){
         }    
     });
 }
+
+function crear_categoria(accion){
+    
+
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            accion,
+            option: 'crear_categoria'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('.datos_categoria').html(r.message);
+                $('.modal-footer').html(r.botones);
+                /* No code */
+            }else{
+                alert(r.error);
+//                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function CrearCarpeta(action){
+
+    var categoria = $('#nombre_categoria').val();
+    //alert(categoria);
+         
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            categoria,
+            action,
+            option: 'crearcarpeta'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                if (r.nosave == '') {
+                    alert(r.sucess);
+                }else{
+                    alert(r.nosave);
+                }
+                /* No code */
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}

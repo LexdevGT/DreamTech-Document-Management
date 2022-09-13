@@ -203,6 +203,22 @@
 			case 'send_mail_patsy':
 				sendMailPatsy();
 				break;
+			case 'crear_categoria':
+				CrearCategoria();
+				break;
+
+			case 'crearcarpeta':
+				// code...
+				crearcarpeta();
+				break;
+
+			case 'view_categorias_folder':
+				viewCategoriaDash();
+				break;
+
+			case 'viewgatget':
+				viewgatget();
+				break;
 		}
 		
 	}
@@ -5247,5 +5263,230 @@ if($etapa_actual == ''){
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
 	}
+
+
+function CrearCategoria(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$button   = '';
+		
+
+		if(isset($_POST['accion'])){
+		$action = $_POST['accion'];
+
+		switch ($action) {
+			case 'categoria':
+				// code...
+				$message .= '<div class="form-group">
+                                <input type="text" class="form-control" id="nombre_categoria" placeholder="Categoria" />
+                            </div>';
+
+
+                $button .= "<button type='button' class='btn btn-outline-danger' data-bs-dismiss='modal'>Close</button>
+                            <button type='button' class='btn btn-outline-success' onclick=\"CrearCarpeta('categoria')\">Crear</button>";
+				break;
+			case 'subcategoria':
+				// code...
+				$message .= "
+									<div class=\"col-sm-12 form-group\">
+                                    	<select class=\"form-control select2  \" id=\"reportes_filtros_select_categoria\">
+	                                      <option>Seleccione Categoria...</option>
+	                                      <option>Manual</option>
+	                                      <option>Institucional</option>
+	                                      <option>Facturas</option>
+	                                      <option>MARN</option>
+                                    	</select>
+                                  </div>
+							<div class=\"form-group\">
+                                <input type=\"text\" class=\"form-control\" placeholder=\"subcategoria\" />
+                            </div>";
+
+                $button .= "<button type='button' class='btn btn-outline-danger' data-bs-dismiss='modal'>Close</button>
+                            <button type='button' class='btn btn-outline-success' onclick=\"CrearCarpeta('subcategoria')\">Crear</button>";
+				break;
+		}
+
+		}
+
+		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		$jsondata['botones']   = $button;
+		echo json_encode($jsondata);
+	}
+
+function crearcarpeta(){
+	global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$sucess   = '';
+		$nosave   = '';
+		
+		$raiz 	  = '';
+		$categoria= "";
+
+		if(isset($_POST['action'])){
+			$action = $_POST['action'];
+
+			switch ($action) {
+				case 'categoria':
+					// code...
+					$raiz 	  = '../../htmls/categorias';
+					$categoria= $_POST['categoria'];
+
+					$carpeta= $raiz . "/" . $categoria;
+
+					//error_log($carpeta);
+					if(!file_exists($carpeta)) {
+    					if(mkdir($carpeta, 0777, true)){
+    						$sucess .= "La categoria se creo exitosamente";
+    					}else{
+    						$nosave .= "La carpeta ya existe";
+    					}
+					}
+
+					break;
+
+				case 'subcategoria':
+					// code...
+					break;
+				
+				default:
+					// code...
+
+				$error .= 'No se a declarado si es categoria o subcategoria';
+					break;
+			}
+
+		}
+
+		
+
+		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		$jsondata['sucess']  = $sucess;
+		$jsondata['nosave']  = $nosave;
+		echo json_encode($jsondata);
+
+
+}
+
+
+function view_categorias_folder(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+
+		#codigo................;
+
+
+
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+}
+
+
+function viewgatget(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$archivos_recientes = "";
+
+
+		$archivos_recientes .= "<div class=\"col-sm-4 stretch-card \">
+                        <div class=\"card card-rounded\">
+                          <div class=\"card-head p-3\" >
+                            <div class=\"row justify-content-end\">
+                              <div class=\"col-6\">
+                            <h4><b>Archivos recientes</b></h4>
+                            </div>
+                            <div class=\"col-3\">
+                            </div>
+                                    <div class=\"col-3\">
+                                      <span>Ver todo<i class=\"menu-icon mdi mdi-chevron-right\"></i></span>
+                                    </div>
+                                  </div>
+                          </div>
+
+                          <div class=\"card-body\">
+                            <div class=\"row\" >
+                              <div class=\"col-lg-12\">
+                                
+                              <ul class=\"list-group list-group-flush nav\">";
+
+
+
+        $archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
+                                    <a class=\"dropdown-item\" href=\"#\">Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"#\">Compartir Link</a>
+                                  </div>
+                                  <i class=\"mdi mdi-file-word menu-icon mdi-48px mdi-set\"></i> <b>Estrategia Nacional.doc</b>
+                                </li>
+
+                                <li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes2\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes2\">
+                                    <a class=\"dropdown-item\" href=\"#\">Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"#\">Compartir Link</a>
+                                  </div>
+                                  <i class=\"mdi mdi-file-excel menu-icon mdi-48px mdi-set\"></i>   <b>Manual2020costo.xlsx</b>
+                                </li>
+
+                                <li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes3\" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes3">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  Manual de Procedimiento para Optar a los incentivos.pdf</b>
+                                </li>
+
+                                <li class="item">
+                                  <iconify-icon icon="feather:more-vertical" style="padding-bottom: 3%;" type="button" id="archivosRecientes4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes4">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-image menu-icon mdi-48px mdi-set"></i>   <b>Recursos_genet.jpg</b>
+                                </li>
+
+                                <li class="item">
+                                  <iconify-icon icon="feather:more-vertical" style="padding-bottom: 3%;" type="button" id="archivosRecientes5" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></iconify-icon>
+                                  <div class="dropdown-menu" aria-labelledby="archivosRecientes5">
+                                    <a class="dropdown-item" href="#">Descargar</a>
+                                    <a class="dropdown-item" href="#">Compartir Link</a>
+                                  </div>
+                                  <i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  Manual de Educacion  Ambiental sobre el recurso hibrido Br1.pdf</b>
+                                </li>
+                                
+                              </ul>
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
+		#codigo................;
+
+
+
+
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+}
   
 ?>
