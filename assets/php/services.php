@@ -189,7 +189,7 @@
 				loadSuscripcionesFunction();
 				break;
 			case 'load_dashboard':
-				loadDashboardFunction();
+				
 				break;
 			case 'load_filtros':
 				loadFiltrosFunction();
@@ -202,6 +202,22 @@
 				break;
 			case 'send_mail_patsy':
 				sendMailPatsy();
+				break;
+			case 'crear_categoria':
+				CrearCategoria();
+				break;
+
+			case 'crearcarpeta':
+				// code...
+				crearcarpeta();
+				break;
+
+			case 'view_categorias_folder':
+				viewCategoriaDash();
+				break;
+
+			case 'viewgatget':
+				viewgatget();
 				break;
 		}
 		
@@ -486,139 +502,7 @@
 		echo json_encode($jsondata);
 	}
 
-	function loadDashboardFunction(){
-		global $conn;
-		$jsondata 		= array();
-		$error 	  		= '';
-		$message  		= '';
-		$company_id 		= $_SESSION['company_id'];
-		$plazas_activas 	= 0;
-		$total_aplicantes 	= 0;
-		$tiempo_medio 		= 0;
-		$plazas_activas_graph  	= array();
-		$total_aplicantes_graph = array();
-		$embudo_graph 		= array();
-		$etapa_name 		= '';
-
-		$query_plazas_activas = "
-			SELECT fecha,plazas
-			FROM (
-				SELECT DATE(plaza_date_time) fecha,count(*) plazas
-				FROM plazas
-				WHERE plaza_status = 1
-				AND plaza_empresa = 1
-				GROUP BY fecha
-				ORDER BY fecha DESC
-				LIMIT 5
-			) data_set
-			ORDER BY fecha ASC
-					";
-error_log($query_plazas_activas);
-		$execute_plazas_activas = $conn->query($query_plazas_activas);
-		while($row=$execute_plazas_activas->fetch_array()){
-			$fecha 	= $row['fecha'];
-			$plazas = $row['plazas'];
-
-			array_push($plazas_activas_graph,$plazas);
-			$plazas_activas = $plazas_activas + $plazas;
-		}
-
-		$query_total_aplicantes = "
-			SELECT fecha,candidatos
-			FROM (
-				SELECT DATE(date_time) fecha,count(DISTINCT(id_candidato)) candidatos
-				FROM progreso_candidatos
-				INNER JOIN etapas
-				ON etapas.etapa_id = progreso_candidatos.id_etapa
-				WHERE etapa_company = $company_id
-				AND progreso_candidatos.id_estatus = 1
-				GROUP BY fecha
-				ORDER BY fecha DESC
-				LIMIT 5
-			) data_set
-			ORDER BY fecha ASC
-					";
-error_log($query_total_aplicantes);
-		$execute_total_aplicantes = $conn->query($query_total_aplicantes);
-		while($row=$execute_total_aplicantes->fetch_array()){
-			$fecha 	= $row['fecha'];
-			$aplicantes = $row['candidatos'];
-
-			array_push($total_aplicantes_graph,$aplicantes);
-			//$total_aplicantes = $total_aplicantes + $aplicantes;
-		}
-
-		$query_total_aplicantes_number = "
-			SELECT SUM(candidatos) c
-			FROM (
-				SELECT DATE(date_time) fecha,count(DISTINCT(id_candidato)) candidatos
-				FROM progreso_candidatos
-				INNER JOIN etapas
-				ON etapas.etapa_id = progreso_candidatos.id_etapa
-				WHERE etapa_company = 1
-				AND progreso_candidatos.id_estatus = 1
-				GROUP BY fecha
-				ORDER BY fecha DESC
-			) data_set
-			ORDER BY fecha ASC
-					";
-		$execute_total_aplicantes_number = $conn->query($query_total_aplicantes_number);
-		$row_total_aplicantes_number = $execute_total_aplicantes_number->fetch_array();
-		$total_aplicantes = $row_total_aplicantes_number['c'];
-		if($total_aplicantes>0){
-			$total_aplicantes = $total_aplicantes;
-		}else{
-			$total_aplicantes = 0;
-		}
-
-		$query_tiempo_promedio = "
-			SELECT AVG(DISTINCT(diference)) promedio
-			FROM (
-				SELECT DISTINCT(id_candidato) id
-					,MIN(date_time) start_date
-					,MAX(date_time) end_date
-					,DATEDIFF(MAX(date_time),MIN(date_time))+1 diference
-				FROM progreso_candidatos
-				GROUP BY id
-			) data_set
-					";
-//error_log($query_total_aplicantes);
-		$execute_tiempo_promedio = $conn->query($query_tiempo_promedio);
-		while($row=$execute_tiempo_promedio->fetch_array()){
-			$tiempo_medio 	= $row['promedio'];
-		}
-		
-
-		$query_embudo = "
-			SELECT etapa_name,count(DISTINCT(id_candidato)) cantidad
-			FROM progreso_candidatos
-			INNER JOIN etapas
-			ON etapas.etapa_id = progreso_candidatos.id_etapa
-			WHERE etapa_company = $company_id
-			AND progreso_candidatos.id_estatus = 1
-			GROUP BY id_etapa
-					";
-//error_log($query_embudo);
-		$execute_embudo = $conn->query($query_embudo);
-		while($row=$execute_embudo->fetch_array()){
-			$etapa_name 	= $row['etapa_name'];
-			$cantidad 	= $row['cantidad'];
-			array_push($embudo_graph,array($etapa_name,$cantidad));
-		}
-
-
-		$jsondata['embudo_graph'] 		= $embudo_graph;
-		$jsondata['tiempo_medio']	 	= number_format($tiempo_medio,2);
-		$jsondata['total_aplicantes_graph'] 	= $total_aplicantes_graph;
-		$jsondata['total_aplicantes'] 		= $total_aplicantes;
-		$jsondata['plazas_activas_graph'] 	= $plazas_activas_graph;
-		$jsondata['plazas_activas'] 		= $plazas_activas;
-		$jsondata['message'] 			= $message;
-		$jsondata['error']   			= $error;
-//error_log(print_r($jsondata,TRUE));
-		echo json_encode($jsondata);
-
-	}
+	
 
 	function loadSuscripcionesFunction(){
 		global $conn;
@@ -5247,5 +5131,458 @@ if($etapa_actual == ''){
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
 	}
+
+
+function CrearCategoria(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$button   = '';
+
+		
+
+		if(isset($_POST['accion'])){
+		$action = $_POST['accion'];
+
+		switch ($action) {
+			case 'categoria':
+				// code...
+				$message .= '<div class="form-group">
+                                <input type="text" class="form-control" id="nombre_categoria" placeholder="Categoria" />
+                            </div>';
+
+
+                $button .= "<button type='button' class='btn btn-outline-danger' data-bs-dismiss='modal'>Close</button>
+                            <button type='button' class='btn btn-outline-success' onclick=\"CrearCarpeta('categoria')\">Crear</button>";
+				break;
+			case 'subcategoria':
+				// code...
+				$message .= "
+									<div class=\"col-sm-12 form-group\">
+                                    	<select class=\"form-control select2  \" id=\"reportes_filtros_select_categoria\">
+	                                      <option>Seleccione Categoria...</option>
+	                                      <option>Manual</option>
+	                                      <option>Institucional</option>
+	                                      <option>Facturas</option>
+	                                      <option>MARN</option>
+                                    	</select>
+                                  </div>
+							<div class=\"form-group\">
+                                <input type=\"text\" class=\"form-control\" placeholder=\"subcategoria\" />
+                            </div>";
+
+                $button .= "<button type='button' class='btn btn-outline-danger' data-bs-dismiss='modal'>Close</button>
+                            <button type='button' class='btn btn-outline-success' onclick=\"CrearCarpeta('subcategoria')\">Crear</button>";
+				break;
+		}
+
+		}
+
+		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		$jsondata['botones']   = $button;
+		echo json_encode($jsondata);
+	}
+
+function crearcarpeta(){
+	global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$sucess   = '';
+		$nosave   = '';
+		
+		$raiz 	  = '';
+		$categoria= "";
+
+		if(isset($_POST['action'])){
+			$action = $_POST['action'];
+
+			switch ($action) {
+				case 'categoria':
+					// code...
+					$raiz 	  = '../../htmls/categorias';
+					$categoria= $_POST['categoria'];
+
+					$carpeta= $raiz . "/" . $categoria;
+
+					//error_log($carpeta);
+					if(!file_exists($carpeta)) {
+    					if(mkdir($carpeta, 0777, true)){
+    						$sucess .= "La categoria se creo exitosamente";
+    					}else{
+    						$nosave .= "La carpeta ya existe";
+    					}
+					}
+
+					break;
+
+				case 'subcategoria':
+					// code...
+					break;
+				
+				default:
+					// code...
+
+				$error .= 'No se a declarado si es categoria o subcategoria';
+					break;
+			}
+
+		}
+
+		
+
+		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		$jsondata['sucess']  = $sucess;
+		$jsondata['nosave']  = $nosave;
+		echo json_encode($jsondata);
+
+
+}
+
+
+function view_categorias_folder(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+
+		#codigo................;
+
+
+
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+}
+
+
+function viewgatget(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$archivos_recientes = "";
+		$permiso  = "";
+		$graficas = "";
+		$archi  = 'Nuevo Archivo';
+		$cat1 = '';
+		$cat2 = '';
+		$cat3	= '';
+
+		$rol_name = $_SESSION['rol_name'];
+		$rol_id   = $_SESSION['rol_id'];
+
+
+
+		switch ($rol_name) {
+			case 'Administrador':
+				// code...
+				$n = 4;
+				break;
+			case 'Ciudadano';
+				// code...
+				$n = 6;
+				break;
+			default:
+				// code...
+				$n = 4;
+				break;
+		}
+
+
+		$logquery  	="SELECT * FROM log WHERE description LIKE '%$archi%' ORDER BY date_time DESC  Limit 7 ";
+		error_log($logquery);
+		$execute_rquery 	= mysqli_query($conn, $logquery);
+		
+
+
+		$archivos_recientes .= "<div class=\"col-sm-$n stretch-card \">
+                        <div class=\"card card-rounded\">
+                          <div class=\"card-head p-3\" >
+                            <div class=\"row justify-content-end\">
+                              <div class=\"col-6\">
+                            <h4><b>Archivos recientes</b></h4>
+                            </div>
+                            <div class=\"col-3\">
+                            </div>
+                                    <div class=\"col-3\">
+                                      <span>Ver todo<i class=\"menu-icon mdi mdi-chevron-right\"></i></span>
+                                    </div>
+                                  </div>
+                          </div>
+
+                          <div class=\"card-body\">
+                            <div class=\"row\" >
+                              <div class=\"col-lg-12\">
+                                
+                              <ul class=\"list-group list-group-flush nav\">";
+
+
+
+		//$dir = "../../htmls/documents/";
+		//$archivos = scandir($dir);
+
+		//foreach ($archivos as $key => $value) {
+		//	if($value != "." && $value != ".."){
+    while ($row 		= mysqli_fetch_array($execute_rquery)) {
+    	// code...
+    		$fecha_archivo = $row['date_time'];
+
+				$dato_archivo = $row['description'];
+
+
+				$nombre_partes = explode('-',$dato_archivo);
+				$nombre = $nombre_partes[1];
+				$file   = $nombre_partes[2];
+				$cat2 = $nombre_partes[3];
+				$cat1 = $nombre_partes[4];
+				$cat3	= $nombre_partes[5];
+				$icono = $nombre_partes[6];
+
+				
+				
+
+				switch ($icono) {
+					case 'pdf':
+						// code...
+						$image_ico = "mdi-file-pdf";
+						break;
+
+					case 'PNG':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+
+					case 'DOCX':
+						// code...
+					$image_ico = "mdi-file-word";
+						break;
+
+					case 'JPG':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+
+					case 'EXCEL':
+						// code...
+					$image_ico = "mdi-file-excel";
+						break;
+					
+					default:
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+				}
+
+				if ($cat1 !=="") {
+					// code...
+					$cat1 = $cat1.'/';
+				}
+				if ($cat2 !=="") {
+					// code...
+					$cat2 = $cat2.'/';
+				}
+				if ($cat3 !=="") {
+					// code...
+					$cat3 = $cat3.'/';
+				}
+				
+					$directory = "../htmls/documents/";
+
+					
+					$file = $directory.$cat1.$cat2.$cat3.$file;
+
+
+
+					$archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
+                                    <a class=\"dropdown-item\" href=\"$file\" download>Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"$file\">Compartir Link</a>
+                                  </div>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre</b>
+                                </li>";
+
+
+
+					/*$tabla .= "
+					<tr>
+                                        <td>
+                                          <h6>
+                                             $value
+                                          </h6>
+                                        </td>
+                                        <td>
+                                          <button class=\"btn btn-primary\">
+                                          	<a href=\"$file\" target=\"_blank\">
+                                          	<i class=\"mdi mdi-cloud-download\"></i>
+                                          	</a>
+                          		  </button>
+                                        </td>
+                                        <!--<td>
+                                          <i class=\"mdi mdi-delete-forever\"></i>
+                                        </td>-->
+                                      </tr>
+					  ";*/
+				
+				}
+		//	}
+	//	}
+
+
+		
+
+
+        
+
+         
+                                
+        $archivos_recientes .= "</ul>
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
+		#codigo................;
+
+
+        $graficas .=  "<div class=\"col-sm-$n stretch-card \">
+                      <div class=\"card card-rounded\">
+                        <div class=\"card-head p-3\" >
+                          <div class=\"row justify-content-end\">
+                            <div class=\"col-6\">
+                              <h4><b>Categorias y archivos</b></h4>
+                            </div>
+                            <div class=\"col-3\">
+                            </div>
+                            <div class=\"col-3\">
+                            </div>
+                          </div>
+                        </div>
+                        <div class=\"card-body p-6\">
+                          <canvas id=\"pieChart\"></canvas>
+                        </div>
+                      </div>
+                    </div>";
+
+         	if ($rol_name == "Administrador") {
+       		// code...
+
+         		$graficas .= "<div class=\"col-sm-4 stretch-card\">
+                        <div class=\"card card-rounded\">
+                          <div class=\"card-head p-3\" >
+                            <div class=\"row justify-content-end\">
+                              <div class=\"col-6\">
+                                <h4><b>Subir archivo</b></h4>
+                              </div>
+                              <div class=\"col-3\">
+                              </div>
+                              <div class=\"col-3\">
+                              </div>
+                            </div>
+                          </div>
+                          <div class=\"card-body p-6\">
+                            <div class=\"col-lg-12 border border-primary border-2 rounded-3 text-center\">
+                              <div class=\"row\">
+                                <div id=\"content\" class=\"col-lg-12 p-3\">
+                                  <form action=\"#\" method=\"post\" enctype=\"multipart/form-data\">
+                                    <div class=\"fallback\">
+                                      <input name=\"file\" type=\"file\" multiple />
+                                    </div>
+                                    <div class=\"table table-striped files\" id=\"previews\">
+                                      <div id=\"template\" class=\"file-row row\">
+                                        <!-- This is used as the file preview template -->
+                                        <div class=\"col-xs-12 col-lg-3\">
+                                          <span class=\"preview\" style=\"width:160px;height:160px;\">
+                                            <img data-dz-thumbnail />
+                                          </span>
+                                            <br/>
+                                          <button class=\"btn btn-primary start\" style=\"display:none;\">
+                                            <i class=\"mdi mdi-upload\"></i>
+                                            <span>Empezar</span>
+                                          </button>
+                                          <button data-dz-remove class=\"btn btn-warning cancel\">
+                                            <i class=\"mdi mdi-cancel\"></i> 
+                                            <span>Cancelar</span>
+                                          </button>
+                                          <button data-dz-remove class=\"btn btn-danger delete\">
+                                            <i class=\"icon-trash fa fa-trash\"></i> 
+                                            <span>Eliminar</span>
+                                          </button>
+                                        </div>
+                                        <div class=\"col-xs-12 col-lg-9\">
+                                          <p class=\"name\" data-dz-name></p>
+                                          <p class=\"size\" data-dz-size></p>
+                                          <div>
+                                            <strong class=\"error text-danger\" data-dz-errormessage></strong>
+                                          </div>
+                                          <div>
+                                            <div class=\"progress progress-striped active\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"0\">
+                                            <div class=\"progress-bar progress-bar-success\" style=\"width:0%;\" data-dz-uploadprogress>
+                                            </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                        <br><br>
+                                    <div class=\"dropzone-here\"><span><i class=\"mdi mdi-cloud-upload mdi-48px\"></i></span><br><b>Arrastra los archivos aquí para subirlos.</b>
+                                    </div><br><br>
+                                    <center>
+                                      <div id=\"actions\" class=\"row\">
+                                        <div class=\"col-lg-7\">
+                                                <!-- The fileinput-button span is used to style the file input field as button -->
+                                          <span class=\"btn btn-info fileinput-button\">
+                                            <i class=\"mdi mdi-plus\"></i>
+                                            <span>Añadir imágenes...</span>
+                                          </span>
+                                          <button type=\"submit\" class=\"btn btn-primary start\" style=\"display: none;\">
+                                            <i class=\"mdi mdi-upload\"></i>
+                                            <span>Start upload</span>
+                                          </button>
+                                          <button type=\"reset\" class=\"btn btn-warning cancel\" style=\"display: none;\">
+                                            <i class=\"mdi mdi-cancel\"></i>
+                                            <span>Cancel upload</span>
+                                          </button>
+                                        </div>
+                                        <div class=\"col-lg-5\">
+                                                <!-- The global file processing state -->
+                                          <span class=\"fileupload-process\">
+                                            <div id=\"total-progress\" class=\"progress progress-striped active\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"0\">
+                                              <div class=\"progress-bar progress-bar-info\" style=\"width:0%;\" data-dz-uploadprogress>
+                                                
+                                              </div>
+                                            </div>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </center>
+                                  </form>  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
+       		}
+
+
+        $segundafila = $archivos_recientes . $graficas;
+
+
+        $jsondata['datos2'] = $segundafila;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+}
   
 ?>
