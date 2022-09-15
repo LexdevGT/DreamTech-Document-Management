@@ -415,6 +415,14 @@ function load_procesos(){
     });
 }
 
+function modalProperties(){
+    $('#propModal').modal('show'); 
+}
+
+function modalComments(){
+    $("#comentModal").modal('show');
+}
+
 
 function standar_display(){
 
@@ -2181,7 +2189,7 @@ function load_sidebar(){
                                 '<div class="collapse" id="documents">'+
                                   '<ul class="nav flex-column sub-menu">'+
                                     '<li class="item"><a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
+                                    '<li class="item"> <a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
                                   '</ul>'+
                                 '</div>'+
                               '</li>'+
