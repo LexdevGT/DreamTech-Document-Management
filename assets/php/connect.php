@@ -3,7 +3,7 @@
 $hostname = 'localhost';
 $username = 'root';
 $password = '';
-$db_name  = 'lex';
+$db_name  = 'docummng';
 */
 
 $hostname = '161.35.13.96';
