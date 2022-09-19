@@ -423,6 +423,148 @@ function modalComments(){
     $("#comentModal").modal('show');
 }
 
+function display_categoria(){
+
+     $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/categorias.php",
+        data: ({
+            option: 'categorias'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+            var result = [];
+
+            for (var i in r.table_content){
+                result.push([i, r.table_content[i]]);
+            }
+
+
+            //alert(result);
+
+            $.each(r.table_content, function (x, item) {
+                
+
+                if(item!=="."&&item!==".."){
+                    //alert(item);
+                    $('#select_categoria').append($('<option>',{value: x,text : item}));
+
+                }
+                
+
+
+            });
+                
+        
+        }    
+    });
+
+}
+
+function display_busqueda(tipo,nombre,cat,fecha,autor){
+
+     $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/busqueda.php",
+        data: ({
+            option: 'resultado_busqueda'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+
+            var result = [];
+
+            for (var i in r.table_content){
+                result.push([i, r.table_content[i]]);
+            }
+
+
+            //alert(result);
+
+            $.each(r.table_content, function (x, item) {
+            
+
+                if(item!=="."&&item!==".."){
+                    //alert(item);
+                    $('#select_documento').append($('<option>',{value: x,text : item}));
+
+                }
+                
+
+
+            });
+                
+        
+        }    
+    });
+
+}
+
+function seach_result_display(){
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/busqueda.php",
+        data: ({
+            option: 'resultado_busqueda'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+
+            var result = [];
+
+            for (var i in r.table_content){
+                result.push([i, r.table_content[i]]);
+            }
+
+
+            //alert(result);
+
+            $.each(r.table_content, function (x, item) {
+            
+
+                if(item!=="."&&item!==".."){
+                    //alert(item);
+                    $('#ul_result_busqueda').append('<li class="item"><i class="mdi mdi-file menu-icon mdi-48px mdi-set"></i><b>'+item+'</b></li>');
+
+                }
+                
+
+
+            });
+                
+        
+        }    
+    });
+
+}
+
+
+function seach_result_display_1(){
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/busqueda.php",
+        data: ({
+            option: 'resultado_busqueda'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+            //alert()
+            $('#spnFileselected').append(r.file1);
+            $('#propName').append(r.file1);
+
+        
+        }    
+    });
+
+}
 
 function standar_display(){
 
