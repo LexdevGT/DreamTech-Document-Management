@@ -157,21 +157,21 @@
                             </ul>
                             <br><br><br>
                             <h4>48.6 KB</h4>
-                            <h6><b>Facturas2020.xlsx</b></h6>
+                            <h6 id="propName"><b></b></h6>
                           </div>
                           <div class="col-lg-2 text-center">
                             <i class="mdi mdi-file-document-box mdi-24px"></i>
-                            <i >Nombre</i>
-                            <i ><b>Marina Gonzalez</b></i>
+                            <i ></i>
+                            <i ><b></b></i>
                             <i><br></i>
                             <i><br></i>
                             <i class="mdi mdi-file-document-box mdi-24px"></i>
-                            <i >Empresa</i>
-                            <i ><b>Patsy</b></i>
+                            <i ></i>
+                            <i ><b></b></i>
                             <i><br></i>
                             <i><br></i>
-                            <i >Fecha de factura</i>
-                            <i ><b>20/08/2022</b></i>
+                            <i >Fecha</i>
+                            <i ><b>12/09/2022</b></i>
                           </div>
                           <div class="col-lg-1"></div>
                            
@@ -356,20 +356,26 @@
 
                   <div class="col-sm">
                      <h5 class="welcome-text"><span class="text-black fw-bold">Tipo de documento</span> </h5>
-                      <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
-                                <option selected value="AL">Todo</option>
+                      <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_tipo_doc" name="">
+                                <option  value="Todo">Todo</option>
+                                <option  value="pdf">PDF</option>
+                                <option  value="xlsx">EXCEL</option>
+                                <option  value="xdoc">WORD</option>
+                                <option  value="jpg_png">IMAGEN</option>
+                                <option  value="jpg_png">VIDEO</option>
                       </select>
                   </div>
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Nombre de documento</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
-                                <option selected value="AL">Ambiental</option>
-                      </select>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_documento" name="">
+                    </select>
                   </div>
+
+
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Categoría</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
-                                <option selected value="AL">Manuales</option>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_categoria" name="">
+                                <!--<option selected value="AL">Manuales</option>-->
                       </select>
                   </div>
                   <div class="col-sm">
@@ -382,7 +388,7 @@
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Autor</span> </h5>
                     <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
-                                <option selected value="AL">MARN</option>
+                                <option selected value="AL">SEMARNAT</option>
                       </select>
                   </div>
 
@@ -443,15 +449,11 @@
                             <div class="row " >
                               <div class="col-lg-12">
                                 
-                                <ul class="list-group list-group-flush nav">
+                                <ul class="list-group list-group-flush nav" id="ul_result_busqueda">
 
-                                    <a class="selected"><li class="item"><i class="mdi mdi-file-excel menu-icon mdi-48px mdi-set"></i> <b>Facturas2020.xlsx</b></li></a>
-                                    <li class="item"><i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i>   <b>Factura de servicios.pdf</b></li>
-                                    <li class="item"><i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  Por cobrar.doc</b></li>
-                                    <li class="item"><i class="mdi mdi-file-image menu-icon mdi-48px mdi-set"></i>   <b>Fact_23_4331.jpg</b></li>
-                                    <li class="item"><i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i> <b>  pago_22_521385.pdf</b></li>
                                     
-                              </ul>
+                                    
+                               </ul>
                                 
                               </div>
                             </div>
@@ -489,8 +491,8 @@
                                     <i class="mdi mdi-file-document-box mdi-36px"></i>
                                     
                                 </ul>
-                                <h4>48.6 KB</h4>
-                                <h6><b>Facturas2020.xlsx</b></h6>
+                                <!--<h4>48.6 KB</h4>-->
+                                <h6 id="spnFileselected"><b ></b></h6>
                               </div>
                             </div>
                             <div class="row">
@@ -572,6 +574,10 @@
     /*security(5);*/
     load_dashboard();
     avanzado_display();
+    display_categoria();
+    display_busqueda();
+    seach_result_display();
+    seach_result_display_1();
 $(function() {
   $('input[id="dtRange"]').daterangepicker({
     timePicker: true,
