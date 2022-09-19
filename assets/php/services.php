@@ -206,18 +206,17 @@
 			case 'crear_categoria':
 				CrearCategoria();
 				break;
-
 			case 'crearcarpeta':
-				// code...
 				crearcarpeta();
 				break;
-
 			case 'view_categorias_folder':
 				viewCategoriaDash();
 				break;
-
 			case 'viewgatget':
 				viewgatget();
+				break;
+			case 'save_ciudadano_login':
+				saveCiudadanoLogin();
 				break;
 		}
 		
@@ -230,6 +229,40 @@
 		$message  = '';
 
 		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function saveCiudadanoLogin(){
+		global $conn;
+		$jsondata = array();
+		$error 	  				= '';
+		$message  				= '';
+		$email 						= $_POST['email'];
+		$names 						= $_POST['names'];
+		$last_names 			= $_POST['last_names'];
+		$id_document 			= $_POST['id_document'];
+		$user_sex 				= $_POST['user_sex'];
+		$birthday 				= $_POST['birthday'];
+		$academic_level 	= $_POST['academic_level'];
+		$phone 						= $_POST['phone'];
+		$pass 						= $_POST['pass'];
+
+		$query_save_ciudadano = "
+				INSERT INTO users (user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_id_document,user_sex,user_birthday,user_academic_level,user_phone)
+				VALUES ('$email','$names','$last_names',1,5,MD5('$pass'),1,'$id_document','$user_sex','$birthday','$academic_level',$phone)
+			";
+
+//error_log($query_save_ciudadano);
+		$execute_save_ciudadano = $conn->query($query_save_ciudadano);
+
+		if($execute_save_ciudadano){
+			$message = "Ciudadano guardado";
+		}else{
+			$error = "No se pudo guardar ciudadano!";
+		}
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;

@@ -196,6 +196,10 @@ $(function(){
         load_filtros_table();
     });
 
+    $('#guardar-ciudadano-login').click(function(){
+        save_ciudadano_login();
+    });
+
 });
 
 function new_function(){
@@ -217,6 +221,50 @@ function new_function(){
             }
         }    
     });
+}
+
+function save_ciudadano_login(){
+    var email           = $('#ciudadano_email').val();
+    var names           = $('#ciudadano_nombre').val();
+    var last_names      = $('#ciudadano_apellido').val();
+    var id_document     = $('#ciudadano_documento').val();
+    var user_sex        = $('#ciudadano_sexo').val();
+    var birthday        = $('#ciudadano_nacimiento').val();
+    var academic_level  = $('#ciudadano_academico').val();
+    var phone           = $('#ciudadano_telefono').val();
+    var pass            = $('#ciudadano_contra').val();
+
+    //alert("EMAIL: " + email + " Nombres: "+names);
+
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'save_ciudadano_login',
+            email,
+            names,
+            last_names,
+            id_document,
+            user_sex,
+            birthday,
+            academic_level,
+            phone,
+            pass
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                alert(r.message);
+                window.location.replace('../');
+            }else{
+                alert(r.error);
+                window.location.replace('dashboard.html');
+            }
+        }    
+    });
+    
 }
 
 function load_filtros_table(){
@@ -2320,6 +2368,12 @@ function load_sidebar(){
                                 '<a class="nav-link" href="dashboard.html">'+
                                   '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
                                   '<span class="menu-title">DASHBOARD</span>'+
+                                '</a>'+
+                              '</li>'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" href="quienes_somos.html">'+
+                                  '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
+                                  '<span class="menu-title">QUIENES SOMOS?</span>'+
                                 '</a>'+
                               '</li>'+
                               '<li class="nav-item">'+
