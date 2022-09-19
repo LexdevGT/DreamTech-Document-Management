@@ -1,6 +1,7 @@
 $(function(){
     load_sidebar();
     load_headbar();
+    viewcarpeta();
 
     $(".exportToExcel").click(function(e){
         //alert('something');
@@ -2450,15 +2451,17 @@ function load_headbar(){
     });
 }
 
-function crear_categoria(accion){
+function crear_categoria(accion,pathcat){
     
-
+    //var pathcat = $('.pathCat').val.();
+    //alert(pathcat);
 
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
         url: "../assets/php/services.php",
         data: ({
+            pathcat,
             accion,
             option: 'crear_categoria'                   
         }),
@@ -2476,17 +2479,19 @@ function crear_categoria(accion){
     });
 }
 
-function CrearCarpeta(action){
+function CrearCarpeta(action,pathcat){
 
     var categoria = $('#nombre_categoria').val();
     //alert(categoria);
-         
+
+    //alert(pathcat);     
     
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
         url: "../assets/php/services.php",
         data: ({
+            pathcat,
             categoria,
             action,
             option: 'crearcarpeta'                   
@@ -2496,9 +2501,43 @@ function CrearCarpeta(action){
             if(r.error == ''){
                 if (r.nosave == '') {
                     alert(r.sucess);
+                    $('#exampleModal').modal('hide');
+                    window.location.replace('categorias.html');
                 }else{
                     alert(r.nosave);
                 }
+                /* No code */
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function viewcarpeta(directorio){
+
+    //var directorio = $('.directorio').val();
+
+    if (typeof directorio === 'undefined') { 
+            var directorio = "../../htmls/documents/"; 
+        } 
+
+    //alert(directorio);
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            directorio,
+            option: 'viewCategoria'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('.viewcategoria').html(r.carpetas);
+                $('.patchbtn').html(r.pathbtn);
                 /* No code */
             }else{
                 alert(r.error);

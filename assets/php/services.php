@@ -215,6 +215,9 @@
 			case 'viewgatget':
 				viewgatget();
 				break;
+			case 'viewCategoria':
+				viewcategoria();
+				break;
 			case 'save_ciudadano_login':
 				saveCiudadanoLogin();
 				break;
@@ -5172,6 +5175,7 @@ function CrearCategoria(){
 		$error 	  = '';
 		$message  = '';
 		$button   = '';
+		$path     = $_POST['pathcat'];
 
 		
 
@@ -5183,11 +5187,12 @@ function CrearCategoria(){
 				// code...
 				$message .= '<div class="form-group">
                                 <input type="text" class="form-control" id="nombre_categoria" placeholder="Categoria" />
+                                <input type="hidden" class="form-control" value="'.$path.'" id="path" placeholder="direccion" />
                             </div>';
 
 
                 $button .= "<button type='button' class='btn btn-outline-danger' data-bs-dismiss='modal'>Close</button>
-                            <button type='button' class='btn btn-outline-success' onclick=\"CrearCarpeta('categoria')\">Crear</button>";
+                            <button type='button' class='btn btn-outline-success' onclick=\"CrearCarpeta('categoria',document.getElementById('pathCat').value)\">Crear</button>";
 				break;
 			case 'subcategoria':
 				// code...
@@ -5237,7 +5242,7 @@ function crearcarpeta(){
 			switch ($action) {
 				case 'categoria':
 					// code...
-					$raiz 	  = '../../htmls/categorias';
+					$raiz 	  = $_POST['pathcat'];
 					$categoria= $_POST['categoria'];
 
 					$carpeta= $raiz . "/" . $categoria;
@@ -5245,7 +5250,23 @@ function crearcarpeta(){
 					//error_log($carpeta);
 					if(!file_exists($carpeta)) {
     					if(mkdir($carpeta, 0777, true)){
+
+    						$query  = "INSERT INTO `categoria`(`name_cat`, `path_cat`) VALUES ('$categoria','$raiz')";
+    						$resultado = mysqli_query($conn,$query);
+
+    						if($resultado){
+    							$query = "SELECT * FROM categoria where name_cat = '$categoria' AND path_cat='$raiz'";
+    							$rquery = mysqli_query($conn,$query);
+    							$resultado = mysqli_fetch_array($rquery);
+
+    							$id  =  $resultado['idCat'];
+    							$msg = "Se creo la categoria-$categoria-$raiz-$id";
+
+    						insert_log($msg);
     						$sucess .= "La categoria se creo exitosamente";
+    						}
+
+    						
     					}else{
     						$nosave .= "La carpeta ya existe";
     					}
@@ -5309,7 +5330,7 @@ function viewgatget(){
 		$cat1 = '';
 		$cat2 = '';
 		$cat3	= '';
-
+		$ar ="";
 		$rol_name = $_SESSION['rol_name'];
 		$rol_id   = $_SESSION['rol_id'];
 
@@ -5331,8 +5352,8 @@ function viewgatget(){
 		}
 
 
-		$logquery  	="SELECT * FROM log WHERE description LIKE '%$archi%' ORDER BY date_time DESC  Limit 7 ";
-		error_log($logquery);
+		$logquery  	="SELECT * FROM documentation ORDER BY data_creation DESC  Limit 7 ";
+		//error_log($logquery);
 		$execute_rquery 	= mysqli_query($conn, $logquery);
 		
 
@@ -5358,6 +5379,299 @@ function viewgatget(){
                                 
                               <ul class=\"list-group list-group-flush nav\">";
 
+// iNICIA PRUEBA fINAL
+
+ 		$gfg_folderpath = "../../htmls/documents/";
+ 		$download = "documents/";
+
+   //$gfg_folderpath = "GeeksForGeeks/";
+// CHECKING WHETHER PATH IS A DIRECTORY OR NOT
+if (is_dir($gfg_folderpath)) {
+    // GETTING INTO DIRECTORY
+    $files = opendir($gfg_folderpath); {
+        // CHECKING FOR SMOOTH OPENING OF DIRECTORY
+        if ($files) {
+            //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
+            while (($gfg_subfolder = readdir($files)) !== FALSE) {
+                // CHECKING FOR FILENAME ERRORS
+             if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {
+
+             		$file_c = strtolower(substr($gfg_subfolder, -3));
+												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+																{
+												$download = "documents/";
+																	switch ($file_c) {
+																			case 'pdf':
+																				// code...
+																				$image_ico = "mdi-file-pdf";
+																				break;
+
+																			case 'png':
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+
+																			case 'ocx':
+																				// code...
+																			$image_ico = "mdi-file-word";
+																				break;
+
+																			case 'jpg':
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+
+																			case 'xls':
+																				// code...
+																			$image_ico = "mdi-file-excel";
+																				break;
+																			
+																			default:
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+																		}
+
+
+//                    $archivos_recientes .=  $gfg_subfolder."<br>";
+
+                    $direcc1 = $download.$gfg_subfolder;
+
+                    $archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
+                                    <a class=\"dropdown-item\" href=\"$direcc1\" download>Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"$direcc1\">Compartir Link</a>
+                                  </div>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_subfolder</b>
+                                </li>";
+
+
+
+
+                     }
+                $dirpath = "../../htmls/documents/" . $gfg_subfolder . "/";
+                $down    = "documents/" . $gfg_subfolder . "/";
+                
+                    // GETTING INSIDE EACH SUBFOLDERS
+                    if (is_dir($dirpath)) {
+                        $file = opendir($dirpath); {
+                            if ($file) {
+                //READING NAMES OF EACH FILE INSIDE SUBFOLDERS
+               while (($gfg_filename = readdir($file)) !== FALSE) {
+                if ($gfg_filename != '.' && $gfg_filename != '..') {
+
+                						$file_c = strtolower(substr($gfg_filename, -3));
+												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+																{
+																	$download = "documents/". $gfg_subfolder."/";
+
+
+																	switch ($file_c) {
+																			case 'pdf':
+																				// code...
+																				$image_ico = "mdi-file-pdf";
+																				break;
+
+																			case 'png':
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+
+																			case 'ocx':
+																				// code...
+																			$image_ico = "mdi-file-word";
+																				break;
+
+																			case 'jpg':
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+
+																			case 'xls':
+																				// code...
+																			$image_ico = "mdi-file-excel";
+																				break;
+																			
+																			default:
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+																		}
+                        //$archivos_recientes .= $gfg_filename . "<br>";
+
+                        $direcc2 = $download.$gfg_filename;
+                        	$archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
+                                    <a class=\"dropdown-item\" href=\"$direcc2\" download >Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"$direcc2\">Compartir Link</a>
+                                  </div>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_filename</b>
+                                </li>";
+
+                        }
+                        
+                        $dirsub = $dirpath.$gfg_filename ."/";
+                       
+                        if (is_dir($dirsub)) {
+                        	// code...
+                        	$fil = opendir($dirsub);{
+                        		if($fil){
+                        			while (($nombre_archivo = readdir($fil)) !== FALSE) {
+                        				// code...
+                        				if ($nombre_archivo != '.' && $nombre_archivo != '..') {
+                        					// code...
+                        					$file_c = strtolower(substr($nombre_archivo, -3));
+															if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+																{
+
+																	 $download = $down.$gfg_filename ."/";
+																	switch ($file_c) {
+																			case 'pdf':
+																				// code...
+																				$image_ico = "mdi-file-pdf";
+																				break;
+
+																			case 'png':
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+
+																			case 'ocx':
+																				// code...
+																			$image_ico = "mdi-file-word";
+																				break;
+
+																			case 'jpg':
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+
+																			case 'xls':
+																				// code...
+																			$image_ico = "mdi-file-excel";
+																				break;
+																			
+																			default:
+																				// code...
+																			$image_ico = "mdi-file-image";
+																				break;
+																		}
+                        					//$archivos_recientes .= $nombre_archivo . "<br>";
+																		
+																		$direcc3 = $download.$nombre_archivo;
+
+                        					$archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
+                                    <a class=\"dropdown-item\" href=\"$direcc3\" download>Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"$direcc3\">Compartir Link</a>
+                                  </div>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre_archivo</b>
+                                </li>";
+
+                        				}
+
+                        				}
+                        			}
+                        		}
+                        	}
+                        }
+
+
+
+
+                           }
+                         }	
+                      }
+                   }
+               }
+                   // $archivos_recientes .=  "<br>";
+                }
+            }
+        }
+    }
+}
+
+
+
+
+//    INICIA PRUEBA SEMI FINAL
+
+  //   $dir1 = "../../htmls/documents/*/*/*";
+   //  $dir2 = "../../htmls/documents/*/*";
+   //  $dir3 = "../../htmls/documents/***";
+//
+
+     //$dir = "/etc/php5/*";
+/*
+// Abrir un directorio conocido, y proceder a leer su contenido
+foreach(glob($dir1) as $file) {
+		$file_c = strtolower(substr($file, -3));
+	if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")	
+		{
+				//$query  = "SELECT display_name, file_patch ";
+       //$archivos_recientes .= "filename: $file : filetype: " . filetype($file) . "<br />";
+     }
+    }
+
+foreach(glob($dir2) as $file) {
+		$file_c = strtolower(substr($file, -3));
+	if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+		{
+     //  $archivos_recientes .= "filename: $file : filetype: " . filetype($file) . "<br />";
+
+     }
+    }		
+foreach(glob($dir3) as $file) {
+		$file_c = strtolower(substr($file, -3));
+	if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+		{
+       $archivos_recientes .= "filename: $file : filetype: " . filetype($file) . "<br />";
+
+     }
+    }	
+*/
+
+    //Termina prueba semi final
+ /*
+// Abre un directorio conocido, y procede a leer el contenido
+if (is_dir($dir)) {
+    if ($dh = opendir($dir)) {
+        while (($file = readdir($dh)) !== false) {
+            $archivos_recientes.= "nombre archivo: $file : tipo archivo: " . filetype($dir . $file) . "\n";
+        }
+        closedir($dh);
+    }
+}*/
+
+/*
+//Asignamos la ruta a la variable path
+$path="../../htmls/documents/";
+//asignamos a $directorio el objeto dir creado con la ruta
+$directorio=dir($path);
+
+//y ahora lo vamos leyendo hasta el final
+while ($archivo = $directorio->read())
+{//
+if($archivo!="." AND $archivo!=".."){
+	//ponemos el nombre de archivo a minuscula y recojemos solo los tres caracteres por la izquierda
+
+//para saber la extensión
+	if (strtolower(substr($archivo, -3) == "pdf"))
+		{
+//si es pdf,lo mostramos por pantalla
+$archivos_recientes .= "$archivo <br>";
+
+error_log($archivos_reciente);
+}
+}
+}
+//descargo el objeto
+$directorio->close();
+*/
+
 
 
 		//$dir = "../../htmls/documents/";
@@ -5365,46 +5679,43 @@ function viewgatget(){
 
 		//foreach ($archivos as $key => $value) {
 		//	if($value != "." && $value != ".."){
-    while ($row 		= mysqli_fetch_array($execute_rquery)) {
+
+    while ($row = mysqli_fetch_array($execute_rquery)) {
     	// code...
-    		$fecha_archivo = $row['date_time'];
+    		$fecha_archivo = $row['data_creation'];
 
-				$dato_archivo = $row['description'];
-
-
-				$nombre_partes = explode('-',$dato_archivo);
-				$nombre = $nombre_partes[1];
-				$file   = $nombre_partes[2];
-				$cat2 = $nombre_partes[3];
-				$cat1 = $nombre_partes[4];
-				$cat3	= $nombre_partes[5];
-				$icono = $nombre_partes[6];
-
-				
+				$nombre_archivo = $row['file_name'];
+				$nombre_display = $row['display_name'];
+				$pathfile  			= utf8_encode($row['file_path']);
+				//error_log($pathfile);
+				$extension = strtolower(substr($nombre_archivo, -3));
 				
 
-				switch ($icono) {
+			
+				
+
+				switch ($extension) {
 					case 'pdf':
 						// code...
 						$image_ico = "mdi-file-pdf";
 						break;
 
-					case 'PNG':
+					case 'png':
 						// code...
 					$image_ico = "mdi-file-image";
 						break;
 
-					case 'DOCX':
+					case 'ocx':
 						// code...
 					$image_ico = "mdi-file-word";
 						break;
 
-					case 'JPG':
+					case 'jpg':
 						// code...
 					$image_ico = "mdi-file-image";
 						break;
 
-					case 'EXCEL':
+					case 'xls':
 						// code...
 					$image_ico = "mdi-file-excel";
 						break;
@@ -5414,7 +5725,7 @@ function viewgatget(){
 					$image_ico = "mdi-file-image";
 						break;
 				}
-
+	/*
 				if ($cat1 !=="") {
 					// code...
 					$cat1 = $cat1.'/';
@@ -5428,20 +5739,20 @@ function viewgatget(){
 					$cat3 = $cat3.'/';
 				}
 				
-					$directory = "../htmls/documents/";
+					
 
 					
 					$file = $directory.$cat1.$cat2.$cat3.$file;
-
-
+*//*
+				$directory = "../../htmls/documents/".$pathfile."/";
 
 					$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$file\" download>Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$file\">Compartir Link</a>
+                                    <a class=\"dropdown-item\" href=\"$directory\" download>Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"$directory\">Compartir Link</a>
                                   </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre</b>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$pathfile</b>
                                 </li>";
 
 
@@ -5507,7 +5818,7 @@ function viewgatget(){
                       </div>
                     </div>";
 
-         	if ($rol_name == "Administrador") {
+         	if ($rol_id == "1") {
        		// code...
 
          		$graficas .= "<div class=\"col-sm-4 stretch-card\">
@@ -5615,6 +5926,75 @@ function viewgatget(){
         $jsondata['datos2'] = $segundafila;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+}
+
+function viewcategoria(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$carpetas = "";
+		$path = $_POST['directorio'];
+		$pathbtn = "";
+
+		#codigo................;
+		
+		
+				$pathbtn .= "<input type=\"hidden\" id=\"pathCat\" value=\"$path\">
+											<button type=\"submit\" class=\"form-control btn btn-outline-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\"><i class=\"ti ti-plus\"> </i>Agregar</button>";
+
+			
+
+
+
+		    //Asignamos la ruta a la variable path
+				//$path="../../htmls/documents/";
+				//asignamos a $directorio el objeto dir creado con la ruta
+				$directorio=dir($path);
+
+				
+				$carpetas .= "
+                          
+                          	<div class=\"row\">";
+
+				//y ahora lo vamos leyendo hasta el final
+				while ($archivo = $directorio->read())
+				{//
+				if($archivo!="." AND $archivo!=".."){
+						$file_c = strtolower(substr($archivo, -3));
+						//error_log($file_c);
+	if ($file_c != "pdf" && $file_c != "jpg" && $file_c != "png" && $file_c != "xls" && $file_c != "doc"  && $file_c!= "ocx" && $file_c != "lsx" && $file_c != ".db")
+		{
+					$path_n = $path . $archivo . "/";
+
+				$carpetas .= "
+                       <div class=\"col-sm-3 stretch-card\">
+
+                       <input type=\"hidden\" class=\"directorio\" value=\"$path_n\">
+
+                       <button type=\"submit\" class=\"form-control btn btn-outline-dark\" onclick=\"viewcarpeta(this.value)\" value=\"$path_n\"><i class=\"ti ti-folder\"></i><b>$archivo</b></button>
+                       
+                      	</div>
+                      	";
+
+				//error_log($archivos_reciente);
+				}
+				}
+				}
+				//descargo el objeto
+				$directorio->close();
+
+	
+		   // $carpetas .= "</div>";
+
+
+    //Termina prueba semi final
+
+		$jsondata['pathbtn'] = $pathbtn;
+		$jsondata['carpetas'] = $carpetas;
+		$jsondata['message'] 	= $message;
+		$jsondata['error']   	= $error;
 		echo json_encode($jsondata);
 }
   
