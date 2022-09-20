@@ -2312,7 +2312,7 @@ function log_out(){
 }
 
 
-function security(access=0){
+function security(access=0,action=''){
 
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2320,7 +2320,8 @@ function security(access=0){
         url: "../assets/php/services.php",
         data: ({
             option: 'security',
-            access                   
+            access,
+            action                   
         }),
         dataType: "json",        
         success: function(r) {                                                   
@@ -2407,8 +2408,8 @@ function load_sidebar(){
                                 '</a>'+
                                 '<div class="collapse" id="reports-menu">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="#"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
+                                    '<!--<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>-->'+
+                                    '<li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
 
                                     '<li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>'+
 

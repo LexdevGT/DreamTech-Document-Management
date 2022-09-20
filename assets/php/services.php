@@ -440,7 +440,7 @@
 				AND plaza_empresa = $id_company
 					       ";
 		}
-
+/*
 		$execute_search_botones = $conn->query($query_search_botones);
 		
 		$lista_etapas .= "<option value=''>Selecciona una etapa...</option>";
@@ -465,7 +465,7 @@
 				";
 			
 		}
-
+*/
 		$query_tabla_procesos = "
 			SELECT plaza_name
 				,plaza_categoria
@@ -5039,30 +5039,31 @@ if($etapa_actual == ''){
 		$error 	  = '';
 		$message  = '';
 		$access   = $_POST['access'];
+		$action   = $_POST['action'];
 
 		
 		if(isset($_SESSION['username'])){
 			$u = $_SESSION['username'];
-			insert_log(" Security Check - $u");
+			insert_log(" Security Check-$action-$u");
 			$rol_id = $_SESSION['rol_id'];
 			if($access > 0){
 				$query_secure_page = "SELECT count(*) n
 							FROM access 
 							WHERE id_rol = $rol_id
 							AND id_menu = $access";
-				//error_log($query_secure_page);
+//error_log($query_secure_page);
 				$execute_query_secure_page = $conn->query($query_secure_page);
 				$result_query_secure_page =$execute_query_secure_page->fetch_array();
 				if($result_query_secure_page['n']>0){
 
 				}else{
 					$error = 'Usuario sin acceso';
-					insert_log(" Security NOT Check - $u");
+					insert_log(" Security NOT Check-$action-$u");
 				}
 			}
 		}else{
 			$error = 'Usuario sin acceso';
-			insert_log(" Security NOT Check - unknown user try to enter!");
+			insert_log(" Security NOT Check-unknown user try to enter!");
 		}
 
 		$jsondata['message'] = $message;
