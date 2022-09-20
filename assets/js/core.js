@@ -2427,6 +2427,7 @@ function load_sidebar(){
                               '</li>-->'+
                             '</ul>';
     $('#sidebar').html(sidebar_text);
+
 }
 
 
