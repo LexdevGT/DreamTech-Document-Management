@@ -2373,14 +2373,14 @@ function load_sidebar(){
                               '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="quienes_somos.html">'+
-                                  '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
-                                  '<span class="menu-title">QUIENES SOMOS?</span>'+
+                                  '<i class="mdi mdi-barley  menu-icon"></i>'+
+                                  '<span class="menu-title">QUIENES SOMOS</span>'+
                                 '</a>'+
                               '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">'+
                                   '<i class="mdi mdi-folder-open menu-icon"></i>'+
-                                  '<span class="menu-title">Documentos</span>'+
+                                  '<span class="menu-title">DOCUMENTOS</span>'+
                                 '<i class="menu-arrow"></i> '+
                                 '</a>'+
                                 '<div class="collapse" id="documents">'+
@@ -2393,7 +2393,7 @@ function load_sidebar(){
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="reportes.html">'+
                                   '<i class="mdi mdi-chart-pie menu-icon"></i>'+
-                                  '<span class="menu-title">Reportes</span>'+
+                                  '<span class="menu-title">REPORTES</span>'+
 
                               '</li>'+
                              
@@ -2402,7 +2402,7 @@ function load_sidebar(){
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">'+
                                   '<i class="menu-icon mdi mdi-settings "></i>'+
-                                  '<span class="menu-title">Ajustes</span>'+
+                                  '<span class="menu-title">AJUSTES</span>'+
                                   '<i class="menu-arrow"></i> '+
                                 '</a>'+
                                 '<div class="collapse" id="reports-menu">'+
