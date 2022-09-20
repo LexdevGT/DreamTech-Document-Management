@@ -1,6 +1,7 @@
 $(function(){
     load_sidebar();
     load_headbar();
+    viewcarpeta();
 
     $(".exportToExcel").click(function(e){
         //alert('something');
@@ -2311,7 +2312,7 @@ function log_out(){
 }
 
 
-function security(access=0){
+function security(access=0,action=''){
 
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2319,7 +2320,8 @@ function security(access=0){
         url: "../assets/php/services.php",
         data: ({
             option: 'security',
-            access                   
+            access,
+            action                   
         }),
         dataType: "json",        
         success: function(r) {                                                   
@@ -2372,14 +2374,14 @@ function load_sidebar(){
                               '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="quienes_somos.html">'+
-                                  '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
-                                  '<span class="menu-title">QUIENES SOMOS?</span>'+
+                                  '<i class="mdi mdi-barley  menu-icon"></i>'+
+                                  '<span class="menu-title">QUIENES SOMOS</span>'+
                                 '</a>'+
                               '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">'+
                                   '<i class="mdi mdi-folder-open menu-icon"></i>'+
-                                  '<span class="menu-title">Documentos</span>'+
+                                  '<span class="menu-title">DOCUMENTOS</span>'+
                                 '<i class="menu-arrow"></i> '+
                                 '</a>'+
                                 '<div class="collapse" id="documents">'+
@@ -2392,7 +2394,7 @@ function load_sidebar(){
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="reportes.html">'+
                                   '<i class="mdi mdi-chart-pie menu-icon"></i>'+
-                                  '<span class="menu-title">Reportes</span>'+
+                                  '<span class="menu-title">REPORTES</span>'+
 
                               '</li>'+
                              
@@ -2401,13 +2403,13 @@ function load_sidebar(){
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">'+
                                   '<i class="menu-icon mdi mdi-settings "></i>'+
-                                  '<span class="menu-title">Ajustes</span>'+
+                                  '<span class="menu-title">AJUSTES</span>'+
                                   '<i class="menu-arrow"></i> '+
                                 '</a>'+
                                 '<div class="collapse" id="reports-menu">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="#"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
+                                    '<!--<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>-->'+
+                                    '<li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
 
                                     '<li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>'+
 
@@ -2450,15 +2452,17 @@ function load_headbar(){
     });
 }
 
-function crear_categoria(accion){
+function crear_categoria(accion,pathcat){
     
-
+    //var pathcat = $('.pathCat').val.();
+    //alert(pathcat);
 
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
         url: "../assets/php/services.php",
         data: ({
+            pathcat,
             accion,
             option: 'crear_categoria'                   
         }),
@@ -2476,17 +2480,19 @@ function crear_categoria(accion){
     });
 }
 
-function CrearCarpeta(action){
+function CrearCarpeta(action,pathcat){
 
     var categoria = $('#nombre_categoria').val();
     //alert(categoria);
-         
+
+    //alert(pathcat);     
     
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
         url: "../assets/php/services.php",
         data: ({
+            pathcat,
             categoria,
             action,
             option: 'crearcarpeta'                   
@@ -2496,9 +2502,43 @@ function CrearCarpeta(action){
             if(r.error == ''){
                 if (r.nosave == '') {
                     alert(r.sucess);
+                    $('#exampleModal').modal('hide');
+                    window.location.replace('categorias.html');
                 }else{
                     alert(r.nosave);
                 }
+                /* No code */
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function viewcarpeta(directorio){
+
+    //var directorio = $('.directorio').val();
+
+    if (typeof directorio === 'undefined') { 
+            var directorio = "../../htmls/documents/"; 
+        } 
+
+    //alert(directorio);
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            directorio,
+            option: 'viewCategoria'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('.viewcategoria').html(r.carpetas);
+                $('.patchbtn').html(r.pathbtn);
                 /* No code */
             }else{
                 alert(r.error);
