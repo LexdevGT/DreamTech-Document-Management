@@ -440,7 +440,7 @@
 				AND plaza_empresa = $id_company
 					       ";
 		}
-
+/*
 		$execute_search_botones = $conn->query($query_search_botones);
 		
 		$lista_etapas .= "<option value=''>Selecciona una etapa...</option>";
@@ -465,7 +465,7 @@
 				";
 			
 		}
-
+*/
 		$query_tabla_procesos = "
 			SELECT plaza_name
 				,plaza_categoria
@@ -4679,45 +4679,57 @@ if($etapa_actual == ''){
 
 	function saveUserFunction(){
 		global $conn;
-		$jsondata 	= array();
-		$error 	  	= '';
-		$message  	= '';
-		$nombre 	= $_POST['nombre'];
-		$apellidos 	= $_POST['apellidos'];
-		$correo 	= $_POST['correo'];
-		$region 	= $_POST['region'];
-		$lista_roles 	= $_POST['lista_roles'];
-		$lista_empresas = $_POST['lista_empresas'];
-		$lista_estatus 	= $_POST['lista_estatus'];
-		$pass 		= $_POST['pass'];
+		$jsondata 				= array();
+		$error 	  				= '';
+		$message  				= '';
+		$nombre 					= $_POST['nombre'];
+		$apellidos 				= $_POST['apellidos'];
+		$correo 					= $_POST['correo'];
+		$identification 	= $_POST['identification'];
+		$lista_roles 			= $_POST['lista_roles'];
+		$lista_empresas 	= $_POST['lista_empresas'];
+		$lista_sexo			 	= $_POST['lista_sexo'];
+		$lista_estatus 		= $_POST['lista_estatus'];
+		$pass 						= $_POST['pass'];
+		$nivel_academico 	= $_POST['nivel_academico'];
+		$phone 					 	= $_POST['phone'];
+		$dependencia		 	= $_POST['dependencia'];
 
 		if($correo != ''){
 
 
 			if($pass == ''){
 				$query_save_user = "
-					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_region)
+					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_id_document,user_sex,user_academic_level,user_phone,user_dependencia)
 					VALUES
-					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$region')
+					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$identification','$lista_sexo','$nivel_academico','$phone','$dependencia')
 					ON DUPLICATE KEY UPDATE user_name = '$nombre'
-					, user_last_name = '$apellidos'
-					, user_company   = $lista_empresas
-					, user_rol       = $lista_roles
-					, user_status    = $lista_estatus
-					, user_region	 = '$region'
+					, user_last_name 			= '$apellidos'
+					, user_company   			= $lista_empresas
+					, user_rol       			= $lista_roles
+					, user_status    			= $lista_estatus
+					, user_id_document		= '$identification'
+					, user_sex						= '$lista_sexo'
+					, user_academic_level	= '$nivel_academico'
+					, user_phone 					= '$phone'
+					, user_dependencia		= '$dependencia'
 					   ";
 			}else{
 				$query_save_user = "
-					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_region)
+					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_id_document,user_sex,user_academic_level,user_phone,user_dependencia)
 					VALUES
-					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$region')
+					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$identification','$lista_sexo','$nivel_academico','$phone','$dependencia')
 					ON DUPLICATE KEY UPDATE user_name = '$nombre'
-					, user_last_name = '$apellidos'
-					, user_company   = $lista_empresas
-					, user_rol       = $lista_roles
-					, user_password  = MD5('$pass')
-					, user_status    = $lista_estatus
-					, user_region	 = '$region'
+					, user_last_name 			= '$apellidos'
+					, user_company   			= $lista_empresas
+					, user_rol       			= $lista_roles
+					, user_status    			= $lista_estatus
+					, user_id_document		= '$identification'
+					, user_sex						= '$lista_sexo'
+					, user_academic_level	= '$nivel_academico'
+					, user_phone 					= '$phone'
+					, user_dependencia		= '$dependencia'
+					, user_password  			= MD5('$pass')
 					   ";
 			}
 
@@ -4934,8 +4946,9 @@ if($etapa_actual == ''){
 		if($rol_id == 1){
 			$query_get_users = "SELECT CONCAT(user_name,' ',user_last_name) name
 						,user_email
-						,user_region
+						,user_id_document
 						,rol_name
+						,user_academic_level
 						,CASE
 							WHEN user_status = 1 THEN \"Activo\"
 							ELSE \"Inactivo\"
@@ -4947,8 +4960,9 @@ if($etapa_actual == ''){
 		}else{
 			$query_get_users = "SELECT CONCAT(user_name,' ',user_last_name) name
 						,user_email
-						,user_region
+						,user_id_document
 						,rol_name
+						,user_academic_level
 						,CASE
 							WHEN user_status = 1 THEN \"Activo\"
 							ELSE \"Inactivo\"
@@ -4963,11 +4977,12 @@ if($etapa_actual == ''){
 
 		while($row_data = $execute_get_users->fetch_array()){
 
-			$nombre 	= $row_data['name'];
+			$nombre 				= $row_data['name'];
 			$email_usuario 	= $row_data['user_email'];
-			$region_usuario = $row_data['user_region'];
-			$rol_usuario 	= $row_data['rol_name'];
-			$estatus 	= $row_data['status'];
+			$identification = $row_data['user_id_document'];
+			$rol_usuario 		= $row_data['rol_name'];
+			$academic_level = $row_data['user_academic_level'];
+			$estatus 				= $row_data['status'];
 
 			if($estatus == 'Activo'){
 				$estatus = "<h6 class='text-success'>Activo</h6>";
@@ -4979,7 +4994,8 @@ if($etapa_actual == ''){
 					<tr>
 	                                        <td>
 	                                          <h6>
-	                                            <a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>
+	                                            <!--<a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>-->
+	                                            <a href='#'>
 	                                              $nombre
 	                                            </a>
 	                                          </h6>
@@ -4991,12 +5007,17 @@ if($etapa_actual == ''){
 	                                        </td>
 	                                        <td>
 	                                          <h6>
-	                                              $region_usuario
+	                                              $identification
 	                                          </h6>
 	                                        </td>
 	                                        <td>
 	                                          <h6>
 	                                              $rol_usuario
+	                                          </h6>
+	                                        </td>
+	                                        <td>
+	                                          <h6>
+	                                              $academic_level
 	                                          </h6>
 	                                        </td>
 	                                        <td>
@@ -5039,30 +5060,31 @@ if($etapa_actual == ''){
 		$error 	  = '';
 		$message  = '';
 		$access   = $_POST['access'];
+		$action   = $_POST['action'];
 
 		
 		if(isset($_SESSION['username'])){
 			$u = $_SESSION['username'];
-			insert_log(" Security Check - $u");
+			insert_log(" Security Check-$action-$u");
 			$rol_id = $_SESSION['rol_id'];
 			if($access > 0){
 				$query_secure_page = "SELECT count(*) n
 							FROM access 
 							WHERE id_rol = $rol_id
 							AND id_menu = $access";
-				//error_log($query_secure_page);
+//error_log($query_secure_page);
 				$execute_query_secure_page = $conn->query($query_secure_page);
 				$result_query_secure_page =$execute_query_secure_page->fetch_array();
 				if($result_query_secure_page['n']>0){
 
 				}else{
 					$error = 'Usuario sin acceso';
-					insert_log(" Security NOT Check - $u");
+					insert_log(" Security NOT Check-$action-$u");
 				}
 			}
 		}else{
 			$error = 'Usuario sin acceso';
-			insert_log(" Security NOT Check - unknown user try to enter!");
+			insert_log(" Security NOT Check-unknown user try to enter!");
 		}
 
 		$jsondata['message'] = $message;
@@ -5390,15 +5412,21 @@ if (is_dir($gfg_folderpath)) {
     // GETTING INTO DIRECTORY
     $files = opendir($gfg_folderpath); {
         // CHECKING FOR SMOOTH OPENING OF DIRECTORY
+    	$count_files = 0;
         if ($files) {
             //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
+            $count_files = 0;
             while (($gfg_subfolder = readdir($files)) !== FALSE) {
+            	
                 // CHECKING FOR FILENAME ERRORS
              if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {
 
              		$file_c = strtolower(substr($gfg_subfolder, -3));
-												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+
+             						if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
+																	$count_files++;
 												$download = "documents/";
 																	switch ($file_c) {
 																			case 'pdf':
@@ -5435,9 +5463,10 @@ if (is_dir($gfg_folderpath)) {
 
 //                    $archivos_recientes .=  $gfg_subfolder."<br>";
 
-                    $direcc1 = $download.$gfg_subfolder;
-
-                    $archivos_recientes .= "<li class=\"item\">
+                    
+                    if($count_files <= 5){
+                    	$direcc1 = $download.$gfg_subfolder;
+                    	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
                                     <a class=\"dropdown-item\" href=\"$direcc1\" download>Descargar</a>
@@ -5445,6 +5474,8 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_subfolder</b>
                                 </li>";
+                    }
+                    
 
 
 
@@ -5459,11 +5490,13 @@ if (is_dir($gfg_folderpath)) {
                             if ($file) {
                 //READING NAMES OF EACH FILE INSIDE SUBFOLDERS
                while (($gfg_filename = readdir($file)) !== FALSE) {
+               	
                 if ($gfg_filename != '.' && $gfg_filename != '..') {
 
                 						$file_c = strtolower(substr($gfg_filename, -3));
-												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+												if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
+																	$count_files++;
 																	$download = "documents/". $gfg_subfolder."/";
 
 
@@ -5499,7 +5532,7 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
                         //$archivos_recientes .= $gfg_filename . "<br>";
-
+												if($count_files <= 3){
                         $direcc2 = $download.$gfg_filename;
                         	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
@@ -5509,6 +5542,7 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_filename</b>
                                 </li>";
+                              }
 
                         }
                         
@@ -5519,13 +5553,14 @@ if (is_dir($gfg_folderpath)) {
                         	$fil = opendir($dirsub);{
                         		if($fil){
                         			while (($nombre_archivo = readdir($fil)) !== FALSE) {
+
                         				// code...
                         				if ($nombre_archivo != '.' && $nombre_archivo != '..') {
                         					// code...
                         					$file_c = strtolower(substr($nombre_archivo, -3));
-															if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+															if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
-
+																	$count_files++;
 																	 $download = $down.$gfg_filename ."/";
 																	switch ($file_c) {
 																			case 'pdf':
@@ -5559,7 +5594,7 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
                         					//$archivos_recientes .= $nombre_archivo . "<br>";
-																		
+																		if($count_files <= 5){
 																		$direcc3 = $download.$nombre_archivo;
 
                         					$archivos_recientes .= "<li class=\"item\">
@@ -5570,7 +5605,7 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre_archivo</b>
                                 </li>";
-
+                                	}
                         				}
 
                         				}
@@ -5750,7 +5785,7 @@ function viewCategoriaDash(){
 		$categoria 	= "";
 		$rol_id   	= $_SESSION['rol_id'];
 		
-		$query = "SELECT * FROM categoria where status=0 ORDER BY f_creacion DESC LIMIT 4";
+		$query = "SELECT * FROM categoria where status=1 ORDER BY f_creacion DESC LIMIT 4";
 
 		$execute_query =  mysqli_query($conn, $query);
 
@@ -5785,7 +5820,7 @@ function viewCategoriaDash(){
                                   <h4 class=\"card-title card-title-dash \">$name_cat</h4>
                                   
                                 </div>";
-          if ($rol_id == "1") {
+          if ($rol_id == "1" || $rol_id == "4") {
            $categoria .="       <div class=\"card-footer pb-0\">
                                   <div class=\"row\">
                                     <div class=\"col-sm-6\">

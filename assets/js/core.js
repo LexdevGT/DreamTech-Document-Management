@@ -329,16 +329,7 @@ function load_dashboard(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                $('#plazas_activas_conteo').html(r.plazas_activas);
-                var plazas_activas = r.plazas_activas_graph;
-                load_plazas_activas(plazas_activas);
-                $('#total_aplicantes_conteo').html(r.total_aplicantes);
-                var total_aplicantes = r.total_aplicantes_graph;
-                load_total_aplicantes(total_aplicantes);
-                $('#tiempo_contratacion').html(r.tiempo_medio + " días");
-                var d = r.embudo_graph;
-                var l = r.embudo_labels;
-                load_embudo(d);
+                
             }else{
                 alert(r.error);
                 window.location.replace('dashboard.html');
@@ -2180,14 +2171,18 @@ function load_roles(){
 
 function guardar_usuario(){
 
-    var nombre         = $('#nombres').val();
-    var apellidos      = $('#apellidos').val();
-    var correo         = $('#correo').val();
-    var region         = $('#region').val();
-    var lista_roles    = $('#lista_roles').val();
-    var lista_empresas = $('#lista_empresas').val();
-    var lista_estatus  = $('#lista_estatus').val();
-    var pass           = $('#pass').val();
+    var nombre          = $('#nombres').val();
+    var apellidos       = $('#apellidos').val();
+    var correo          = $('#correo').val();
+    var identification  = $('#identification').val();
+    var lista_roles     = $('#lista_roles').val();
+    var lista_empresas  = $('#lista_empresas').val();
+    var lista_sexo      = $('#lista_sexo').val();
+    var lista_estatus   = $('#lista_estatus').val();
+    var pass            = $('#pass').val();
+    var nivel_academico = $('#lista_nivel_academico').val();
+    var phone           = $('#phone').val();
+    var dependencia     = $('#dependencia').val();
     
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2198,11 +2193,15 @@ function guardar_usuario(){
             nombre,
             apellidos,
             correo,
-            region,
+            identification,
             lista_roles,
             lista_empresas,
+            lista_sexo,
             lista_estatus,
-            pass                   
+            pass,
+            nivel_academico,
+            phone,
+            dependencia          
         }),
         dataType: "json",        
         success: function(r) {                                                   
@@ -2312,7 +2311,7 @@ function log_out(){
 }
 
 
-function security(access=0){
+function security(access=0,action=''){
 
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2320,7 +2319,8 @@ function security(access=0){
         url: "../assets/php/services.php",
         data: ({
             option: 'security',
-            access                   
+            access,
+            action                   
         }),
         dataType: "json",        
         success: function(r) {                                                   
@@ -2407,8 +2407,8 @@ function load_sidebar(){
                                 '</a>'+
                                 '<div class="collapse" id="reports-menu">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="#"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
+                                    '<!--<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>-->'+
+                                    '<li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
 
                                     '<li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>'+
 
