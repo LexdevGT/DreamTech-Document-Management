@@ -2171,14 +2171,18 @@ function load_roles(){
 
 function guardar_usuario(){
 
-    var nombre         = $('#nombres').val();
-    var apellidos      = $('#apellidos').val();
-    var correo         = $('#correo').val();
-    var region         = $('#region').val();
-    var lista_roles    = $('#lista_roles').val();
-    var lista_empresas = $('#lista_empresas').val();
-    var lista_estatus  = $('#lista_estatus').val();
-    var pass           = $('#pass').val();
+    var nombre          = $('#nombres').val();
+    var apellidos       = $('#apellidos').val();
+    var correo          = $('#correo').val();
+    var identification  = $('#identification').val();
+    var lista_roles     = $('#lista_roles').val();
+    var lista_empresas  = $('#lista_empresas').val();
+    var lista_sexo      = $('#lista_sexo').val();
+    var lista_estatus   = $('#lista_estatus').val();
+    var pass            = $('#pass').val();
+    var nivel_academico = $('#lista_nivel_academico').val();
+    var phone           = $('#phone').val();
+    var dependencia     = $('#dependencia').val();
     
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2189,11 +2193,15 @@ function guardar_usuario(){
             nombre,
             apellidos,
             correo,
-            region,
+            identification,
             lista_roles,
             lista_empresas,
+            lista_sexo,
             lista_estatus,
-            pass                   
+            pass,
+            nivel_academico,
+            phone,
+            dependencia          
         }),
         dataType: "json",        
         success: function(r) {                                                   

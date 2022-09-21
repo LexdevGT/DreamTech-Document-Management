@@ -4679,45 +4679,57 @@ if($etapa_actual == ''){
 
 	function saveUserFunction(){
 		global $conn;
-		$jsondata 	= array();
-		$error 	  	= '';
-		$message  	= '';
-		$nombre 	= $_POST['nombre'];
-		$apellidos 	= $_POST['apellidos'];
-		$correo 	= $_POST['correo'];
-		$region 	= $_POST['region'];
-		$lista_roles 	= $_POST['lista_roles'];
-		$lista_empresas = $_POST['lista_empresas'];
-		$lista_estatus 	= $_POST['lista_estatus'];
-		$pass 		= $_POST['pass'];
+		$jsondata 				= array();
+		$error 	  				= '';
+		$message  				= '';
+		$nombre 					= $_POST['nombre'];
+		$apellidos 				= $_POST['apellidos'];
+		$correo 					= $_POST['correo'];
+		$identification 	= $_POST['identification'];
+		$lista_roles 			= $_POST['lista_roles'];
+		$lista_empresas 	= $_POST['lista_empresas'];
+		$lista_sexo			 	= $_POST['lista_sexo'];
+		$lista_estatus 		= $_POST['lista_estatus'];
+		$pass 						= $_POST['pass'];
+		$nivel_academico 	= $_POST['nivel_academico'];
+		$phone 					 	= $_POST['phone'];
+		$dependencia		 	= $_POST['dependencia'];
 
 		if($correo != ''){
 
 
 			if($pass == ''){
 				$query_save_user = "
-					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_region)
+					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_id_document,user_sex,user_academic_level,user_phone,user_dependencia)
 					VALUES
-					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$region')
+					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$identification','$lista_sexo','$nivel_academico','$phone','$dependencia')
 					ON DUPLICATE KEY UPDATE user_name = '$nombre'
-					, user_last_name = '$apellidos'
-					, user_company   = $lista_empresas
-					, user_rol       = $lista_roles
-					, user_status    = $lista_estatus
-					, user_region	 = '$region'
+					, user_last_name 			= '$apellidos'
+					, user_company   			= $lista_empresas
+					, user_rol       			= $lista_roles
+					, user_status    			= $lista_estatus
+					, user_id_document		= '$identification'
+					, user_sex						= '$lista_sexo'
+					, user_academic_level	= '$nivel_academico'
+					, user_phone 					= '$phone'
+					, user_dependencia		= '$dependencia'
 					   ";
 			}else{
 				$query_save_user = "
-					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_region)
+					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_id_document,user_sex,user_academic_level,user_phone,user_dependencia)
 					VALUES
-					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$region')
+					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$identification','$lista_sexo','$nivel_academico','$phone','$dependencia')
 					ON DUPLICATE KEY UPDATE user_name = '$nombre'
-					, user_last_name = '$apellidos'
-					, user_company   = $lista_empresas
-					, user_rol       = $lista_roles
-					, user_password  = MD5('$pass')
-					, user_status    = $lista_estatus
-					, user_region	 = '$region'
+					, user_last_name 			= '$apellidos'
+					, user_company   			= $lista_empresas
+					, user_rol       			= $lista_roles
+					, user_status    			= $lista_estatus
+					, user_id_document		= '$identification'
+					, user_sex						= '$lista_sexo'
+					, user_academic_level	= '$nivel_academico'
+					, user_phone 					= '$phone'
+					, user_dependencia		= '$dependencia'
+					, user_password  			= MD5('$pass')
 					   ";
 			}
 
@@ -4934,8 +4946,9 @@ if($etapa_actual == ''){
 		if($rol_id == 1){
 			$query_get_users = "SELECT CONCAT(user_name,' ',user_last_name) name
 						,user_email
-						,user_region
+						,user_id_document
 						,rol_name
+						,user_academic_level
 						,CASE
 							WHEN user_status = 1 THEN \"Activo\"
 							ELSE \"Inactivo\"
@@ -4947,8 +4960,9 @@ if($etapa_actual == ''){
 		}else{
 			$query_get_users = "SELECT CONCAT(user_name,' ',user_last_name) name
 						,user_email
-						,user_region
+						,user_id_document
 						,rol_name
+						,user_academic_level
 						,CASE
 							WHEN user_status = 1 THEN \"Activo\"
 							ELSE \"Inactivo\"
@@ -4963,11 +4977,12 @@ if($etapa_actual == ''){
 
 		while($row_data = $execute_get_users->fetch_array()){
 
-			$nombre 	= $row_data['name'];
+			$nombre 				= $row_data['name'];
 			$email_usuario 	= $row_data['user_email'];
-			$region_usuario = $row_data['user_region'];
-			$rol_usuario 	= $row_data['rol_name'];
-			$estatus 	= $row_data['status'];
+			$identification = $row_data['user_id_document'];
+			$rol_usuario 		= $row_data['rol_name'];
+			$academic_level = $row_data['user_academic_level'];
+			$estatus 				= $row_data['status'];
 
 			if($estatus == 'Activo'){
 				$estatus = "<h6 class='text-success'>Activo</h6>";
@@ -4979,7 +4994,8 @@ if($etapa_actual == ''){
 					<tr>
 	                                        <td>
 	                                          <h6>
-	                                            <a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>
+	                                            <!--<a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>-->
+	                                            <a href='#'>
 	                                              $nombre
 	                                            </a>
 	                                          </h6>
@@ -4991,12 +5007,17 @@ if($etapa_actual == ''){
 	                                        </td>
 	                                        <td>
 	                                          <h6>
-	                                              $region_usuario
+	                                              $identification
 	                                          </h6>
 	                                        </td>
 	                                        <td>
 	                                          <h6>
 	                                              $rol_usuario
+	                                          </h6>
+	                                        </td>
+	                                        <td>
+	                                          <h6>
+	                                              $academic_level
 	                                          </h6>
 	                                        </td>
 	                                        <td>
