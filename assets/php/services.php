@@ -4679,45 +4679,57 @@ if($etapa_actual == ''){
 
 	function saveUserFunction(){
 		global $conn;
-		$jsondata 	= array();
-		$error 	  	= '';
-		$message  	= '';
-		$nombre 	= $_POST['nombre'];
-		$apellidos 	= $_POST['apellidos'];
-		$correo 	= $_POST['correo'];
-		$region 	= $_POST['region'];
-		$lista_roles 	= $_POST['lista_roles'];
-		$lista_empresas = $_POST['lista_empresas'];
-		$lista_estatus 	= $_POST['lista_estatus'];
-		$pass 		= $_POST['pass'];
+		$jsondata 				= array();
+		$error 	  				= '';
+		$message  				= '';
+		$nombre 					= $_POST['nombre'];
+		$apellidos 				= $_POST['apellidos'];
+		$correo 					= $_POST['correo'];
+		$identification 	= $_POST['identification'];
+		$lista_roles 			= $_POST['lista_roles'];
+		$lista_empresas 	= $_POST['lista_empresas'];
+		$lista_sexo			 	= $_POST['lista_sexo'];
+		$lista_estatus 		= $_POST['lista_estatus'];
+		$pass 						= $_POST['pass'];
+		$nivel_academico 	= $_POST['nivel_academico'];
+		$phone 					 	= $_POST['phone'];
+		$dependencia		 	= $_POST['dependencia'];
 
 		if($correo != ''){
 
 
 			if($pass == ''){
 				$query_save_user = "
-					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_region)
+					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_id_document,user_sex,user_academic_level,user_phone,user_dependencia)
 					VALUES
-					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$region')
+					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$identification','$lista_sexo','$nivel_academico','$phone','$dependencia')
 					ON DUPLICATE KEY UPDATE user_name = '$nombre'
-					, user_last_name = '$apellidos'
-					, user_company   = $lista_empresas
-					, user_rol       = $lista_roles
-					, user_status    = $lista_estatus
-					, user_region	 = '$region'
+					, user_last_name 			= '$apellidos'
+					, user_company   			= $lista_empresas
+					, user_rol       			= $lista_roles
+					, user_status    			= $lista_estatus
+					, user_id_document		= '$identification'
+					, user_sex						= '$lista_sexo'
+					, user_academic_level	= '$nivel_academico'
+					, user_phone 					= '$phone'
+					, user_dependencia		= '$dependencia'
 					   ";
 			}else{
 				$query_save_user = "
-					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_region)
+					INSERT INTO users(user_email,user_name,user_last_name,user_company,user_rol,user_password,user_status,user_id_document,user_sex,user_academic_level,user_phone,user_dependencia)
 					VALUES
-					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$region')
+					('$correo','$nombre','$apellidos',$lista_empresas,$lista_roles,MD5('$pass'),$lista_estatus,'$identification','$lista_sexo','$nivel_academico','$phone','$dependencia')
 					ON DUPLICATE KEY UPDATE user_name = '$nombre'
-					, user_last_name = '$apellidos'
-					, user_company   = $lista_empresas
-					, user_rol       = $lista_roles
-					, user_password  = MD5('$pass')
-					, user_status    = $lista_estatus
-					, user_region	 = '$region'
+					, user_last_name 			= '$apellidos'
+					, user_company   			= $lista_empresas
+					, user_rol       			= $lista_roles
+					, user_status    			= $lista_estatus
+					, user_id_document		= '$identification'
+					, user_sex						= '$lista_sexo'
+					, user_academic_level	= '$nivel_academico'
+					, user_phone 					= '$phone'
+					, user_dependencia		= '$dependencia'
+					, user_password  			= MD5('$pass')
 					   ";
 			}
 
@@ -4934,8 +4946,9 @@ if($etapa_actual == ''){
 		if($rol_id == 1){
 			$query_get_users = "SELECT CONCAT(user_name,' ',user_last_name) name
 						,user_email
-						,user_region
+						,user_id_document
 						,rol_name
+						,user_academic_level
 						,CASE
 							WHEN user_status = 1 THEN \"Activo\"
 							ELSE \"Inactivo\"
@@ -4947,8 +4960,9 @@ if($etapa_actual == ''){
 		}else{
 			$query_get_users = "SELECT CONCAT(user_name,' ',user_last_name) name
 						,user_email
-						,user_region
+						,user_id_document
 						,rol_name
+						,user_academic_level
 						,CASE
 							WHEN user_status = 1 THEN \"Activo\"
 							ELSE \"Inactivo\"
@@ -4963,11 +4977,12 @@ if($etapa_actual == ''){
 
 		while($row_data = $execute_get_users->fetch_array()){
 
-			$nombre 	= $row_data['name'];
+			$nombre 				= $row_data['name'];
 			$email_usuario 	= $row_data['user_email'];
-			$region_usuario = $row_data['user_region'];
-			$rol_usuario 	= $row_data['rol_name'];
-			$estatus 	= $row_data['status'];
+			$identification = $row_data['user_id_document'];
+			$rol_usuario 		= $row_data['rol_name'];
+			$academic_level = $row_data['user_academic_level'];
+			$estatus 				= $row_data['status'];
 
 			if($estatus == 'Activo'){
 				$estatus = "<h6 class='text-success'>Activo</h6>";
@@ -4979,7 +4994,8 @@ if($etapa_actual == ''){
 					<tr>
 	                                        <td>
 	                                          <h6>
-	                                            <a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>
+	                                            <!--<a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>-->
+	                                            <a href='#'>
 	                                              $nombre
 	                                            </a>
 	                                          </h6>
@@ -4991,12 +5007,17 @@ if($etapa_actual == ''){
 	                                        </td>
 	                                        <td>
 	                                          <h6>
-	                                              $region_usuario
+	                                              $identification
 	                                          </h6>
 	                                        </td>
 	                                        <td>
 	                                          <h6>
 	                                              $rol_usuario
+	                                          </h6>
+	                                        </td>
+	                                        <td>
+	                                          <h6>
+	                                              $academic_level
 	                                          </h6>
 	                                        </td>
 	                                        <td>
@@ -5391,15 +5412,21 @@ if (is_dir($gfg_folderpath)) {
     // GETTING INTO DIRECTORY
     $files = opendir($gfg_folderpath); {
         // CHECKING FOR SMOOTH OPENING OF DIRECTORY
+    	$count_files = 0;
         if ($files) {
             //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
+            $count_files = 0;
             while (($gfg_subfolder = readdir($files)) !== FALSE) {
+            	
                 // CHECKING FOR FILENAME ERRORS
              if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {
 
              		$file_c = strtolower(substr($gfg_subfolder, -3));
-												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+
+             						if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
+																	$count_files++;
 												$download = "documents/";
 																	switch ($file_c) {
 																			case 'pdf':
@@ -5436,9 +5463,10 @@ if (is_dir($gfg_folderpath)) {
 
 //                    $archivos_recientes .=  $gfg_subfolder."<br>";
 
-                    $direcc1 = $download.$gfg_subfolder;
-
-                    $archivos_recientes .= "<li class=\"item\">
+                    
+                    if($count_files <= 5){
+                    	$direcc1 = $download.$gfg_subfolder;
+                    	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
                                     <a class=\"dropdown-item\" href=\"$direcc1\" download>Descargar</a>
@@ -5446,6 +5474,8 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_subfolder</b>
                                 </li>";
+                    }
+                    
 
 
 
@@ -5460,11 +5490,13 @@ if (is_dir($gfg_folderpath)) {
                             if ($file) {
                 //READING NAMES OF EACH FILE INSIDE SUBFOLDERS
                while (($gfg_filename = readdir($file)) !== FALSE) {
+               	
                 if ($gfg_filename != '.' && $gfg_filename != '..') {
 
                 						$file_c = strtolower(substr($gfg_filename, -3));
-												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+												if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
+																	$count_files++;
 																	$download = "documents/". $gfg_subfolder."/";
 
 
@@ -5500,7 +5532,7 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
                         //$archivos_recientes .= $gfg_filename . "<br>";
-
+												if($count_files <= 3){
                         $direcc2 = $download.$gfg_filename;
                         	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
@@ -5510,6 +5542,7 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_filename</b>
                                 </li>";
+                              }
 
                         }
                         
@@ -5520,13 +5553,14 @@ if (is_dir($gfg_folderpath)) {
                         	$fil = opendir($dirsub);{
                         		if($fil){
                         			while (($nombre_archivo = readdir($fil)) !== FALSE) {
+
                         				// code...
                         				if ($nombre_archivo != '.' && $nombre_archivo != '..') {
                         					// code...
                         					$file_c = strtolower(substr($nombre_archivo, -3));
-															if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+															if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
-
+																	$count_files++;
 																	 $download = $down.$gfg_filename ."/";
 																	switch ($file_c) {
 																			case 'pdf':
@@ -5560,7 +5594,7 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
                         					//$archivos_recientes .= $nombre_archivo . "<br>";
-																		
+																		if($count_files <= 5){
 																		$direcc3 = $download.$nombre_archivo;
 
                         					$archivos_recientes .= "<li class=\"item\">
@@ -5571,7 +5605,7 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre_archivo</b>
                                 </li>";
-
+                                	}
                         				}
 
                         				}
@@ -5595,192 +5629,6 @@ if (is_dir($gfg_folderpath)) {
     }
 }
 
-
-
-
-//    INICIA PRUEBA SEMI FINAL
-
-  //   $dir1 = "../../htmls/documents/*/*/*";
-   //  $dir2 = "../../htmls/documents/*/*";
-   //  $dir3 = "../../htmls/documents/***";
-//
-
-     //$dir = "/etc/php5/*";
-/*
-// Abrir un directorio conocido, y proceder a leer su contenido
-foreach(glob($dir1) as $file) {
-		$file_c = strtolower(substr($file, -3));
-	if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")	
-		{
-				//$query  = "SELECT display_name, file_patch ";
-       //$archivos_recientes .= "filename: $file : filetype: " . filetype($file) . "<br />";
-     }
-    }
-
-foreach(glob($dir2) as $file) {
-		$file_c = strtolower(substr($file, -3));
-	if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-		{
-     //  $archivos_recientes .= "filename: $file : filetype: " . filetype($file) . "<br />";
-
-     }
-    }		
-foreach(glob($dir3) as $file) {
-		$file_c = strtolower(substr($file, -3));
-	if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-		{
-       $archivos_recientes .= "filename: $file : filetype: " . filetype($file) . "<br />";
-
-     }
-    }	
-*/
-
-    //Termina prueba semi final
- /*
-// Abre un directorio conocido, y procede a leer el contenido
-if (is_dir($dir)) {
-    if ($dh = opendir($dir)) {
-        while (($file = readdir($dh)) !== false) {
-            $archivos_recientes.= "nombre archivo: $file : tipo archivo: " . filetype($dir . $file) . "\n";
-        }
-        closedir($dh);
-    }
-}*/
-
-/*
-//Asignamos la ruta a la variable path
-$path="../../htmls/documents/";
-//asignamos a $directorio el objeto dir creado con la ruta
-$directorio=dir($path);
-
-//y ahora lo vamos leyendo hasta el final
-while ($archivo = $directorio->read())
-{//
-if($archivo!="." AND $archivo!=".."){
-	//ponemos el nombre de archivo a minuscula y recojemos solo los tres caracteres por la izquierda
-
-//para saber la extensión
-	if (strtolower(substr($archivo, -3) == "pdf"))
-		{
-//si es pdf,lo mostramos por pantalla
-$archivos_recientes .= "$archivo <br>";
-
-error_log($archivos_reciente);
-}
-}
-}
-//descargo el objeto
-$directorio->close();
-*/
-
-
-
-		//$dir = "../../htmls/documents/";
-		//$archivos = scandir($dir);
-
-		//foreach ($archivos as $key => $value) {
-		//	if($value != "." && $value != ".."){
-
-    while ($row = mysqli_fetch_array($execute_rquery)) {
-    	// code...
-    		$fecha_archivo = $row['data_creation'];
-
-				$nombre_archivo = $row['file_name'];
-				$nombre_display = $row['display_name'];
-				$pathfile  			= utf8_encode($row['file_path']);
-				//error_log($pathfile);
-				$extension = strtolower(substr($nombre_archivo, -3));
-				
-
-			
-				
-
-				switch ($extension) {
-					case 'pdf':
-						// code...
-						$image_ico = "mdi-file-pdf";
-						break;
-
-					case 'png':
-						// code...
-					$image_ico = "mdi-file-image";
-						break;
-
-					case 'ocx':
-						// code...
-					$image_ico = "mdi-file-word";
-						break;
-
-					case 'jpg':
-						// code...
-					$image_ico = "mdi-file-image";
-						break;
-
-					case 'xls':
-						// code...
-					$image_ico = "mdi-file-excel";
-						break;
-					
-					default:
-						// code...
-					$image_ico = "mdi-file-image";
-						break;
-				}
-	/*
-				if ($cat1 !=="") {
-					// code...
-					$cat1 = $cat1.'/';
-				}
-				if ($cat2 !=="") {
-					// code...
-					$cat2 = $cat2.'/';
-				}
-				if ($cat3 !=="") {
-					// code...
-					$cat3 = $cat3.'/';
-				}
-				
-					
-
-					
-					$file = $directory.$cat1.$cat2.$cat3.$file;
-*//*
-				$directory = "../../htmls/documents/".$pathfile."/";
-
-					$archivos_recientes .= "<li class=\"item\">
-                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
-                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$directory\" download>Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$directory\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$pathfile</b>
-                                </li>";
-
-
-
-					/*$tabla .= "
-					<tr>
-                                        <td>
-                                          <h6>
-                                             $value
-                                          </h6>
-                                        </td>
-                                        <td>
-                                          <button class=\"btn btn-primary\">
-                                          	<a href=\"$file\" target=\"_blank\">
-                                          	<i class=\"mdi mdi-cloud-download\"></i>
-                                          	</a>
-                          		  </button>
-                                        </td>
-                                        <!--<td>
-                                          <i class=\"mdi mdi-delete-forever\"></i>
-                                        </td>-->
-                                      </tr>
-					  ";*/
-				
-				}
-		//	}
-	//	}
 
 
 		
@@ -5836,86 +5684,15 @@ $directorio->close();
                             </div>
                           </div>
                           <div class=\"card-body p-6\">
-                            <div class=\"col-lg-12 border border-primary border-2 rounded-3 text-center\">
-                              <div class=\"row\">
-                                <div id=\"content\" class=\"col-lg-12 p-3\">
-                                  <form action=\"#\" method=\"post\" enctype=\"multipart/form-data\">
-                                    <div class=\"fallback\">
-                                      <input name=\"file\" type=\"file\" multiple />
-                                    </div>
-                                    <div class=\"table table-striped files\" id=\"previews\">
-                                      <div id=\"template\" class=\"file-row row\">
-                                        <!-- This is used as the file preview template -->
-                                        <div class=\"col-xs-12 col-lg-3\">
-                                          <span class=\"preview\" style=\"width:160px;height:160px;\">
-                                            <img data-dz-thumbnail />
-                                          </span>
-                                            <br/>
-                                          <button class=\"btn btn-primary start\" style=\"display:none;\">
-                                            <i class=\"mdi mdi-upload\"></i>
-                                            <span>Empezar</span>
-                                          </button>
-                                          <button data-dz-remove class=\"btn btn-warning cancel\">
-                                            <i class=\"mdi mdi-cancel\"></i> 
-                                            <span>Cancelar</span>
-                                          </button>
-                                          <button data-dz-remove class=\"btn btn-danger delete\">
-                                            <i class=\"icon-trash fa fa-trash\"></i> 
-                                            <span>Eliminar</span>
-                                          </button>
-                                        </div>
-                                        <div class=\"col-xs-12 col-lg-9\">
-                                          <p class=\"name\" data-dz-name></p>
-                                          <p class=\"size\" data-dz-size></p>
-                                          <div>
-                                            <strong class=\"error text-danger\" data-dz-errormessage></strong>
-                                          </div>
-                                          <div>
-                                            <div class=\"progress progress-striped active\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"0\">
-                                            <div class=\"progress-bar progress-bar-success\" style=\"width:0%;\" data-dz-uploadprogress>
-                                            </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                        <br><br>
-                                    <div class=\"dropzone-here\"><span><i class=\"mdi mdi-cloud-upload mdi-48px\"></i></span><br><b>Arrastra los archivos aquí para subirlos.</b>
-                                    </div><br><br>
-                                    <center>
-                                      <div id=\"actions\" class=\"row\">
-                                        <div class=\"col-lg-7\">
-                                                <!-- The fileinput-button span is used to style the file input field as button -->
-                                          <span class=\"btn btn-info fileinput-button\">
-                                            <i class=\"mdi mdi-plus\"></i>
-                                            <span>Añadir imágenes...</span>
-                                          </span>
-                                          <button type=\"submit\" class=\"btn btn-primary start\" style=\"display: none;\">
-                                            <i class=\"mdi mdi-upload\"></i>
-                                            <span>Start upload</span>
-                                          </button>
-                                          <button type=\"reset\" class=\"btn btn-warning cancel\" style=\"display: none;\">
-                                            <i class=\"mdi mdi-cancel\"></i>
-                                            <span>Cancel upload</span>
-                                          </button>
-                                        </div>
-                                        <div class=\"col-lg-5\">
-                                                <!-- The global file processing state -->
-                                          <span class=\"fileupload-process\">
-                                            <div id=\"total-progress\" class=\"progress progress-striped active\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"0\">
-                                              <div class=\"progress-bar progress-bar-info\" style=\"width:0%;\" data-dz-uploadprogress>
-                                                
-                                              </div>
-                                            </div>
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </center>
-                                  </form>  
-                                </div>
-                              </div>
+                            <div class=\"drop-area\">
+                            	<h2>Arrastra y suelta imágenes</h2>
+                            	<span>0</span>
+                            	<button>Selecciona tus archivos</button>
+                            	<input type=\"file\" name=\"\" id=\"input-file\" hidden multiple />
                             </div>
+                            <div id=\"preview\"></div>
                           </div>
+
                         </div>
                       </div>";
        		}
@@ -5997,6 +5774,78 @@ function viewcategoria(){
 		$jsondata['message'] 	= $message;
 		$jsondata['error']   	= $error;
 		echo json_encode($jsondata);
+}
+
+
+function viewCategoriaDash(){
+		global $conn;
+		$jsondata 	= array();
+		$error 	  	= '';
+		$message  	= '';
+		$categoria 	= "";
+		$rol_id   	= $_SESSION['rol_id'];
+		
+		$query = "SELECT * FROM categoria where status=1 ORDER BY f_creacion DESC LIMIT 4";
+
+		$execute_query =  mysqli_query($conn, $query);
+
+		while($fetch_query = mysqli_fetch_array($execute_query)){
+
+			$name_cat	=	$fetch_query['name_cat'];
+			$id_cat   = $fetch_query['idCat'];
+			$path     = $fetch_query['path_cat'];
+
+			$divi_path = explode("htmls", $path);
+
+			$data = $divi_path[1];
+
+			$categoria .= "<div class=\"col-md-3 col-lg-3 row-eq-height\">
+                              <div class=\"card  w-100 \">
+                                <div class=\"card-body pb-0\">
+                                  <div class=\"row justify-content-end\">
+                                    <div class=\"col-1\">
+                                      <div class=\"dropdown\">
+                                       
+                                      <iconify-icon icon=\"feather:more-vertical\" type=\"button\" id=\"dropdownMenuIconButton1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                      <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuIconButton1\">
+                                          
+                                          
+                                          <a class=\"dropdown-item\" href=\"#\">Compartir Link</a>
+                                          
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <img src=\"images/folder/folder_azul.png\" width=\"40%\">
+                                  <h4 class=\"card-title card-title-dash \">$name_cat</h4>
+                                  
+                                </div>";
+          if ($rol_id == "1" || $rol_id == "4") {
+           $categoria .="       <div class=\"card-footer pb-0\">
+                                  <div class=\"row\">
+                                    <div class=\"col-sm-6\">
+                                      <p class=\"\" id=\"manual_conteo\">12 Archivos</p>
+                                    </div>
+                                    <div class=\"col-sm-6\">
+                                      <h5><b>150 MB</b></h5>
+                                    </div>
+                                    
+                                  </div>
+                                </div>";
+                              }
+            $categoria .="    </div>
+                            </div>";
+
+		}
+
+		error_log($categoria);
+
+		
+		$jsondata['categoria'] = $categoria;
+		$jsondata['message'] 	= $message;
+		$jsondata['error']   	= $error;
+		echo json_encode($jsondata);
+
 }
   
 ?>

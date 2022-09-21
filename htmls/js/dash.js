@@ -2,7 +2,7 @@
 
 //categorias_folder();
 datos();
-
+categorias_folder();
 
 
   })(jQuery);
@@ -18,7 +18,9 @@ function categorias_folder(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                /* No code */
+             
+                $('.carp-reciente').html(r.categoria);
+                alert(categoria);
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');
