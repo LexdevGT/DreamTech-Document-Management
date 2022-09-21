@@ -5391,15 +5391,21 @@ if (is_dir($gfg_folderpath)) {
     // GETTING INTO DIRECTORY
     $files = opendir($gfg_folderpath); {
         // CHECKING FOR SMOOTH OPENING OF DIRECTORY
+    	$count_files = 0;
         if ($files) {
             //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
+            $count_files = 0;
             while (($gfg_subfolder = readdir($files)) !== FALSE) {
+            	
                 // CHECKING FOR FILENAME ERRORS
              if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {
 
              		$file_c = strtolower(substr($gfg_subfolder, -3));
-												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+
+             						if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
+																	$count_files++;
 												$download = "documents/";
 																	switch ($file_c) {
 																			case 'pdf':
@@ -5436,9 +5442,10 @@ if (is_dir($gfg_folderpath)) {
 
 //                    $archivos_recientes .=  $gfg_subfolder."<br>";
 
-                    $direcc1 = $download.$gfg_subfolder;
-
-                    $archivos_recientes .= "<li class=\"item\">
+                    
+                    if($count_files <= 5){
+                    	$direcc1 = $download.$gfg_subfolder;
+                    	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
                                     <a class=\"dropdown-item\" href=\"$direcc1\" download>Descargar</a>
@@ -5446,6 +5453,8 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_subfolder</b>
                                 </li>";
+                    }
+                    
 
 
 
@@ -5460,11 +5469,13 @@ if (is_dir($gfg_folderpath)) {
                             if ($file) {
                 //READING NAMES OF EACH FILE INSIDE SUBFOLDERS
                while (($gfg_filename = readdir($file)) !== FALSE) {
+               	
                 if ($gfg_filename != '.' && $gfg_filename != '..') {
 
                 						$file_c = strtolower(substr($gfg_filename, -3));
-												if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+												if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
+																	$count_files++;
 																	$download = "documents/". $gfg_subfolder."/";
 
 
@@ -5500,7 +5511,7 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
                         //$archivos_recientes .= $gfg_filename . "<br>";
-
+												if($count_files <= 3){
                         $direcc2 = $download.$gfg_filename;
                         	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
@@ -5510,6 +5521,7 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_filename</b>
                                 </li>";
+                              }
 
                         }
                         
@@ -5520,13 +5532,14 @@ if (is_dir($gfg_folderpath)) {
                         	$fil = opendir($dirsub);{
                         		if($fil){
                         			while (($nombre_archivo = readdir($fil)) !== FALSE) {
+
                         				// code...
                         				if ($nombre_archivo != '.' && $nombre_archivo != '..') {
                         					// code...
                         					$file_c = strtolower(substr($nombre_archivo, -3));
-															if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+															if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 																{
-
+																	$count_files++;
 																	 $download = $down.$gfg_filename ."/";
 																	switch ($file_c) {
 																			case 'pdf':
@@ -5560,7 +5573,7 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
                         					//$archivos_recientes .= $nombre_archivo . "<br>";
-																		
+																		if($count_files <= 5){
 																		$direcc3 = $download.$nombre_archivo;
 
                         					$archivos_recientes .= "<li class=\"item\">
@@ -5571,7 +5584,7 @@ if (is_dir($gfg_folderpath)) {
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre_archivo</b>
                                 </li>";
-
+                                	}
                         				}
 
                         				}
@@ -5751,7 +5764,7 @@ function viewCategoriaDash(){
 		$categoria 	= "";
 		$rol_id   	= $_SESSION['rol_id'];
 		
-		$query = "SELECT * FROM categoria where status=0 ORDER BY f_creacion DESC LIMIT 4";
+		$query = "SELECT * FROM categoria where status=1 ORDER BY f_creacion DESC LIMIT 4";
 
 		$execute_query =  mysqli_query($conn, $query);
 
@@ -5786,7 +5799,7 @@ function viewCategoriaDash(){
                                   <h4 class=\"card-title card-title-dash \">$name_cat</h4>
                                   
                                 </div>";
-          if ($rol_id == "1") {
+          if ($rol_id == "1" || $rol_id == "4") {
            $categoria .="       <div class=\"card-footer pb-0\">
                                   <div class=\"row\">
                                     <div class=\"col-sm-6\">

@@ -329,16 +329,7 @@ function load_dashboard(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                $('#plazas_activas_conteo').html(r.plazas_activas);
-                var plazas_activas = r.plazas_activas_graph;
-                load_plazas_activas(plazas_activas);
-                $('#total_aplicantes_conteo').html(r.total_aplicantes);
-                var total_aplicantes = r.total_aplicantes_graph;
-                load_total_aplicantes(total_aplicantes);
-                $('#tiempo_contratacion').html(r.tiempo_medio + " días");
-                var d = r.embudo_graph;
-                var l = r.embudo_labels;
-                load_embudo(d);
+                
             }else{
                 alert(r.error);
                 window.location.replace('dashboard.html');
