@@ -463,6 +463,94 @@ function modalComments(){
     $("#comentModal").modal('show');
 }
 
+
+function notify_info() {
+    
+   $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'notificacion_leer'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+          
+            //alert(r.notificacion_read);
+
+            window.setInterval(function() {$('#notify_info').effect( "shake",1000);}, 5000);
+            $("#info_notify").append(r.notificacion_read);
+            $('#notify_info').css({ color: "red"});
+            $('#notify_info').click(function() {
+                   $("#dropdownNotify").show();
+            });
+                
+           $("#read_notify").click(function() {
+                   $("#dropdownNotify").hide();
+                   read_notifications();
+                   window.setInterval(function() {$('#notify_info').effect( "shake",1000);}, 5000);
+            });
+             
+
+        
+        }    
+    });
+
+
+
+}
+
+
+function notification_send(title,notification){
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'notificacion_leida'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+                $alert("ok");
+        }    
+    });
+
+}
+
+
+function notification_send(title,notification){
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'notificacion',
+            title: title,
+            notification: notification
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                
+                $('#notify_title').val('');
+                $('#notify').val('');
+                alert('Notificación enviada');
+
+
+            }else{
+                alert(r.error);
+                window.location.replace('notificacion.html');
+            }
+
+        
+        }    
+    });
+
+}
+
 function display_categoria(){
 
      $.ajax({

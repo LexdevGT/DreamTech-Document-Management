@@ -108,8 +108,8 @@
             </div>
           </li>
         -->
-          <li class="nav-item">
-            <i class="mdi mdi-bell mdi-24px"></i>
+          <li id="info_notify" class="nav-item dropdown d-none d-lg-block user-dropdown">
+            <i id="notify_info"  class="mdi mdi-bell mdi-24px"></i>
             <!--form class="search-form" action="#">
               <i class="icon-search"></i>
               <input type="search" class="form-control" placeholder="Search Here" title="Search here">
@@ -416,6 +416,7 @@
   <script >
     security(1,'DASHBOARD');
     load_dashboard();
+    notify_info();
   </script>
 
   <!-- End custom js for this page-->

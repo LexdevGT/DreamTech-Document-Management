@@ -221,10 +221,92 @@
 			case 'save_ciudadano_login':
 				saveCiudadanoLogin();
 				break;
+			case 'notificacion':
+			    newnotificacion();
+			    break;
+			case 'notificacion_leer':
+				readnotification();
+				break;
 		}
 		
 	}
+
+	function readnotification(){
+
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$notificacion = '';
+		
+
+		$readnotquery  	="SELECT * FROM notifications where estado = 0";
+		$execute_rquery 	= mysqli_query($conn, $readnotquery);
+
+		$notificacion .='<div id = "dropdownNotify" class="dropdown-menu dropdown-menu-right navbar-dropdown">';
+		$notificacion .=  '<div class="dropdown-header text-center">';
+
+		while($fetch_query = mysqli_fetch_array($execute_rquery)){
+
+			$title	=	$fetch_query['title'];
+			$notification   = $fetch_query['notification'];
+			$user    = $fetch_query['user'];
+			
+			$notificacion .=	'<p class="mb-1 mt-3 font-weight-semibold">'.$title.'</p>';
+			$notificacion .=	'<p class="fw-light text-muted mb-0">'.$notification.'</p>';
+
+		}
+
+
+		$notificacion .= '</div>';
+		$notificacion .=  '<a class="dropdown-item"href="#" id="read_notify"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Entendido</a>';
+		$notificacion .= '</div>';
+
+
+
+		$jsondata['notificacion_read']= $notificacion;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+
+	}
 	
+
+	function newnotificacion()
+	{
+		global $conn;
+
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$notificacion = isset($_POST['notification'])?$_POST['notification']:"";
+		$title = isset($_POST['title'])?$_POST['title']:"";
+		$datetm = "CURRENT_TIMESTAMP";
+		$user = $_SESSION['user_email'];
+
+		if(!empty($notificacion)&&!empty($user)){
+
+		$query_insert_notify = "
+					INSERT INTO notifications (notification,title,date_time,estado,user)
+					VALUES ('$notificacion','$title',$datetm,0,'$user')
+							   ";
+
+							   //print_r($query_insert_notify);
+					$execute_insert_access = $conn->query($query_insert_notify);
+		}
+
+		if($execute_insert_access){
+			$message = "Notificación enviada";
+		}else{
+			$error = "No se pudo enviar la notificación";
+		}
+
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
 	function nueva(){
 		global $conn;
 		$jsondata = array();
