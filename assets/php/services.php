@@ -221,6 +221,9 @@
 			case 'save_ciudadano_login':
 				saveCiudadanoLogin();
 				break;
+			case 'descargar_archivos':
+				DescargaArchivo();
+			break;
 		}
 		
 	}
@@ -5469,18 +5472,14 @@ if (is_dir($gfg_folderpath)) {
                     	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc1\" download>Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"descargar_archivo('$direcc1');return false;\">Descargar</a>
                                     <a class=\"dropdown-item\" href=\"$direcc1\">Compartir Link</a>
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_subfolder</b>
                                 </li>";
                     }
-                    
-
-
-
-
-                     }
+                  }
+                
                 $dirpath = "../../htmls/documents/" . $gfg_subfolder . "/";
                 $down    = "documents/" . $gfg_subfolder . "/";
                 
@@ -5532,12 +5531,12 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
                         //$archivos_recientes .= $gfg_filename . "<br>";
-												if($count_files <= 3){
+												if($count_files <= 5){
                         $direcc2 = $download.$gfg_filename;
                         	$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc2\" download >Descargar</a>
+                                    <a class=\"dropdown-item \" href=\"#\" onclick=\"descargar_archivo('$direcc2');return false;\">Descargar</a>
                                     <a class=\"dropdown-item\" href=\"$direcc2\">Compartir Link</a>
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_filename</b>
@@ -5545,6 +5544,7 @@ if (is_dir($gfg_folderpath)) {
                               }
 
                         }
+                      
                         
                         $dirsub = $dirpath.$gfg_filename ."/";
                        
@@ -5600,7 +5600,7 @@ if (is_dir($gfg_folderpath)) {
                         					$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc3\" download>Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"descargar_archivo('$direcc3');return false;\">Descargar</a>
                                     <a class=\"dropdown-item\" href=\"$direcc3\">Compartir Link</a>
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre_archivo</b>
@@ -5608,16 +5608,16 @@ if (is_dir($gfg_folderpath)) {
                                 	}
                         				}
 
-                        				}
                         			}
                         		}
                         	}
                         }
+                       }
 
 
 
 
-                           }
+               						}
                          }	
                       }
                    }
@@ -5795,9 +5795,9 @@ function viewCategoriaDash(){
 			$id_cat   = $fetch_query['idCat'];
 			$path     = $fetch_query['path_cat'];
 
-			$divi_path = explode("htmls", $path);
+			//$divi_path = explode("htmls", $path);
 
-			$data = $divi_path[1];
+			//$data = $divi_path[1];
 
 			$categoria .= "<div class=\"col-md-3 col-lg-3 row-eq-height\">
                               <div class=\"card  w-100 \">
@@ -5838,7 +5838,7 @@ function viewCategoriaDash(){
 
 		}
 
-		error_log($categoria);
+		//error_log($categoria);
 
 		
 		$jsondata['categoria'] = $categoria;
@@ -5847,5 +5847,61 @@ function viewCategoriaDash(){
 		echo json_encode($jsondata);
 
 }
+
+function DescargaArchivo(){
+	global $conn;
+	$jsondata 	= array();
+	$error 	  	= '';
+	$message  	= '';
+	$url      	= "";
+
+	$rol_id   	= $_SESSION['rol_id'];
+
+	if (isset($_POST['link'])) {
+		$url = $_POST['link'];
+		// code...
+
+		$divide = explode('/',$url);
+
+
+		$count_array = count($divide);
+
+		$count_name = $count_array - 1;
+
+		error_log($count_name);
+
+		$name = mysqli_real_escape_string($conn,$divide[$count_name]);
+		if ($name !="") {
+			// code...
+			$query = "INSERT INTO downloads(file_name,file_path,file_download_amount)
+					VALUES
+					('$name','$url','1')
+					ON DUPLICATE KEY UPDATE 
+					file_download_amount	= file_download_amount + VALUES(file_download_amount) ";
+					
+					$insert_query = mysqli_query($conn, $query);
+
+		if ($insert_query) {
+			// code...
+			$link_archivo = $url;
+		}
+
+		
+		}else{
+			$error .= "No se encontro el archivo descargable";
+		}
+
+		
+
+	}
+		
+
+	$jsondata['link'] = $link_archivo;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
+}
+
   
 ?>

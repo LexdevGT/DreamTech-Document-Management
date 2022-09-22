@@ -3,6 +3,8 @@ $(function(){
     load_headbar();
     viewcarpeta();
 
+
+
     $(".exportToExcel").click(function(e){
         //alert('something');
         var table = $('.table2excel');
@@ -2546,4 +2548,42 @@ function viewcarpeta(directorio){
             }
         }    
     });
+}
+
+function descargar_archivo(link){
+
+    //alert('pulsaste boton para descargar');
+    //alert(link);
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            link,
+            option: 'descargar_archivos'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                
+                var a = document.createElement('a');
+                
+                a.href = link;
+                a.target = '_blank';
+                a.download = 'Ministerio Ambiente';
+
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+
 }
