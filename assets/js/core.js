@@ -591,6 +591,47 @@ function display_categoria(){
 
 }
 
+function buscar_documentos(nombre){
+    var order = '';
+
+    $("input:radio").each(function(){
+
+        var name = $(this).attr("id");
+
+
+        if($("[id="+name+"]:checked").length == 1)
+        {
+            var src = $('#' + name).attr("datasrc")                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+            order = name;                
+
+        }               
+
+        $(this).prop('checked', false);                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+    });
+
+    $("#cardStandar").empty();
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'buscar_todo',
+            nombre: nombre,
+            order: order
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+            //alert(r.todo);
+            $("#cardStandar").append(r.todo);
+
+        
+        }    
+    });
+}
+
 function display_busqueda(tipo,nombre,cat,fecha,autor){
 
      $.ajax({
@@ -617,7 +658,7 @@ function display_busqueda(tipo,nombre,cat,fecha,autor){
             
 
                 if(item!=="."&&item!==".."){
-                    //alert(item);
+                    //
                     $('#select_documento').append($('<option>',{value: x,text : item}));
 
                 }
@@ -703,7 +744,10 @@ function standar_display(){
     $('#avanzado2').hide();
     $('#avanzado3').hide();
 
+
 }
+
+
 
 function avanzado_display(){
 
@@ -2473,8 +2517,8 @@ function load_sidebar(){
                                 '</a>'+
                                 '<div class="collapse" id="documents">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="item"><a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
+                                    '<li class="item"><a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
+                                    '<li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
                                   '</ul>'+
                                 '</div>'+
                               '</li>'+
