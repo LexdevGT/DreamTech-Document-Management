@@ -1,7 +1,10 @@
 $(function(){
     load_sidebar();
     load_headbar();
-    viewcarpeta();
+    shared_descarga();
+
+    
+
 
     $(".exportToExcel").click(function(e){
         //alert('something');
@@ -200,6 +203,8 @@ $(function(){
     $('#guardar-ciudadano-login').click(function(){
         save_ciudadano_login();
     });
+
+
 
 });
 
@@ -2547,3 +2552,150 @@ function viewcarpeta(directorio){
         }    
     });
 }
+
+function descargar_archivo(link){
+
+    //alert('pulsaste boton para descargar');
+    //alert(link);
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            link,
+            option: 'descargar_archivos'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(link);                                                   
+            if(r.error == ''){
+                
+                var a = document.createElement('a');
+                
+                a.href = link;
+                a.target = '_blank';
+                a.download = r.name;
+
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+
+}
+
+function compartir(link){
+    //alert('preciono el boton de compartir');
+    //alert(link);
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            link,
+            option: 'compartir'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+               var content = r.share;
+
+                navigator.clipboard.writeText(content)
+                    .then(() => {
+                    //console.log("link copiado al portapapel...")
+                    alert('LINK COPIADO PARA COMPARTIR');
+                })
+                    .catch(err => {
+                    console.log('Something went wrong', err);
+                })
+                
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+
+    }
+
+    function shared_descarga(){
+        const queryString = window.location.search;
+            console.log(queryString);
+
+        const urlParams = new URLSearchParams(queryString);
+
+        const pandora = urlParams.get('share')
+        console.log(pandora);
+        const type = urlParams.get('type')
+        console.log(type);
+
+        $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            pandora,
+            type,
+            option: 'shared_archivo'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                
+                var a = document.createElement('a');
+                
+                a.href = r.share;
+                a.target = '_blank';
+                a.download = r.name;
+
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+
+    }
+
+    function subir_archivos(){
+        //alert('subir archivos');
+        $('#upload').modal('show');
+            $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'mostrar_upload'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                $('.subir_archivos').html(r.form);
+             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+
+    }
+
+
