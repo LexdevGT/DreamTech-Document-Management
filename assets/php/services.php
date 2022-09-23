@@ -249,7 +249,7 @@
 		$ar ="";
 		$rol_name = $_SESSION['rol_name'];
 		$rol_id   = $_SESSION['rol_id'];
-		$like = $_POST['nombre'];
+		$name = $_POST['nombre'];
 		$order = $_POST['order'];
 
 
@@ -270,290 +270,88 @@
 		}
 
 
-		$logquery  	="SELECT * FROM documentation";
+		$logquery  	="SELECT UPPER(file_name) as name_file, display_name FROM documentation";
 
-		if(!empty($like)){
-			$logquery .= " WHERE file_name like '%".$like."%'";
+		if(!empty($name)){
+			$logquery .= " WHERE LOCATE(UPPER('".$name."'), file_name) > 0";
+		}else{
+			$logquery .= " WHERE 1=1";
+			$message = 'Ingrese texto para la búsqueda';
 		}
 
 		if(!empty($order)&&$order!=='all'){
-			$logquery .= " ORDER BY ".$order;
+			$logquery .= " ORDER BY ".$order." ASC  ";
+		}else{
+			$logquery .= " ORDER BY file_name ASC  "; 
 		}
-		//print_r($logquery);
+		
 		$execute_rquery 	= mysqli_query($conn, $logquery);
 		
+		//print_r($logquery);
+		
+		$x = 0;
+        while($fetch_query = mysqli_fetch_array($execute_rquery)){
 
-
-		$archivos_recientes .= "<div class=\"col-sm-$n stretch-card \">
-                        <div class=\"card card-rounded\">
-                          <div class=\"card-head p-3\" >
-                            <div class=\"row justify-content-end\">
-                              <div class=\"col-12\">
-                            <h4><b>Resultado búsqueda</b></h4>
-                            </div>
-                            <div class=\"col-3\">
-                            </div>
-                                  </div>
-                          </div>
-
-                          <div class=\"card-body\">
-                            <div class=\"row\" >
-                              <div class=\"col-lg-12\">
-                                
-                              <ul class=\"list-group list-group-flush nav\">";
-
-// iNICIA PRUEBA fINAL
-
- 		$gfg_folderpath = "../../htmls/documents/";
- 		$download = "documents/";
-
-   //$gfg_folderpath = "GeeksForGeeks/";
-// CHECKING WHETHER PATH IS A DIRECTORY OR NOT
-if (is_dir($gfg_folderpath)) {
-    // GETTING INTO DIRECTORY
-    $files = opendir($gfg_folderpath); {
-        // CHECKING FOR SMOOTH OPENING OF DIRECTORY
-    	$count_files = 0;
-        if ($files) {
-            //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
-            $count_files = 0;
-            while (($gfg_subfolder = readdir($files)) !== FALSE) {
-            	
-                // CHECKING FOR FILENAME ERRORS
-             if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {
-
-             		$file_c = strtolower(substr($gfg_subfolder, -3));
+        	$file_c = strtolower(substr($fetch_query['name_file'], -3));
 												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
 
-             						if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-																{
-																	$count_files++;
-												$download = "documents/";
-																	switch ($file_c) {
-																			case 'pdf':
-																				// code...
-																				$image_ico = "mdi-file-pdf";
-																				break;
+        	switch ($file_c) {
+					case 'pdf':
+						// code...
+						$image_ico = "mdi-file-pdf";
+						break;
 
-																			case 'png':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
+					case 'png':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
 
-																			case 'ocx':
-																				// code...
-																			$image_ico = "mdi-file-word";
-																				break;
+					case 'ocx':
+						// code...
+					$image_ico = "mdi-file-word";
+						break;
 
-																			case 'jpg':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
+					case 'jpg':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
 
-																			case 'xls':
-																				// code...
-																			$image_ico = "mdi-file-excel";
-																				break;
-																			
-																			default:
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-																		}
+					case 'xls':
+						// code...
+					$image_ico = "mdi-file-excel";
+						break;
+					
+					default:
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+				}
 
 
-//                    $archivos_recientes .=  $gfg_subfolder."<br>";
+        	$file_name = $fetch_query['name_file'];
 
-                    
-                    if($count_files <= 5){
-                    	$direcc1 = $download.$gfg_subfolder;
-                    	$archivos_recientes .= "<li class=\"item\">
-                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
-                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc1\" download>Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$direcc1\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_subfolder</b>
+        	$archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"fileName$x\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file_name</b>
                                 </li>";
-                    }
-                    
 
+            $x= $x+1;
 
-
-
-                     }
-                $dirpath = "../../htmls/documents/" . $gfg_subfolder . "/";
-                $down    = "documents/" . $gfg_subfolder . "/";
-                
-                    // GETTING INSIDE EACH SUBFOLDERS
-                    if (is_dir($dirpath)) {
-                        $file = opendir($dirpath); {
-                            if ($file) {
-                //READING NAMES OF EACH FILE INSIDE SUBFOLDERS
-               while (($gfg_filename = readdir($file)) !== FALSE) {
-               	
-                if ($gfg_filename != '.' && $gfg_filename != '..') {
-
-                						$file_c = strtolower(substr($gfg_filename, -3));
-												if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-																{
-																	$count_files++;
-																	$download = "documents/". $gfg_subfolder."/";
-
-
-																	switch ($file_c) {
-																			case 'pdf':
-																				// code...
-																				$image_ico = "mdi-file-pdf";
-																				break;
-
-																			case 'png':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'ocx':
-																				// code...
-																			$image_ico = "mdi-file-word";
-																				break;
-
-																			case 'jpg':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'xls':
-																				// code...
-																			$image_ico = "mdi-file-excel";
-																				break;
-																			
-																			default:
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-																		}
-                        //$archivos_recientes .= $gfg_filename . "<br>";
-												if($count_files <= 3){
-                        $direcc2 = $download.$gfg_filename;
-                        	$archivos_recientes .= "<li class=\"item\">
-                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
-                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc2\" download >Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$direcc2\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_filename</b>
-                                </li>";
-                              }
-
-                        }
-                        
-                        $dirsub = $dirpath.$gfg_filename ."/";
-                       
-                        if (is_dir($dirsub)) {
-                        	// code...
-                        	$fil = opendir($dirsub);{
-                        		if($fil){
-                        			while (($nombre_archivo = readdir($fil)) !== FALSE) {
-
-                        				// code...
-                        				if ($nombre_archivo != '.' && $nombre_archivo != '..') {
-                        					// code...
-                        					$file_c = strtolower(substr($nombre_archivo, -3));
-															if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-																{
-																	$count_files++;
-																	 $download = $down.$gfg_filename ."/";
-																	switch ($file_c) {
-																			case 'pdf':
-																				// code...
-																				$image_ico = "mdi-file-pdf";
-																				break;
-
-																			case 'png':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'ocx':
-																				// code...
-																			$image_ico = "mdi-file-word";
-																				break;
-
-																			case 'jpg':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'xls':
-																				// code...
-																			$image_ico = "mdi-file-excel";
-																				break;
-																			
-																			default:
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-																		}
-                        					//$archivos_recientes .= $nombre_archivo . "<br>";
-																		if($count_files <= 5){
-																		$direcc3 = $download.$nombre_archivo;
-
-                        					$archivos_recientes .= "<li class=\"item\">
-                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
-                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc3\" download>Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$direcc3\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre_archivo</b>
-                                </li>";
-                                	}
-                        				}
-
-                        				}
-                        			}
-                        		}
-                        	}
-                        }
-
-
-
-
-                           }
-                         }	
-                      }
-                   }
-               }
-                   // $archivos_recientes .=  "<br>";
-                }
-            }
         }
-    }
-}
-
-
-
-		
-
-
-        
-
-         
-                                
-        $archivos_recientes .= "</ul>
-                                
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>";
 
 
         $segundafila = $archivos_recientes;
 
 
+        
+
+        print($segundafila);//die();
+
         $jsondata['todo'] = $segundafila;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
+
+
 		echo json_encode($jsondata);
 }
 
@@ -566,7 +364,7 @@ if (is_dir($gfg_folderpath)) {
 		$notificacion = '';
 		
 
-		$readnotquery  	="SELECT * FROM notifications where estado = 0";
+		$readnotquery  	="SELECT * FROM notifications WHERE estado = 0";
 		$execute_rquery 	= mysqli_query($conn, $readnotquery);
 
 		$notificacion .='<div id = "dropdownNotify" class="dropdown-menu dropdown-menu-right navbar-dropdown">';
@@ -5825,6 +5623,7 @@ if (is_dir($gfg_folderpath)) {
             //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
             $count_files = 0;
             while (($gfg_subfolder = readdir($files)) !== FALSE) {
+
             	
                 // CHECKING FOR FILENAME ERRORS
              if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {

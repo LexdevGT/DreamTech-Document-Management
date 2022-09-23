@@ -257,15 +257,15 @@
                         </li>
                         <form id="frmRadios">
                         <li class="item">
-                            <input  type="radio" id="Rdfecha_publicacion" name="publish_date" value="this">
+                            <input  type="radio" id="publish_date" name="publish_date" value="this">
                             <label for="fecha_publicacion">Fecha de publicación</label>
                         </li>
                         <li class="item">
-                          <input type="radio" id="Rdautor"name="author" value="this">
+                          <input type="radio" id="author"name="author" value="this">
                           <label for="Rdautor">Autor</label>
                         </li>
                         <li class="item">
-                          <input type="radio"  id="RdTodo"name="all" value="this">
+                          <input type="radio"  id="all"name="all" value="this">
                           <label for="rdTodo">Todo</label>
                         </li>
                       </form>
@@ -293,9 +293,30 @@
                 </div>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-8 card card-rounded">
-                    <div id="cardStandar"  class="card-body text-center">
+                    <div id="cardStandar"  class="card-body ">
+                        <div class="col-sm-$n stretch-card">
+                              <div class="card card-rounded">
+                                <div class="card-head p-3" >
+                                    <div class="row justify-content-end">
+                                        <div class="col-12">
+                                        <h4><b>Resultado</b></h4>
+                                      </div>
+                                      <div class="col-3">
+                                      </div>
+                                      </div>
+                                  </div>
+                                  <div class="card-body\">
+                                    <div class="row" >
+                                        <div class="col-lg-12">
+                                              <ul id="itemsFiles" class="list-group list-group-flush nav">
+                                              <ul>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
                         
-                      </div>
+                    </div>
                 </div>
             </div>
 
@@ -306,7 +327,7 @@
                   <div class="col-sm">
                      <h5 class="welcome-text"><span class="text-black fw-bold">Tipo de documento</span> </h5>
                       <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_tipo_doc" name="">
-                                <option  value="Todo">Todo</option>
+                                <option selected value="Todo">Todo</option>
                                 <option  value="pdf">PDF</option>
                                 <option  value="xlsx">EXCEL</option>
                                 <option  value="xdoc">WORD</option>
@@ -314,12 +335,6 @@
                                 <option  value="jpg_png">VIDEO</option>
                       </select>
                   </div>
-                  <div class="col-sm">
-                    <h5 class="welcome-text"><span class="text-black fw-bold">Nombre de documento</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_documento" name="">
-                    </select>
-                  </div>
-
 
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Categoría</span> </h5>
@@ -327,6 +342,13 @@
                                 <!--<option selected value="AL">Manuales</option>-->
                       </select>
                   </div>
+                  <div class="col-sm">
+                    <h5 class="welcome-text"><span class="text-black fw-bold">Nombre de documento</span> </h5>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Nombre de documento" id="select_documento" name="">
+                    </select>
+                  </div>
+
+
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Fecha de publicación</span> </h5>
                     <input type="text" class="js-example-basic-multiple w-100" id="dtRange" name="datetimes" /><!--
@@ -336,8 +358,8 @@
                   </div>
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Autor</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
-                                <option selected value="AL">SEMARNAT</option>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Autor" id="select_author" name="">
+                                
                       </select>
                   </div>
 
@@ -362,10 +384,7 @@
               <div class="col-sm"></div>
               <div class="col-sm"></div>
               <div class="col-sm">
-                <button type="button" class="btn btn-dark">
-                        Reiniciar
-                </button>
-                <button type="button" class="btn btn-dark">
+                <button onclick="busqueda_avanzada($('#select_tipo_doc').val(),$('#select_categoria').val(),$('#select_documento').val(),$('#dtRange').val(),$('#select_author').val());" type="button" class="btn btn-dark">
                         Buscar
                 </button>
               </div>
@@ -394,11 +413,11 @@
                             </div>
                           </div>
 
-                          <div class="card-body">
+                          <div class="card-body\">
                             <div class="row " >
                               <div class="col-lg-12">
                                 
-                                <ul class="list-group list-group-flush nav" id="ul_result_busqueda">
+                                <ul class="list-group list-group-flush nav" id="rsl_b_avanzada">
 
                                     
                                     
@@ -524,16 +543,17 @@
     load_dashboard();
     avanzado_display();
     display_categoria();
+    display_author();
     display_busqueda();
-    seach_result_display();
+    //seach_result_display();
     seach_result_display_1();
 $(function() {
   $('input[id="dtRange"]').daterangepicker({
     timePicker: true,
-    startDate: moment().startOf('hour'),
-    endDate: moment().startOf('hour').add(32, 'hour'),
+    startDate: moment().startOf('hour').add(-48, 'hour'),
+    endDate: moment().startOf('hour'),
     locale: {
-      format: 'M/DD hh:mm A'
+      format: 'DD/M/Y'
     }
   });
 });
