@@ -468,8 +468,235 @@ function modalComments(){
     $("#comentModal").modal('show');
 }
 
+
+function notify_info() {
+    
+   $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'notificacion_leer'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+          
+            //alert(r.notificacion_read);
+
+            window.setInterval(function() {$('#notify_info').effect( "shake",1000);}, 5000);
+            $("#info_notify").append(r.notificacion_read);
+            $('#notify_info').css({ color: "red"});
+            $('#notify_info').click(function() {
+                   $("#dropdownNotify").show();
+            });
+                
+           $("#read_notify").click(function() {
+                   $("#dropdownNotify").hide();
+                   read_notifications();
+                   window.setInterval(function() {$('#notify_info').effect( "shake",1000);}, 5000);
+            });
+             
+
+        
+        }    
+    });
+
+
+
+}
+
+
+function notification_send(title,notification){
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'notificacion_leida'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+                $alert("ok");
+        }    
+    });
+
+}
+
+
+function notification_send(title,notification){
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'notificacion',
+            title: title,
+            notification: notification
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                
+                $('#notify_title').val('');
+                $('#notify').val('');
+                alert('Notificación enviada');
+
+
+            }else{
+                alert(r.error);
+                window.location.replace('notificacion.html');
+            }
+
+        
+        }    
+    });
+
+}
+
+
+
+function buscar_documentos(nombre){
+    var order = '';
+
+    $("input:radio").each(function(){
+
+        var name = $(this).attr("id");
+
+
+        if($("[id="+name+"]:checked").length == 1)
+        {
+            var src = $('#' + name).attr("datasrc")                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+            order = name;                
+
+        }               
+
+        $(this).prop('checked', false);                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+    });
+
+    $("#itemsFiles").empty();
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'buscar_todo',
+            nombre: nombre,
+            order: order
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+            //console.log(r.todo);
+            $("#itemsFiles").append(r.todo);
+
+        
+        },
+        error: function (r) {
+            let text = r.responseText;
+            let result = text.includes('{"todo":"');
+
+            if(result == true){
+                $("#itemsFiles").append('No hay coincidencia de texto');
+            }else{
+
+                $("#itemsFiles").append(r.responseText);
+               //console.log(r);
+            }
+        }
+    });
+}
+
+function busqueda_avanzada(tipo,categoria,nombre,fecha,autor){
+
+    $('#rsl_b_avanzada').empty();
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/busqueda_avanzada.php",
+        data: ({
+            option: 'autor',
+            tipo: tipo,
+            categoria: categoria,
+            nombre: nombre,
+            fecha: fecha,
+            autor: autor
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+           // alert(r.files);
+        
+              $('#rsl_b_avanzada').append(r.files);
+                
+        
+        },
+        error: function(r){
+            //alert(r.responseText);
+            let arr = r.responseText.split('{');
+        
+                    
+            //console.log(r);
+            $('#rsl_b_avanzada').append(arr[1]);
+            //console.log(r.responseText);
+    
+
+        }  
+    });
+}
+
+function display_author(){
+     $('#rsl_b_avanzada').empty();
+     $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/autor.php",
+        data: ({
+            option: 'autor'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            
+            //alert(r);
+            var result = [];
+
+            for (var i in r.table_content){
+                result.push([i, r.table_content[i]]);
+            }
+
+
+            //alert(r.table_content);
+
+           
+            $('#select_author').append(r.table_content);
+
+              
+                
+        
+        },
+        error: function(r){
+            //alert(r);
+            let arr = r.responseText.split('{');
+        
+                    
+            //console.log(r);
+            $('#select_author').append(arr[0]);
+            //console.log(r.responseText);
+    
+
+        }  
+    });
+
+}
+
 function display_categoria(){
 
+     $('#rsl_b_avanzada').empty();
      $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
@@ -480,6 +707,7 @@ function display_categoria(){
         dataType: "json",        
         success: function(r) {                                                   
             
+
             var result = [];
 
             for (var i in r.table_content){
@@ -487,35 +715,41 @@ function display_categoria(){
             }
 
 
-            //alert(result);
+            //alert(r.table_content);
 
-            $.each(r.table_content, function (x, item) {
-                
+           
+            $('#select_categoria').append(r.table_content);
 
-                if(item!=="."&&item!==".."){
-                    //alert(item);
-                    $('#select_categoria').append($('<option>',{value: x,text : item}));
-
-                }
-                
-
-
-            });
+              
                 
         
-        }    
+        },
+        error: function(r){
+            //alert(r.responseText);
+            let arr = r.responseText.split('{');
+        
+                    
+            //console.log(r);
+            $('#select_categoria').append(arr[0]);
+            //console.log(r.responseText);
+    
+
+        }  
     });
 
 }
 
-function display_busqueda(tipo,nombre,cat,fecha,autor){
+function display_busqueda(){
+     var categoria = $("#select_categoria").val();
+     $('#select_documento').empty();
 
      $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
         url: "../assets/php/busqueda.php",
         data: ({
-            option: 'resultado_busqueda'
+            option: 'resultado_busqueda',
+            categoria: categoria
         }),
         dataType: "json",        
         success: function(r) {                                                   
@@ -528,23 +762,21 @@ function display_busqueda(tipo,nombre,cat,fecha,autor){
             }
 
 
-            //alert(result);
+            //alert(r.table_content);
 
-            $.each(r.table_content, function (x, item) {
-            
+           
+            $('#select_documento').append(r.table_content);
 
-                if(item!=="."&&item!==".."){
-                    //alert(item);
-                    $('#select_documento').append($('<option>',{value: x,text : item}));
-
-                }
-                
-
-
-            });
+              
                 
         
-        }    
+        },
+        error: function(r){
+            //console.log(r);
+            let arr = r.responseText.split('{');
+            $('#select_documento').append(arr[0]);
+            //console.log(r.responseText);
+        }  
     });
 
 }
@@ -575,7 +807,7 @@ function seach_result_display(){
 
                 if(item!=="."&&item!==".."){
                     //alert(item);
-                    $('#ul_result_busqueda').append('<li class="item"><i class="mdi mdi-file menu-icon mdi-48px mdi-set"></i><b>'+item+'</b></li>');
+                    //$('#ul_result_busqueda').append('<li class="item"><i class="mdi mdi-file menu-icon mdi-48px mdi-set"></i><b>'+item+'</b></li>');
 
                 }
                 
@@ -620,7 +852,10 @@ function standar_display(){
     $('#avanzado2').hide();
     $('#avanzado3').hide();
 
+
 }
+
+
 
 function avanzado_display(){
 
@@ -2390,8 +2625,8 @@ function load_sidebar(){
                                 '</a>'+
                                 '<div class="collapse" id="documents">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="item"><a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
+                                    '<li class="item"><a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
+                                    '<li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
                                   '</ul>'+
                                 '</div>'+
                               '</li>'+

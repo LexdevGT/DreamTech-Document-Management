@@ -233,12 +233,216 @@
 					break;
 			case 'mostrar_upload':
 						mostrar_upload();
-
 				break;
+      case 'notificacion':
+			    newnotificacion();
+			    break;
+			case 'notificacion_leer':
+				readnotification();
+				break;
+			case 'buscar_todo':
+				busqueda_todo();
 		}
 		
 	}
+
+	function busqueda_todo(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$archivos_recientes = "";
+		$permiso  = "";
+		$graficas = "";
+		$archi  = 'Nuevo Archivo';
+		$cat1 = '';
+		$cat2 = '';
+		$cat3	= '';
+		$ar ="";
+		$rol_name = $_SESSION['rol_name'];
+		$rol_id   = $_SESSION['rol_id'];
+		$name = $_POST['nombre'];
+		$order = $_POST['order'];
+
+
+
+		switch ($rol_name) {
+			case 'Administrador':
+				// code...
+				$n = 4;
+				break;
+			case 'Ciudadano';
+				// code...
+				$n = 6;
+				break;
+			default:
+				// code...
+				$n = 4;
+				break;
+		}
+
+
+		$logquery  	="SELECT UPPER(file_name) as name_file, display_name FROM documentation";
+
+		if(!empty($name)){
+			$logquery .= " WHERE LOCATE(UPPER('".$name."'), file_name) > 0";
+		}else{
+			$logquery .= " WHERE 1=1";
+			$message = 'Ingrese texto para la búsqueda';
+		}
+
+		if(!empty($order)&&$order!=='all'){
+			$logquery .= " ORDER BY ".$order." ASC  ";
+		}else{
+			$logquery .= " ORDER BY file_name ASC  "; 
+		}
+		
+		$execute_rquery 	= mysqli_query($conn, $logquery);
+		
+		//print_r($logquery);
+		
+		$x = 0;
+        while($fetch_query = mysqli_fetch_array($execute_rquery)){
+
+        	$file_c = strtolower(substr($fetch_query['name_file'], -3));
+												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+
+        	switch ($file_c) {
+					case 'pdf':
+						// code...
+						$image_ico = "mdi-file-pdf";
+						break;
+
+					case 'png':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+
+					case 'ocx':
+						// code...
+					$image_ico = "mdi-file-word";
+						break;
+
+					case 'jpg':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+
+					case 'xls':
+						// code...
+					$image_ico = "mdi-file-excel";
+						break;
+					
+					default:
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+				}
+
+
+        	$file_name = $fetch_query['name_file'];
+
+        	$archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"fileName$x\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file_name</b>
+                                </li>";
+
+            $x= $x+1;
+
+        }
+
+
+        $segundafila = $archivos_recientes;
+
+
+        
+
+        print($segundafila);//die();
+
+        $jsondata['todo'] = $segundafila;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+
+
+		echo json_encode($jsondata);
+}
+
+	function readnotification(){
+
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$notificacion = '';
+		
+
+		$readnotquery  	="SELECT * FROM notifications WHERE estado = 0";
+		$execute_rquery 	= mysqli_query($conn, $readnotquery);
+
+		$notificacion .='<div id = "dropdownNotify" class="dropdown-menu dropdown-menu-right navbar-dropdown">';
+		$notificacion .=  '<div class="dropdown-header text-center">';
+
+		while($fetch_query = mysqli_fetch_array($execute_rquery)){
+
+			$title	=	$fetch_query['title'];
+			$notification   = $fetch_query['notification'];
+			$user    = $fetch_query['user'];
+			
+			$notificacion .=	'<p class="mb-1 mt-3 font-weight-semibold">'.$title.'</p>';
+			$notificacion .=	'<p class="fw-light text-muted mb-0">'.$notification.'</p>';
+
+		}
+
+
+		$notificacion .= '</div>';
+		$notificacion .=  '<a class="dropdown-item"href="#" id="read_notify"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Entendido</a>';
+		$notificacion .= '</div>';
+
+
+
+		$jsondata['notificacion_read']= $notificacion;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+
+	}
 	
+
+	function newnotificacion()
+	{
+		global $conn;
+
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$notificacion = isset($_POST['notification'])?$_POST['notification']:"";
+		$title = isset($_POST['title'])?$_POST['title']:"";
+		$datetm = "CURRENT_TIMESTAMP";
+		$user = $_SESSION['user_email'];
+
+		if(!empty($notificacion)&&!empty($user)){
+
+		$query_insert_notify = "
+					INSERT INTO notifications (notification,title,date_time,estado,user)
+					VALUES ('$notificacion','$title',$datetm,0,'$user')
+							   ";
+
+							   //print_r($query_insert_notify);
+					$execute_insert_access = $conn->query($query_insert_notify);
+		}
+
+		if($execute_insert_access){
+			$message = "Notificación enviada";
+		}else{
+			$error = "No se pudo enviar la notificación";
+		}
+
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
 	function nueva(){
 		global $conn;
 		$jsondata = array();
@@ -5417,6 +5621,35 @@ function viewgatget(){
 
 // iNICIA PRUEBA fINAL
 
+
+ 		$gfg_folderpath = "../../htmls/documents/";
+ 		$download = "documents/";
+
+   //$gfg_folderpath = "GeeksForGeeks/";
+// CHECKING WHETHER PATH IS A DIRECTORY OR NOT
+if (is_dir($gfg_folderpath)) {
+    // GETTING INTO DIRECTORY
+    $files = opendir($gfg_folderpath); {
+        // CHECKING FOR SMOOTH OPENING OF DIRECTORY
+    	$count_files = 0;
+        if ($files) {
+            //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
+            $count_files = 0;
+            while (($gfg_subfolder = readdir($files)) !== FALSE) {
+
+            	
+                // CHECKING FOR FILENAME ERRORS
+             if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {
+
+             		$file_c = strtolower(substr($gfg_subfolder, -3));
+												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+
+             						if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+																{
+																	$count_files++;
+												$download = "documents/";
+																	switch ($file_c) {
+/* ---- Esto es main
  		$download = "../../htmls/";
  		//$download = "documents/";
 
@@ -5440,6 +5673,7 @@ function viewgatget(){
 					{
 						$link_descarga = $download . $url_archivo;
 						switch ($file_c) {
+*/
 																			case 'pdf':
 																				// code...
 																				$image_ico = "mdi-file-pdf";

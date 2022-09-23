@@ -96,7 +96,7 @@
                 <div class="modal-body">
 
 
-                  <div class="card" style="width: 18rem;">
+                  <!--<div class="card" style="width: 18rem;">
                     <div class="card-body">
                       <h5 class="card-title">01/08/2022 - Francisco Martinez</h5>
                       <p class="card-text">Se procede a la carga de archivo.</p>
@@ -127,11 +127,13 @@
                         <textarea  class="form-control form-control-lg" id="msg" form-control form-control-lg name="user_message"></textarea>
                       </li>
                      </ul>
-                    </form>
+                    </form>--->
+                    <h5 class="card-title"><b>NO HAY COMENTARIOS</b></h5>
+
 
                 </div>
                 <div class="modal-footer">
-                  <button type = "button" class = "btn btn-primary" data-dismiss = "modal">Enviar</button>
+                  <!--<button type = "button" class = "btn btn-primary" data-dismiss = "modal">Enviar</button>-->
                 </div>
               </div>
             </div>
@@ -145,7 +147,7 @@
                 </div>
                 <div class="modal-body">
                    <div class="col-sm-12 card card-rounded">
-                    <div class="card-body text-center">
+                    <!--<div class="card-body text-center">
                         <div class="row " >
                           <div class="col-lg-3"></div>
                           <div class="col-lg-3">
@@ -176,7 +178,7 @@
                           <div class="col-lg-1"></div>
                            
                         </div>
-                      </div>
+                      </div>-->
 
                 </div>
                 </div>
@@ -195,7 +197,7 @@
               <div class="navbar-menu-wrapper d-flex align-items-top"> 
                   <ul class="navbar-nav">
                     <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-                      <h3 class="welcome-text"><span class="text-black fw-bold">Búsqueda avanzada</span> </h3>
+                      <h3 class="welcome-text"><span class="text-black fw-bold">Búsqueda</span> </h3>
                     </li>
                   </ul>
               </div>
@@ -238,12 +240,12 @@
                       <div id="nuevo1" class="input-group">
                           <div id="search-autocomplete" class="form-outline">
                             
-                            <input type="search" value="Factura" id="form1" class="form-control" />
+                            <input type="search" id="form1" class="form-control" />
                             
                           </div>
                           <div id="search-autocomplete" class="form-outline">
                           <label class="form-label" for="form1"><br></label>
-                          <button class="btn-dark">
+                          <button onclick="buscar_documentos($('#form1').val());" class="btn-dark">
                               <i class="mdi mdi-magnify menu-icon"></i>
                             </button>
                           </div>
@@ -255,18 +257,20 @@
                         <li class="item">
                             <label class="form-label" for="form1">Ordenar por:</label>
                         </li>
+                        <form id="frmRadios">
                         <li class="item">
-                            <input type="radio" id="contactChoice3"name="contact" value="mail">
-                            <label for="contactChoice3">Fecha de publicación</label>
+                            <input  type="radio" id="publish_date" name="publish_date" value="this">
+                            <label for="fecha_publicacion">Fecha de publicación</label>
                         </li>
                         <li class="item">
-                          <input type="radio" id="contactChoice3"name="contact" value="mail">
-                          <label for="contactChoice3">Autor</label>
+                          <input type="radio" id="author"name="author" value="this">
+                          <label for="Rdautor">Autor</label>
                         </li>
-                        <li>
-                          <input type="radio" id="contactChoice3"name="contact" value="mail">
-                          <label for="contactChoice3">Todo</label>
+                        <li class="item">
+                          <input type="radio"  id="all"name="all" value="this">
+                          <label for="rdTodo">Todo</label>
                         </li>
+                      </form>
                         <li><br></li>
                         <div class="row"><b><label class="form-label" for="form1"><br>
                           Búsqueda Avanzada
@@ -291,62 +295,30 @@
                 </div>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-8 card card-rounded">
-                    <div class="card-body text-center">
-                        <div class="row " >
-                          <div class="col-lg-3">
-                            
-                            <ul class="list-group list-group-flush nav">
-
-                                <i class="mdi mdi-file-document-box mdi-48px"></i>
-                                
-                            </ul>
-                            <br><br><br>
-                            <h4>48.6 KB</h4>
-                            <h6><b>Facturas de servicios.pdf</b></h6>
+                    <div id="cardStandar"  class="card-body ">
+                        <div class="col-sm-$n stretch-card">
+                              <div class="card card-rounded">
+                                <div class="card-head p-3" >
+                                    <div class="row justify-content-end">
+                                        <div class="col-12">
+                                        <h4><b>Resultado</b></h4>
+                                      </div>
+                                      <div class="col-3">
+                                      </div>
+                                      </div>
+                                  </div>
+                                  <div class="card-body\">
+                                    <div class="row" >
+                                        <div class="col-lg-12">
+                                              <ul id="itemsFiles" class="list-group list-group-flush nav">
+                                              <ul>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
                           </div>
-                          <div class="col-lg-2 text-center">
-                            <i class="mdi mdi-file-document-box mdi-24px"></i>
-                            <i >Nombre</i>
-                            <i ><b>Humberto López</b></i>
-                            <i><br></i>
-                            <i><br></i>
-                            <i class="mdi mdi-file-document-box mdi-24px"></i>
-                            <i >Empresa</i>
-                            <i ><b>Patsy</b></i>
-                            <i><br></i>
-                            <i><br></i>
-                            <i >Fecha de factura</i>
-                            <i ><b>20/10/2021</b></i>
-                          </div>
-                          <div class="col-lg-1"></div>
-                          <div class="col-lg-3">
-                            
-                            <ul class="list-group list-group-flush nav">
-
-                                <i class="mdi mdi-file-document-box mdi-48px"></i>
-                                
-                            </ul>
-                            <br><br><br>
-                            <h4>35.2 KB</h4>
-                            <h6><b>pago_22_521385.pdf</b></h6>
-                          </div>
-                           <div class="col-lg-2 text-center">
-                            <i class="mdi mdi-file-document-box mdi-24px"></i>
-                            <i >Nombre de pago</i>
-                            <i ><b>Andrea Mejía</b></i>
-                            <i><br></i>
-                            <i><br></i>
-                            <i class="mdi mdi-file-document-box mdi-24px"></i>
-                            <i >Banco</i>
-                            <i ><b>BAM</b></i>
-                            <i><br></i>
-                            <i><br></i>
-                            <i >Fecha de pagp</i>
-                            <i ><b>12/05/2021</b></i>
-                          </div>
-                        </div>
-                      </div>
-
+                        
+                    </div>
                 </div>
             </div>
 
@@ -357,7 +329,7 @@
                   <div class="col-sm">
                      <h5 class="welcome-text"><span class="text-black fw-bold">Tipo de documento</span> </h5>
                       <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_tipo_doc" name="">
-                                <option  value="Todo">Todo</option>
+                                <option selected value="Todo">Todo</option>
                                 <option  value="pdf">PDF</option>
                                 <option  value="xlsx">EXCEL</option>
                                 <option  value="xdoc">WORD</option>
@@ -365,19 +337,20 @@
                                 <option  value="jpg_png">VIDEO</option>
                       </select>
                   </div>
+
+                  <div class="col-sm">
+                    <h5 class="welcome-text"><span class="text-black fw-bold">Categoría</span> </h5>
+                    <select onchange="display_busqueda();" class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_categoria" name="">
+                                <!--<option selected value="AL">Manuales</option>-->
+                      </select>
+                  </div>
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Nombre de documento</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_documento" name="">
+                    <select class="js-example-basic-multiple w-100" autocomplete="on" placeholder="Nombre de documento" id="select_documento" name="">
                     </select>
                   </div>
 
 
-                  <div class="col-sm">
-                    <h5 class="welcome-text"><span class="text-black fw-bold">Categoría</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_categoria" name="">
-                                <!--<option selected value="AL">Manuales</option>-->
-                      </select>
-                  </div>
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Fecha de publicación</span> </h5>
                     <input type="text" class="js-example-basic-multiple w-100" id="dtRange" name="datetimes" /><!--
@@ -387,8 +360,8 @@
                   </div>
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Autor</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_palabra_clave" name="">
-                                <option selected value="AL">SEMARNAT</option>
+                    <select class="js-example-basic-multiple w-100"s placeholder="Autor" id="select_author" name="">
+                                
                       </select>
                   </div>
 
@@ -413,10 +386,7 @@
               <div class="col-sm"></div>
               <div class="col-sm"></div>
               <div class="col-sm">
-                <button type="button" class="btn btn-dark">
-                        Reiniciar
-                </button>
-                <button type="button" class="btn btn-dark">
+                <button onclick="busqueda_avanzada($('#select_tipo_doc').val(),$('#select_categoria').val(),$('#select_documento').val(),$('#dtRange').val(),$('#select_author').val());" type="button" class="btn btn-dark">
                         Buscar
                 </button>
               </div>
@@ -445,11 +415,11 @@
                             </div>
                           </div>
 
-                          <div class="card-body">
+                          <div class="card-body\">
                             <div class="row " >
                               <div class="col-lg-12">
                                 
-                                <ul class="list-group list-group-flush nav" id="ul_result_busqueda">
+                                <ul class="list-group list-group-flush nav" id="rsl_b_avanzada">
 
                                     
                                     
@@ -488,7 +458,7 @@
                                 
                                 <ul class="list-group list-group-flush nav">
 
-                                    <i class="mdi mdi-file-document-box mdi-36px"></i>
+                                    <!--<i class="mdi mdi-file-document-box mdi-36px"></i>-->
                                     
                                 </ul>
                                 <!--<h4>48.6 KB</h4>-->
@@ -575,16 +545,17 @@
     load_dashboard();
     avanzado_display();
     display_categoria();
-    display_busqueda();
-    seach_result_display();
+    display_author();
+    //display_busqueda();
+    //seach_result_display();
     seach_result_display_1();
 $(function() {
   $('input[id="dtRange"]').daterangepicker({
     timePicker: true,
-    startDate: moment().startOf('hour'),
-    endDate: moment().startOf('hour').add(32, 'hour'),
+    startDate: moment().startOf('hour').add(-48, 'hour'),
+    endDate: moment().startOf('hour'),
     locale: {
-      format: 'M/DD hh:mm A'
+      format: 'DD/M/Y'
     }
   });
 });
