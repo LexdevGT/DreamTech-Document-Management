@@ -1,8 +1,9 @@
 $(function(){
     load_sidebar();
     load_headbar();
-    viewcarpeta();
+    shared_descarga();
 
+    
 
 
     $(".exportToExcel").click(function(e){
@@ -202,6 +203,8 @@ $(function(){
     $('#guardar-ciudadano-login').click(function(){
         save_ciudadano_login();
     });
+
+
 
 });
 
@@ -2566,12 +2569,12 @@ function descargar_archivo(link){
         dataType: "json",        
         success: function(r) {
 
-            //alert(r.link);                                                   
+            //alert(link);                                                   
             if(r.error == ''){
                 
                 var a = document.createElement('a');
                 
-                a.href = r.link;
+                a.href = link;
                 a.target = '_blank';
                 a.download = r.name;
 
@@ -2621,4 +2624,78 @@ function compartir(link){
             }
         }    
     });
-}
+
+    }
+
+    function shared_descarga(){
+        const queryString = window.location.search;
+            console.log(queryString);
+
+        const urlParams = new URLSearchParams(queryString);
+
+        const pandora = urlParams.get('share')
+        console.log(pandora);
+        const type = urlParams.get('type')
+        console.log(type);
+
+        $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            pandora,
+            type,
+            option: 'shared_archivo'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                
+                var a = document.createElement('a');
+                
+                a.href = r.share;
+                a.target = '_blank';
+                a.download = r.name;
+
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+
+    }
+
+    function subir_archivos(){
+        //alert('subir archivos');
+        $('#upload').modal('show');
+            $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'mostrar_upload'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                $('.subir_archivos').html(r.form);
+             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+
+    }
+
+

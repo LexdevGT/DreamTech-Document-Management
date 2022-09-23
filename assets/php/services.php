@@ -228,6 +228,13 @@
 				// code...
 				compartir();
 				break;
+			case 'shared_archivo';
+					descargar_shared();
+					break;
+			case 'mostrar_upload':
+						mostrar_upload();
+
+				break;
 		}
 		
 	}
@@ -5532,10 +5539,10 @@ function viewgatget(){
                           </div>
                           <div class=\"card-body p-6\">
                             <div class=\"drop-area\">
-                            	<h2>Arrastra y suelta imágenes</h2>
-                            	<span>0</span>
-                            	<button>Selecciona tus archivos</button>
-                            	<input type=\"file\" name=\"\" id=\"input-file\" hidden multiple />
+                            	
+                            	<span></span>
+                            	<button type=\"submit\" id=\"subir_archivos\" onclick=\"subir_archivos();return false;\">Sube tu archivos</button>
+                            	
                             </div>
                             <div id=\"preview\"></div>
                           </div>
@@ -5752,6 +5759,7 @@ function DescargaArchivo(){
 			// code...
 			$link_archivo = $url;
 			$loginsert = "Download-$url-1-$username";
+			error_log($loginsert);
 			insert_log($loginsert);
 		}
 
@@ -5764,8 +5772,8 @@ function DescargaArchivo(){
 
 	}
 		
-	$jsondata['name']			=	$name_download;
-	$jsondata['link'] = $link_archivo;
+	$jsondata['name']			=	$name;
+	$jsondata['link'] 		= $link_archivo;
 	$jsondata['message'] 	= $message;
 	$jsondata['error']   	= $error;
 	echo json_encode($jsondata);
@@ -5803,9 +5811,9 @@ function compartir(){
 		if ($pandora!="") {
 			// code...
 			$raiz = "http://161.35.13.96/htmls/dashboard.html?share=";
-			$compartir = $raiz.$pandora;
-			$query = "UPDATE downloads set shared = '$shared+1' where pandora = '$pandora'";
-			error_log($query);
+			$compartir = $raiz.$pandora."&type=archivo";
+			$query = "UPDATE downloads set shared = '$shared'+1 where pandora = '$pandora'";
+			//error_log($query);
 					
 					$insert_query = mysqli_query($conn, $query);
 		}
@@ -5820,6 +5828,151 @@ function compartir(){
 	echo json_encode($jsondata);
 }
 
+function descargar_shared(){
+	global $conn;
+	$jsondata 	= array();
+	$error 	  	= '';
+	$message  	= '';
+	$url      	= "";
+	$carpeta 		= "";
+	$username   = $_SESSION['username'];
+	$link_archivo = "";
+	$compartir = "";
+	$pandora = "";
+	$type	   = "";
+	$name 	 = "";
 
+	if (isset($_POST['pandora'])) {
+		if (isset($_POST['type'])) {
+			$pandora = $_POST['pandora'];
+			$type = $_POST['type'];
+
+			$query = "SELECT * 
+									FROM
+									downloads
+									WHERE 
+									pandora = '$pandora'";
+			error_log($query);
+			$execute_query = mysqli_query($conn, $query);
+			$fquery  = mysqli_fetch_array($execute_query);
+
+			$link_archivo = $fquery['file_path'];
+			//$adicion = "../../htmls/";
+			//$link_archivo = $adicion.$link_archivo;
+			error_log($link_archivo);
+			$file_download_amount=$fquery['file_download_amount'];
+			$name = $fquery['file_name'];
+
+			if ($fquery) {
+			// code...
+			$query = "UPDATE downloads set file_download_amount = '$file_download_amount'+1 where pandora = '$pandora'";
+					
+					$insert_query = mysqli_query($conn, $query);
+
+		if ($insert_query) {
+			// code...
+			$link = $link_archivo;
+			$loginsert = "Download-$url-1-$username";
+			error_log($loginsert);
+			insert_log($loginsert);
+		}
+
+		
+		}
+
+		}
+		// code...
+	}
+
+	
+
+
+
+
+
+
+	$jsondata['name']			=	$name;
+	$jsondata['share'] 		= $compartir;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+}
+
+function	mostrar_upload(){
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$form_upload = "";
+	
+		$query = "SELECT	
+								*
+								FROM
+								categoria 
+								";
+		$execute_query = mysqli_query($conn,$query);
+
+
+		$form_upload .= "<form class=\"row g-3\">
+        <div class=\"col-md-12\">
+          <label for=\"inputEmail4\" class=\"form-label\">Nombre de Documento</label>
+          <input type=\"text\" class=\"form-control\" id=\"name_document\" required>
+        </div>
+        <div class=\"col-md-6\">
+          <label for=\"inputPassword4\" class=\"form-label\">Autor</label>
+          <input type=\"text\" class=\"form-control\" id=\"autor\" required>
+        </div>
+        <div class=\"col-6\">
+          <label for=\"inputAddress\" class=\"form-label\">Fecha de publicacion</label>
+          <input type=\"date\" class=\"form-control\" id=\"f_public\" required>
+        </div>
+        <div class=\"col-6\">
+          <label for=\"inputAddress\" class=\"form-label\">ISBN</label>
+          <input type=\"date\" class=\"form-control\" id=\"isbn\" required>
+        </div>
+        <div class=\"col-6\">
+          <label for=\"inputAddress\" class=\"form-label\">cantidad de paginas</label>
+          <input type=\"number\" class=\"form-control\" id=\"page\" required>
+        </div>
+        <div class=\"col-12\">
+          <label for=\"exampleFormControlTextarea1\" class=\"form-label\">descripcion</label>
+          <textarea class=\"form-control\" id=\"descripcion\" rows=\"3\" required></textarea>
+        </div>
+        
+        <div class=\"col-md-12 sele_cat\">
+          <label for=\"inputState\" class=\"form-label\">Categoria</label>
+          <select id=\"inputState\" class=\"form-select\" required>
+          <option selected>Selecciona una opcion</option>";
+
+
+        while ($fquery = mysqli_fetch_array($execute_query)) {
+        	// code...
+        	$name_cat = $fquery['name_cat'];
+        	$path_cat = $fquery['path_cat'];
+        	$form_upload .= "<option>$name_cat</option>";
+        }
+    
+    $form_upload .= "
+    		</select>
+    		</div>
+        <div class=\"col-md-12\">
+          <label for=\"formFileSm\" class=\"form-label\">Small file input example</label>
+          <input class=\"form-control form-control-sm\" id=\"formFileSm\" type=\"file\" required>
+        </div>
+        
+        
+        <div class=\"col-12\">
+          <button type=\"submit\" class=\"btn btn-primary\">Subir Archivo rt</button>
+        </div>
+      </form>";
+	$jsondata	['form']		= $form_upload;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+}
+
+function upload_archivos(){
+	
+}
   
 ?>
