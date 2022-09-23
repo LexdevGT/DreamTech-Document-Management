@@ -2571,9 +2571,9 @@ function descargar_archivo(link){
                 
                 var a = document.createElement('a');
                 
-                a.href = link;
+                a.href = r.link;
                 a.target = '_blank';
-                a.download = 'Ministerio Ambiente';
+                a.download = r.name;
 
                 document.body.appendChild(a);
                 a.click();
@@ -2586,4 +2586,39 @@ function descargar_archivo(link){
         }    
     });
 
+}
+
+function compartir(link){
+    //alert('preciono el boton de compartir');
+    //alert(link);
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            link,
+            option: 'compartir'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+               var content = r.share;
+
+                navigator.clipboard.writeText(content)
+                    .then(() => {
+                    //console.log("link copiado al portapapel...")
+                    alert('LINK COPIADO PARA COMPARTIR');
+                })
+                    .catch(err => {
+                    console.log('Something went wrong', err);
+                })
+                
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });
 }
