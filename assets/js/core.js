@@ -768,7 +768,8 @@ function display_busqueda(){
         },
         error: function(r){
             //console.log(r);
-            $('#select_documento').append(r.responseText);
+            let arr = r.responseText.split('{');
+            $('#select_documento').append(arr[0]);
             //console.log(r.responseText);
         }  
     });
