@@ -586,7 +586,7 @@ function buscar_documentos(nombre){
         dataType: "json",        
         success: function(r) {                                                   
             
-            console.log(r.todo);
+            //console.log(r.todo);
             $("#itemsFiles").append(r.todo);
 
         
@@ -600,7 +600,7 @@ function buscar_documentos(nombre){
             }else{
 
                 $("#itemsFiles").append(r.responseText);
-                console.log(r);
+               //console.log(r);
             }
         }
     });
@@ -632,13 +632,13 @@ function busqueda_avanzada(tipo,categoria,nombre,fecha,autor){
         
         },
         error: function(r){
-            alert(r.responseText);
+            //alert(r.responseText);
             let arr = r.responseText.split('{');
         
                     
-            console.log(r);
+            //console.log(r);
             $('#rsl_b_avanzada').append(arr[1]);
-            console.log(r.responseText);
+            //console.log(r.responseText);
     
 
         }  
@@ -679,9 +679,9 @@ function display_author(){
             let arr = r.responseText.split('{');
         
                     
-            console.log(r);
+            //console.log(r);
             $('#select_author').append(arr[0]);
-            console.log(r.responseText);
+            //console.log(r.responseText);
     
 
         }  
@@ -690,6 +690,7 @@ function display_author(){
 }
 
 function display_categoria(){
+
      $('#rsl_b_avanzada').empty();
      $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -723,9 +724,9 @@ function display_categoria(){
             let arr = r.responseText.split('{');
         
                     
-            console.log(r);
+            //console.log(r);
             $('#select_categoria').append(arr[0]);
-            console.log(r.responseText);
+            //console.log(r.responseText);
     
 
         }  
@@ -734,13 +735,16 @@ function display_categoria(){
 }
 
 function display_busqueda(){
-     
+     var categoria = $("#select_categoria").val();
+     $('#select_documento').empty();
+
      $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
         url: "../assets/php/busqueda.php",
         data: ({
-            option: 'resultado_busqueda'
+            option: 'resultado_busqueda',
+            categoria: categoria
         }),
         dataType: "json",        
         success: function(r) {                                                   
@@ -763,9 +767,9 @@ function display_busqueda(){
         
         },
         error: function(r){
-            console.log(r);
+            //console.log(r);
             $('#select_documento').append(r.responseText);
-            console.log(r.responseText);
+            //console.log(r.responseText);
         }  
     });
 

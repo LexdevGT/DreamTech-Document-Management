@@ -340,7 +340,7 @@
 
                   <div class="col-sm">
                     <h5 class="welcome-text"><span class="text-black fw-bold">Categoría</span> </h5>
-                    <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_categoria" name="">
+                    <select onchange="display_busqueda();" class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_categoria" name="">
                                 <!--<option selected value="AL">Manuales</option>-->
                       </select>
                   </div>
@@ -546,7 +546,7 @@
     avanzado_display();
     display_categoria();
     display_author();
-    display_busqueda();
+    //display_busqueda();
     //seach_result_display();
     seach_result_display_1();
 $(function() {
