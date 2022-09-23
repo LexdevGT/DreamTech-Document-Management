@@ -221,7 +221,20 @@
 			case 'save_ciudadano_login':
 				saveCiudadanoLogin();
 				break;
-			case 'notificacion':
+			case 'descargar_archivos':
+				DescargaArchivo();
+			break;
+			case 'compartir':
+				// code...
+				compartir();
+				break;
+			case 'shared_archivo';
+					descargar_shared();
+					break;
+			case 'mostrar_upload':
+						mostrar_upload();
+				break;
+      case 'notificacion':
 			    newnotificacion();
 			    break;
 			case 'notificacion_leer':
@@ -229,7 +242,6 @@
 				break;
 			case 'buscar_todo':
 				busqueda_todo();
-				break;
 		}
 		
 	}
@@ -5609,6 +5621,7 @@ function viewgatget(){
 
 // iNICIA PRUEBA fINAL
 
+
  		$gfg_folderpath = "../../htmls/documents/";
  		$download = "documents/";
 
@@ -5636,6 +5649,31 @@ if (is_dir($gfg_folderpath)) {
 																	$count_files++;
 												$download = "documents/";
 																	switch ($file_c) {
+/* ---- Esto es main
+ 		$download = "../../htmls/";
+ 		//$download = "documents/";
+
+ 			$query = "SELECT
+ 									file_name,
+ 									file_path
+ 								FROM
+ 									downloads
+ 								ORDER BY
+ 									file_download_amount
+ 									DESC LIMIT 5";
+
+ 			$execute_query = mysqli_query($conn,$query);
+
+ 			while ($rquery = mysqli_fetch_array($execute_query)) {
+ 				// code...
+ 				$file   = $rquery['file_name'];
+ 				$url_archivo = $rquery['file_path'];
+ 				$file_c = strtolower(substr($file, -3));
+ 				if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+					{
+						$link_descarga = $download . $url_archivo;
+						switch ($file_c) {
+*/
 																			case 'pdf':
 																				// code...
 																				$image_ico = "mdi-file-pdf";
@@ -5667,178 +5705,21 @@ if (is_dir($gfg_folderpath)) {
 																				break;
 																		}
 
-
-//                    $archivos_recientes .=  $gfg_subfolder."<br>";
-
-                    
-                    if($count_files <= 5){
-                    	$direcc1 = $download.$gfg_subfolder;
-                    	$archivos_recientes .= "<li class=\"item\">
+						$archivos_recientes .= "<li class=\"item\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc1\" download>Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$direcc1\">Compartir Link</a>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"descargar_archivo('$url_archivo');return false;\">Descargar</a>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$url_archivo');return false;\">Compartir Link</a>
                                   </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_subfolder</b>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file</b>
                                 </li>";
-                    }
-                    
+
+					}
 
 
+ 			}
 
-
-                     }
-                $dirpath = "../../htmls/documents/" . $gfg_subfolder . "/";
-                $down    = "documents/" . $gfg_subfolder . "/";
-                
-                    // GETTING INSIDE EACH SUBFOLDERS
-                    if (is_dir($dirpath)) {
-                        $file = opendir($dirpath); {
-                            if ($file) {
-                //READING NAMES OF EACH FILE INSIDE SUBFOLDERS
-               while (($gfg_filename = readdir($file)) !== FALSE) {
-               	
-                if ($gfg_filename != '.' && $gfg_filename != '..') {
-
-                						$file_c = strtolower(substr($gfg_filename, -3));
-												if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-																{
-																	$count_files++;
-																	$download = "documents/". $gfg_subfolder."/";
-
-
-																	switch ($file_c) {
-																			case 'pdf':
-																				// code...
-																				$image_ico = "mdi-file-pdf";
-																				break;
-
-																			case 'png':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'ocx':
-																				// code...
-																			$image_ico = "mdi-file-word";
-																				break;
-
-																			case 'jpg':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'xls':
-																				// code...
-																			$image_ico = "mdi-file-excel";
-																				break;
-																			
-																			default:
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-																		}
-                        //$archivos_recientes .= $gfg_filename . "<br>";
-												if($count_files <= 3){
-                        $direcc2 = $download.$gfg_filename;
-                        	$archivos_recientes .= "<li class=\"item\">
-                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
-                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc2\" download >Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$direcc2\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$gfg_filename</b>
-                                </li>";
-                              }
-
-                        }
-                        
-                        $dirsub = $dirpath.$gfg_filename ."/";
-                       
-                        if (is_dir($dirsub)) {
-                        	// code...
-                        	$fil = opendir($dirsub);{
-                        		if($fil){
-                        			while (($nombre_archivo = readdir($fil)) !== FALSE) {
-
-                        				// code...
-                        				if ($nombre_archivo != '.' && $nombre_archivo != '..') {
-                        					// code...
-                        					$file_c = strtolower(substr($nombre_archivo, -3));
-															if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-																{
-																	$count_files++;
-																	 $download = $down.$gfg_filename ."/";
-																	switch ($file_c) {
-																			case 'pdf':
-																				// code...
-																				$image_ico = "mdi-file-pdf";
-																				break;
-
-																			case 'png':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'ocx':
-																				// code...
-																			$image_ico = "mdi-file-word";
-																				break;
-
-																			case 'jpg':
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-
-																			case 'xls':
-																				// code...
-																			$image_ico = "mdi-file-excel";
-																				break;
-																			
-																			default:
-																				// code...
-																			$image_ico = "mdi-file-image";
-																				break;
-																		}
-                        					//$archivos_recientes .= $nombre_archivo . "<br>";
-																		if($count_files <= 5){
-																		$direcc3 = $download.$nombre_archivo;
-
-                        					$archivos_recientes .= "<li class=\"item\">
-                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
-                                  <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
-                                    <a class=\"dropdown-item\" href=\"$direcc3\" download>Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"$direcc3\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$nombre_archivo</b>
-                                </li>";
-                                	}
-                        				}
-
-                        				}
-                        			}
-                        		}
-                        	}
-                        }
-
-
-
-
-                           }
-                         }	
-                      }
-                   }
-               }
-                   // $archivos_recientes .=  "<br>";
-                }
-            }
-        }
-    }
-}
-
-
-
-		
+ 								
 
 
         
@@ -5892,10 +5773,10 @@ if (is_dir($gfg_folderpath)) {
                           </div>
                           <div class=\"card-body p-6\">
                             <div class=\"drop-area\">
-                            	<h2>Arrastra y suelta imágenes</h2>
-                            	<span>0</span>
-                            	<button>Selecciona tus archivos</button>
-                            	<input type=\"file\" name=\"\" id=\"input-file\" hidden multiple />
+                            	
+                            	<span></span>
+                            	<button type=\"submit\" id=\"subir_archivos\" onclick=\"subir_archivos();return false;\">Sube tu archivos</button>
+                            	
                             </div>
                             <div id=\"preview\"></div>
                           </div>
@@ -5992,19 +5873,23 @@ function viewCategoriaDash(){
 		$categoria 	= "";
 		$rol_id   	= $_SESSION['rol_id'];
 		
-		$query = "SELECT * FROM categoria where status=1 ORDER BY f_creacion DESC LIMIT 4";
+		$query = "SELECT file_path_carpeta,SUM(file_download_amount) AS total, count(file_path_carpeta) As total_arch FROM downloads GROUP BY file_path_carpeta ORDER BY total DESC ";
 
 		$execute_query =  mysqli_query($conn, $query);
 
 		while($fetch_query = mysqli_fetch_array($execute_query)){
+			$total_archivos = $fetch_query['total_arch'];
+			$dir_cat	=	$fetch_query['file_path_carpeta'];
+			$divide = explode('/',$dir_cat);
+			$count_array = count($divide);
+			$count_name = $count_array - 2;
+			$name_cat = mysqli_real_escape_string($conn,$divide[$count_name]);
+			//$id_cat   = $fetch_query['idCat'];
+		//	$path     = $fetch_query['path_cat'];
 
-			$name_cat	=	$fetch_query['name_cat'];
-			$id_cat   = $fetch_query['idCat'];
-			$path     = $fetch_query['path_cat'];
+			//$divi_path = explode("htmls", $path);
 
-			$divi_path = explode("htmls", $path);
-
-			$data = $divi_path[1];
+			//$data = $divi_path[1];
 
 			$categoria .= "<div class=\"col-md-3 col-lg-3 row-eq-height\">
                               <div class=\"card  w-100 \">
@@ -6023,7 +5908,7 @@ function viewCategoriaDash(){
                                       </div>
                                     </div>
                                   </div>
-                                  <img src=\"images/folder/folder_azul.png\" width=\"40%\">
+                                  <img src=\"images/folder/folder_azul.png\" width=\"20%\">
                                   <h4 class=\"card-title card-title-dash \">$name_cat</h4>
                                   
                                 </div>";
@@ -6031,11 +5916,9 @@ function viewCategoriaDash(){
            $categoria .="       <div class=\"card-footer pb-0\">
                                   <div class=\"row\">
                                     <div class=\"col-sm-6\">
-                                      <p class=\"\" id=\"manual_conteo\">12 Archivos</p>
+                                      <p class=\"\" id=\"manual_conteo\">$total_archivos Archivos</p>
                                     </div>
-                                    <div class=\"col-sm-6\">
-                                      <h5><b>150 MB</b></h5>
-                                    </div>
+                                    
                                     
                                   </div>
                                 </div>";
@@ -6045,7 +5928,7 @@ function viewCategoriaDash(){
 
 		}
 
-		error_log($categoria);
+		//error_log($categoria);
 
 		
 		$jsondata['categoria'] = $categoria;
@@ -6053,6 +5936,277 @@ function viewCategoriaDash(){
 		$jsondata['error']   	= $error;
 		echo json_encode($jsondata);
 
+}
+
+function DescargaArchivo(){
+	global $conn;
+	$jsondata 	= array();
+	$error 	  	= '';
+	$message  	= '';
+	$url      	= "";
+	$carpeta 		= "";
+	$username   = $_SESSION['username'];
+	$link_archivo = "";
+
+	if (isset($_POST['link'])) {
+		$url = $_POST['link'];
+		// code...
+
+		$divide = explode('/',$url);
+
+
+		$count_array = count($divide);
+
+		$count_name = $count_array - 1;
+
+		$i=1;
+		$c=0;
+		while ($i<$count_array) {
+			// code...
+			$carpeta .= $divide[$c]."/";
+			//error_log($carpeta);
+			$i++;
+			$c++;
+		}
+
+
+
+		$name = mysqli_real_escape_string($conn,$divide[$count_name]);
+
+		$display_name = explode('.', $name);
+
+		$name_download = $display_name[0];
+
+		if ($name !="") {
+			// code...
+			$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
+					VALUES
+					('$name','$url','1','$carpeta',md5('$url'))
+					ON DUPLICATE KEY UPDATE 
+					file_download_amount	= file_download_amount + VALUES(file_download_amount),
+					file_path_carpeta = '$carpeta',
+					pandora = md5('$url')  ";
+					
+					$insert_query = mysqli_query($conn, $query);
+
+		if ($insert_query) {
+			// code...
+			$link_archivo = $url;
+			$loginsert = "Download-$url-1-$username";
+			error_log($loginsert);
+			insert_log($loginsert);
+		}
+
+		
+		}else{
+			$error .= "No se encontro el archivo descargable";
+		}
+
+		
+
+	}
+		
+	$jsondata['name']			=	$name;
+	$jsondata['link'] 		= $link_archivo;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
+}
+
+function compartir(){
+	global $conn;
+	$jsondata 	= array();
+	$error 	  	= '';
+	$message  	= '';
+	$url      	= "";
+	$carpeta 		= "";
+	$rol_id   	= $_SESSION['rol_id'];
+	$link_archivo = "";
+
+	if (isset($_POST['link'])) {
+		$url = $_POST['link'];
+
+		$query = "SELECT
+								pandora,
+								shared
+							FROM
+								downloads
+							WHERE
+								file_path = '$url'";
+
+		$execute_pandora = mysqli_query($conn,$query);
+
+		$fquery  = mysqli_fetch_array($execute_pandora);
+
+		$pandora = $fquery['pandora'];
+		$shared = $fquery['shared'];
+
+		if ($pandora!="") {
+			// code...
+			$raiz = "http://161.35.13.96/htmls/dashboard.html?share=";
+			$compartir = $raiz.$pandora."&type=archivo";
+			$query = "UPDATE downloads set shared = '$shared'+1 where pandora = '$pandora'";
+			//error_log($query);
+					
+					$insert_query = mysqli_query($conn, $query);
+		}
+
+	}
+
+
+
+	$jsondata['share'] 		= $compartir;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+}
+
+function descargar_shared(){
+	global $conn;
+	$jsondata 	= array();
+	$error 	  	= '';
+	$message  	= '';
+	$url      	= "";
+	$carpeta 		= "";
+	$username   = $_SESSION['username'];
+	$link_archivo = "";
+	$compartir = "";
+	$pandora = "";
+	$type	   = "";
+	$name 	 = "";
+
+	if (isset($_POST['pandora'])) {
+		if (isset($_POST['type'])) {
+			$pandora = $_POST['pandora'];
+			$type = $_POST['type'];
+
+			$query = "SELECT * 
+									FROM
+									downloads
+									WHERE 
+									pandora = '$pandora'";
+			error_log($query);
+			$execute_query = mysqli_query($conn, $query);
+			$fquery  = mysqli_fetch_array($execute_query);
+
+			$link_archivo = $fquery['file_path'];
+			//$adicion = "../../htmls/";
+			//$link_archivo = $adicion.$link_archivo;
+			error_log($link_archivo);
+			$file_download_amount=$fquery['file_download_amount'];
+			$name = $fquery['file_name'];
+
+			if ($fquery) {
+			// code...
+			$query = "UPDATE downloads set file_download_amount = '$file_download_amount'+1 where pandora = '$pandora'";
+					
+					$insert_query = mysqli_query($conn, $query);
+
+		if ($insert_query) {
+			// code...
+			$link = $link_archivo;
+			$loginsert = "Download-$url-1-$username";
+			error_log($loginsert);
+			insert_log($loginsert);
+		}
+
+		
+		}
+
+		}
+		// code...
+	}
+
+	
+
+
+
+
+
+
+	$jsondata['name']			=	$name;
+	$jsondata['share'] 		= $compartir;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+}
+
+function	mostrar_upload(){
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$form_upload = "";
+	
+		$query = "SELECT	
+								*
+								FROM
+								categoria 
+								";
+		$execute_query = mysqli_query($conn,$query);
+
+
+		$form_upload .= "<form class=\"row g-3\">
+        <div class=\"col-md-12\">
+          <label for=\"inputEmail4\" class=\"form-label\">Nombre de Documento</label>
+          <input type=\"text\" class=\"form-control\" id=\"name_document\" required>
+        </div>
+        <div class=\"col-md-6\">
+          <label for=\"inputPassword4\" class=\"form-label\">Autor</label>
+          <input type=\"text\" class=\"form-control\" id=\"autor\" required>
+        </div>
+        <div class=\"col-6\">
+          <label for=\"inputAddress\" class=\"form-label\">Fecha de publicacion</label>
+          <input type=\"date\" class=\"form-control\" id=\"f_public\" required>
+        </div>
+        <div class=\"col-6\">
+          <label for=\"inputAddress\" class=\"form-label\">ISBN</label>
+          <input type=\"date\" class=\"form-control\" id=\"isbn\" required>
+        </div>
+        <div class=\"col-6\">
+          <label for=\"inputAddress\" class=\"form-label\">cantidad de paginas</label>
+          <input type=\"number\" class=\"form-control\" id=\"page\" required>
+        </div>
+        <div class=\"col-12\">
+          <label for=\"exampleFormControlTextarea1\" class=\"form-label\">descripcion</label>
+          <textarea class=\"form-control\" id=\"descripcion\" rows=\"3\" required></textarea>
+        </div>
+        
+        <div class=\"col-md-12 sele_cat\">
+          <label for=\"inputState\" class=\"form-label\">Categoria</label>
+          <select id=\"inputState\" class=\"form-select\" required>
+          <option selected>Selecciona una opcion</option>";
+
+
+        while ($fquery = mysqli_fetch_array($execute_query)) {
+        	// code...
+        	$name_cat = $fquery['name_cat'];
+        	$path_cat = $fquery['path_cat'];
+        	$form_upload .= "<option>$name_cat</option>";
+        }
+    
+    $form_upload .= "
+    		</select>
+    		</div>
+        <div class=\"col-md-12\">
+          <label for=\"formFileSm\" class=\"form-label\">Small file input example</label>
+          <input class=\"form-control form-control-sm\" id=\"formFileSm\" type=\"file\" required>
+        </div>
+        
+        
+        <div class=\"col-12\">
+          <button type=\"submit\" class=\"btn btn-primary\">Subir Archivo rt</button>
+        </div>
+      </form>";
+	$jsondata	['form']		= $form_upload;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+}
+
+function upload_archivos(){
+	
 }
   
 ?>
