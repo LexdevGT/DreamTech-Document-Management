@@ -607,6 +607,9 @@ function buscar_documentos(nombre){
 }
 
 function busqueda_avanzada(tipo,categoria,nombre,fecha,autor){
+
+    $('#rsl_b_avanzada').empty();
+
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
@@ -643,7 +646,7 @@ function busqueda_avanzada(tipo,categoria,nombre,fecha,autor){
 }
 
 function display_author(){
-
+     $('#rsl_b_avanzada').empty();
      $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
@@ -687,7 +690,7 @@ function display_author(){
 }
 
 function display_categoria(){
-
+     $('#rsl_b_avanzada').empty();
      $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
@@ -731,7 +734,7 @@ function display_categoria(){
 }
 
 function display_busqueda(){
-
+     
      $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
