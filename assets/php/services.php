@@ -5337,23 +5337,6 @@ function crearcarpeta(){
 }
 
 
-function view_categorias_folder(){
-		global $conn;
-		$jsondata = array();
-		$error 	  = '';
-		$message  = '';
-
-		#codigo................;
-
-
-
-
-		$jsondata['message'] = $message;
-		$jsondata['error']   = $error;
-		echo json_encode($jsondata);
-}
-
-
 function viewgatget(){
 		global $conn;
 		$jsondata = array();
@@ -5475,7 +5458,7 @@ function viewgatget(){
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
                                     <a class=\"dropdown-item\" href=\"#\" onclick=\"descargar_archivo('$url_archivo');return false;\">Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$url_archivo');return false;\">Compartir Link</a>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$url_archivo','archivo');return false;\">Compartir Link</a>
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file</b>
                                 </li>";
@@ -5747,19 +5730,19 @@ function DescargaArchivo(){
 			// code...
 			$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
 					VALUES
-					('$name','$url','1','$carpeta',md5('$url'))
+					('$name','$url','1','$carpeta',MD5('$url'))
 					ON DUPLICATE KEY UPDATE 
 					file_download_amount	= file_download_amount + VALUES(file_download_amount),
 					file_path_carpeta = '$carpeta',
-					pandora = md5('$url')  ";
-					
+					pandora = MD5('$url')";
+					error_log($query);
 					$insert_query = mysqli_query($conn, $query);
 
 		if ($insert_query) {
 			// code...
 			$link_archivo = $url;
 			$loginsert = "Download-$url-1-$username";
-			error_log($loginsert);
+//			error_log($loginsert);
 			insert_log($loginsert);
 		}
 
@@ -5942,14 +5925,15 @@ function	mostrar_upload(){
         <div class=\"col-md-12 sele_cat\">
           <label for=\"inputState\" class=\"form-label\">Categoria</label>
           <select id=\"inputState\" class=\"form-select\" required>
-          <option selected>Selecciona una opcion</option>";
+          <option value=\"\" selected>Selecciona una opcion</option>";
 
 
         while ($fquery = mysqli_fetch_array($execute_query)) {
         	// code...
         	$name_cat = $fquery['name_cat'];
         	$path_cat = $fquery['path_cat'];
-        	$form_upload .= "<option>$name_cat</option>";
+        	$id_cat = $fquery['idCat'];
+        	$form_upload .= "<option value=\"$id_cat\">$name_cat</option>";
         }
     
     $form_upload .= "
@@ -5957,12 +5941,12 @@ function	mostrar_upload(){
     		</div>
         <div class=\"col-md-12\">
           <label for=\"formFileSm\" class=\"form-label\">Small file input example</label>
-          <input class=\"form-control form-control-sm\" id=\"formFileSm\" type=\"file\" required>
+          <input class=\"form-control form-control-sm\" id=\"formFileSm\" type=\"file\" required >
         </div>
         
         
         <div class=\"col-12\">
-          <button type=\"submit\" class=\"btn btn-primary\">Subir Archivo rt</button>
+          <button type=\"submit\" class=\"btn btn-primary\">Subir Archivo</button>
         </div>
       </form>";
 	$jsondata	['form']		= $form_upload;
@@ -5972,7 +5956,7 @@ function	mostrar_upload(){
 }
 
 function upload_archivos(){
-	
+
 }
   
 ?>

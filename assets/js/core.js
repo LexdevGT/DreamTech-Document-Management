@@ -1,7 +1,13 @@
 $(function(){
     load_sidebar();
     load_headbar();
-    shared_descarga();
+     const queryString = window.location.search;
+            console.log(queryString);
+    if (queryString!=="") {
+        shared_descarga(queryString);
+    }
+
+    viewcarpeta();
 
     
 
@@ -2542,6 +2548,7 @@ function viewcarpeta(directorio){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
+                //alert('prueba');
                 $('.viewcategoria').html(r.carpetas);
                 $('.patchbtn').html(r.pathbtn);
                 /* No code */
@@ -2591,7 +2598,7 @@ function descargar_archivo(link){
 
 }
 
-function compartir(link){
+function compartir(link,type){
     //alert('preciono el boton de compartir');
     //alert(link);
     $.ajax({
@@ -2600,6 +2607,7 @@ function compartir(link){
         url: "../assets/php/services.php",
         data: ({
             link,
+            type,
             option: 'compartir'                   
         }),
         dataType: "json",        
@@ -2627,11 +2635,10 @@ function compartir(link){
 
     }
 
-    function shared_descarga(){
-        const queryString = window.location.search;
-            console.log(queryString);
-
-        const urlParams = new URLSearchParams(queryString);
+    function shared_descarga(veri){
+       
+        console.log('Entro a descargar shared');
+        const urlParams = new URLSearchParams(veri);
 
         const pandora = urlParams.get('share')
         console.log(pandora);
