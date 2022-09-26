@@ -233,7 +233,18 @@
 					break;
 			case 'mostrar_upload':
 						mostrar_upload();
-
+				break;
+      case 'notificacion':
+			    newnotificacion();
+			    break;
+			case 'notificacion_leer':
+				readnotification();
+				break;
+			case 'buscar_todo':
+				busqueda_todo();
+				break;
+			case 'load_explorer':
+				loadExplorerFunction();
 				break;
 
 			case 'upload_Archivos':
@@ -243,7 +254,7 @@
 		}
 		
 	}
-	
+
 	function nueva(){
 		global $conn;
 		$jsondata = array();
@@ -251,6 +262,276 @@
 		$message  = '';
 
 		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadExplorerFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$html = '';
+		$retorno = '';
+		//unset($_SESSION['exp_path']);
+		$dir_var = $_POST['directory'];
+		if(isset($_SESSION['exp_path'])){
+			$dir = $_SESSION['exp_path'];
+			$retorno = $dir;
+		}else{
+			$dir = "../../htmls/documents/"; 
+			$retorno = "../../htmls/documents/";
+		}
+		
+		if($dir_var != ''){
+			$dir .= "$dir_var/";
+		}
+
+		$_SESSION['exp_path'] = $dir;
+
+error_log($dir);
+		$data = scandir($dir);
+error_log(print_r($data,true));
+		$count = 0;
+
+		$html .= "
+			<div class=\"row\">
+        <div class=\"col-sm-3 nav-item\">
+						<a class=\"nav-link\" href='$retorno'>
+           <i class=\"mdi mdi-step-backward menu-icon\"><span class=\"menu-title\">Regresar</span></i>
+            </a>
+        </div>
+      </div>
+			";
+		
+		foreach ($data as $key => $value) {
+			if($value !== '.' && $value !== '..'){
+				
+				if($count ==0){
+					$html .= '<div class="row mt-2">';
+				}
+
+				if($count <=3){
+					$html .= "
+						<div class=\"col-sm-3 nav-item\">
+						<a class=\"nav-link\" onclick=\"load_explorer('$value')\" href='#'>
+              <div class=\"card\">
+                <div class=\"card-body\">
+                  <i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>
+                </div>
+              </div>
+            </a>
+             </div>
+					";
+				$count++;
+				}else{
+					$count = 0;
+					$html .= '</div>';
+				}
+				
+			}
+		}
+
+		$jsondata['retorno'] = $retorno;
+		$jsondata['html']		 = $html;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function busqueda_todo(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$archivos_recientes = "";
+		$permiso  = "";
+		$graficas = "";
+		$archi  = 'Nuevo Archivo';
+		$cat1 = '';
+		$cat2 = '';
+		$cat3	= '';
+		$ar ="";
+		$rol_name = $_SESSION['rol_name'];
+		$rol_id   = $_SESSION['rol_id'];
+		$name = $_POST['nombre'];
+		$order = $_POST['order'];
+
+
+
+		switch ($rol_name) {
+			case 'Administrador':
+				// code...
+				$n = 4;
+				break;
+			case 'Ciudadano';
+				// code...
+				$n = 6;
+				break;
+			default:
+				// code...
+				$n = 4;
+				break;
+		}
+
+
+		$logquery  	="SELECT UPPER(file_name) as name_file, display_name FROM documentation";
+
+		if(!empty($name)){
+			$logquery .= " WHERE LOCATE(UPPER('".$name."'), file_name) > 0";
+		}else{
+			$logquery .= " WHERE 1=1";
+			$message = 'Ingrese texto para la búsqueda';
+		}
+
+		if(!empty($order)&&$order!=='all'){
+			$logquery .= " ORDER BY ".$order." ASC  ";
+		}else{
+			$logquery .= " ORDER BY file_name ASC  "; 
+		}
+		
+		$execute_rquery 	= mysqli_query($conn, $logquery);
+		
+		//print_r($logquery);
+		
+		$x = 0;
+        while($fetch_query = mysqli_fetch_array($execute_rquery)){
+
+        	$file_c = strtolower(substr($fetch_query['name_file'], -3));
+												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
+
+        	switch ($file_c) {
+					case 'pdf':
+						// code...
+						$image_ico = "mdi-file-pdf";
+						break;
+
+					case 'png':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+
+					case 'ocx':
+						// code...
+					$image_ico = "mdi-file-word";
+						break;
+
+					case 'jpg':
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+
+					case 'xls':
+						// code...
+					$image_ico = "mdi-file-excel";
+						break;
+					
+					default:
+						// code...
+					$image_ico = "mdi-file-image";
+						break;
+				}
+
+
+        	$file_name = $fetch_query['name_file'];
+
+        	$archivos_recientes .= "<li class=\"item\">
+                                  <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"fileName$x\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file_name</b>
+                                </li>";
+
+            $x= $x+1;
+
+        }
+
+
+        $segundafila = $archivos_recientes;
+
+
+        
+
+        print($segundafila);//die();
+
+        $jsondata['todo'] = $segundafila;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+
+
+		echo json_encode($jsondata);
+}
+
+	function readnotification(){
+
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$notificacion = '';
+		
+
+		$readnotquery  	="SELECT * FROM notifications WHERE estado = 0";
+		$execute_rquery 	= mysqli_query($conn, $readnotquery);
+
+		$notificacion .='<div id = "dropdownNotify" class="dropdown-menu dropdown-menu-right navbar-dropdown">';
+		$notificacion .=  '<div class="dropdown-header text-center">';
+
+		while($fetch_query = mysqli_fetch_array($execute_rquery)){
+
+			$title	=	$fetch_query['title'];
+			$notification   = $fetch_query['notification'];
+			$user    = $fetch_query['user'];
+			
+			$notificacion .=	'<p class="mb-1 mt-3 font-weight-semibold">'.$title.'</p>';
+			$notificacion .=	'<p class="fw-light text-muted mb-0">'.$notification.'</p>';
+
+		}
+
+
+		$notificacion .= '</div>';
+		$notificacion .=  '<a class="dropdown-item"href="#" id="read_notify"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Entendido</a>';
+		$notificacion .= '</div>';
+
+
+
+		$jsondata['notificacion_read']= $notificacion;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+
+	}
+	
+
+	function newnotificacion()
+	{
+		global $conn;
+
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$notificacion = isset($_POST['notification'])?$_POST['notification']:"";
+		$title = isset($_POST['title'])?$_POST['title']:"";
+		$datetm = "CURRENT_TIMESTAMP";
+		$user = $_SESSION['user_email'];
+
+		if(!empty($notificacion)&&!empty($user)){
+
+		$query_insert_notify = "
+					INSERT INTO notifications (notification,title,date_time,estado,user)
+					VALUES ('$notificacion','$title',$datetm,0,'$user')
+							   ";
+
+							   //print_r($query_insert_notify);
+					$execute_insert_access = $conn->query($query_insert_notify);
+		}
+
+		if($execute_insert_access){
+			$message = "Notificación enviada";
+		}else{
+			$error = "No se pudo enviar la notificación";
+		}
+
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -485,6 +766,7 @@
 			
 		}
 */
+/*
 		$query_tabla_procesos = "
 			SELECT plaza_name
 				,plaza_categoria
@@ -547,11 +829,11 @@
 	                                </td>
                               	</tr>
 				  ";
-		}
-
+		}*/
+/*
 		$jsondata['tabla'] 		= $tabla;
 		$jsondata['lista_etapas'] 	= $lista_etapas;
-		$jsondata['lista_plazas'] 	= $lista_plazas;
+		$jsondata['lista_plazas'] 	= $lista_plazas;*/
 		$jsondata['message'] 		= $message;
 		$jsondata['error']   		= $error;
 		echo json_encode($jsondata);
@@ -5346,6 +5628,7 @@ function crearcarpeta(){
 
 
 function viewgatget(){
+	//error_log('entramos');
 		global $conn;
 		$jsondata = array();
 		$error 	  = '';
@@ -5402,7 +5685,6 @@ function viewgatget(){
                                     </div>
                                   </div>
                           </div>
-
                           <div class=\"card-body\">
                             <div class=\"row\" >
                               <div class=\"col-lg-12\">
@@ -5578,7 +5860,6 @@ $row = mysqli_fetch_assoc($execute_query);
                             </div>
                             <div id=\"preview\"></div>
                           </div>
-
                         </div>
                       </div>";
        		}
@@ -5592,6 +5873,7 @@ $row = mysqli_fetch_assoc($execute_query);
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
 }
+
 
 function viewcategoria(){
 		global $conn;
@@ -5821,6 +6103,7 @@ function compartir(){
 	$carpeta 		= "";
 	$rol_id   	= $_SESSION['rol_id'];
 	$link_archivo = "";
+	$compartir = '';
 
 	if (isset($_POST['link'])) {
 		$url = $_POST['link'];
@@ -5832,7 +6115,7 @@ function compartir(){
 								downloads
 							WHERE
 								file_path = '$url'";
-
+error_log($query);
 		$execute_pandora = mysqli_query($conn,$query);
 
 		$fquery  = mysqli_fetch_array($execute_pandora);
@@ -5884,7 +6167,7 @@ function descargar_shared(){
 									downloads
 									WHERE 
 									pandora = '$pandora'";
-			error_log($query);
+			//error_log($query);
 			$execute_query = mysqli_query($conn, $query);
 			$fquery  = mysqli_fetch_array($execute_query);
 

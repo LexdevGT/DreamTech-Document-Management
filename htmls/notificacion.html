@@ -94,9 +94,17 @@
                       <div class="col-sm-8 stretch-card">
                             <div class="card card-rounded">
                               <div class="card-body">
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                      <label >Título:</label>
+                                      <input class="form-control" id="notify_title" type="text" style="width: 100%">
+                                  </div>
+
+                                </div>
 
                                 <div class="row">
-                                  <div class="col-sm-12 text-center">
+                                  <div class="col-sm-12">
+                                      <label >Notificación:</label>
                                       <textarea rows="5" id="notify" style="width: 100%"></textarea>
                                   </div>
 
@@ -106,7 +114,7 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-sm-12 d-flex justify-content-end">
-                                    <button class="btn btn-primary" style="color: white;"><b>Enviar</b></button>
+                                    <button class="btn btn-primary" onclick="notification_send($('#notify_title').val(),$('#notify').val())" style="color: white;"><b>Enviar</b></button>
                                   </div>
                                 </div>
                                 
