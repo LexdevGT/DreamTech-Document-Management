@@ -5818,8 +5818,7 @@ $row = mysqli_fetch_assoc($execute_query);
     
 											$(function() {
 												var ctx = $('#GraphDash');
-											        //const ctx = document.getElementById('GraphDash').getContext('2d');
-											        alert(ctx);
+											        
 
 											        var grafica = new Chart(ctx,{
 											            type:\"pie\",
