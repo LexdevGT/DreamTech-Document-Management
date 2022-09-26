@@ -6177,6 +6177,8 @@ function descargar_shared(){
 			$file_download_amount=$fquery['file_download_amount'];
 			$name = $fquery['file_name'];
 
+			//$compartir .= $link_archivo;
+
 			if ($fquery) {
 			// code...
 			$query = "UPDATE downloads set file_download_amount = '$file_download_amount'+1 where pandora = '$pandora'";
@@ -6206,7 +6208,7 @@ function descargar_shared(){
 
 
 	$jsondata['name']			=	$name;
-	$jsondata['share'] 		= $compartir;
+	$jsondata['share'] 		= $link;
 	$jsondata['message'] 	= $message;
 	$jsondata['error']   	= $error;
 	echo json_encode($jsondata);

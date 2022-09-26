@@ -2920,6 +2920,8 @@ function compartir(link,type){
 
             //alert(r.link);                                                   
             if(r.error == ''){
+
+                alert(r.share);
                 
                 var a = document.createElement('a');
                 
