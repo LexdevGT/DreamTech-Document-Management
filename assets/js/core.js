@@ -1,7 +1,7 @@
 $(function(){
     load_sidebar();
     load_headbar();
-    shared_descarga();
+    //shared_descarga();
 
     
 
@@ -224,6 +224,29 @@ function new_function(){
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function load_explorer(directory=''){
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'load_explorer',
+            directory
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                //alert(r.message);
+                $('#data_explorer').html(r.html);
+            }else{
+                alert(r.error);
+                window.location.replace('dashboard.html');
             }
         }    
     });
@@ -2625,7 +2648,8 @@ function load_sidebar(){
                                 '</a>'+
                                 '<div class="collapse" id="documents">'+
                                   '<ul class="nav flex-column sub-menu">'+
-                                    '<li class="item"><a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
+                                    '<!--<li class="item"><a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>-->'+
+                                    '<li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
                                     '<li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
                                   '</ul>'+
                                 '</div>'+

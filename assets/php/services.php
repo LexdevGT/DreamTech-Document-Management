@@ -242,8 +242,98 @@
 				break;
 			case 'buscar_todo':
 				busqueda_todo();
+				break;
+			case 'load_explorer':
+				loadExplorerFunction();
+				break;
 		}
 		
+	}
+
+	function nueva(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+
+		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadExplorerFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$html = '';
+		$retorno = '';
+		//unset($_SESSION['exp_path']);
+		$dir_var = $_POST['directory'];
+		if(isset($_SESSION['exp_path'])){
+			$dir = $_SESSION['exp_path'];
+			$retorno = $dir;
+		}else{
+			$dir = "../../htmls/documents/"; 
+			$retorno = "../../htmls/documents/";
+		}
+		
+		if($dir_var != ''){
+			$dir .= "$dir_var/";
+		}
+
+		$_SESSION['exp_path'] = $dir;
+
+error_log($dir);
+		$data = scandir($dir);
+error_log(print_r($data,true));
+		$count = 0;
+
+		$html .= "
+			<div class=\"row\">
+        <div class=\"col-sm-3 nav-item\">
+						<a class=\"nav-link\" href='$retorno'>
+           <i class=\"mdi mdi-step-backward menu-icon\"><span class=\"menu-title\">Regresar</span></i>
+            </a>
+        </div>
+      </div>
+			";
+		
+		foreach ($data as $key => $value) {
+			if($value !== '.' && $value !== '..'){
+				
+				if($count ==0){
+					$html .= '<div class="row mt-2">';
+				}
+
+				if($count <=3){
+					$html .= "
+						<div class=\"col-sm-3 nav-item\">
+						<a class=\"nav-link\" onclick=\"load_explorer('$value')\" href='#'>
+              <div class=\"card\">
+                <div class=\"card-body\">
+                  <i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>
+                </div>
+              </div>
+            </a>
+             </div>
+					";
+				$count++;
+				}else{
+					$count = 0;
+					$html .= '</div>';
+				}
+				
+			}
+		}
+
+		$jsondata['retorno'] = $retorno;
+		$jsondata['html']		 = $html;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
 	}
 
 	function busqueda_todo(){
@@ -437,19 +527,6 @@
 			$error = "No se pudo enviar la notificación";
 		}
 
-
-		$jsondata['message'] = $message;
-		$jsondata['error']   = $error;
-		echo json_encode($jsondata);
-	}
-
-	function nueva(){
-		global $conn;
-		$jsondata = array();
-		$error 	  = '';
-		$message  = '';
-
-		#codigo................;
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -684,6 +761,7 @@
 			
 		}
 */
+/*
 		$query_tabla_procesos = "
 			SELECT plaza_name
 				,plaza_categoria
@@ -746,11 +824,11 @@
 	                                </td>
                               	</tr>
 				  ";
-		}
-
+		}*/
+/*
 		$jsondata['tabla'] 		= $tabla;
 		$jsondata['lista_etapas'] 	= $lista_etapas;
-		$jsondata['lista_plazas'] 	= $lista_plazas;
+		$jsondata['lista_plazas'] 	= $lista_plazas;*/
 		$jsondata['message'] 		= $message;
 		$jsondata['error']   		= $error;
 		echo json_encode($jsondata);
@@ -5559,6 +5637,7 @@ function view_categorias_folder(){
 
 
 function viewgatget(){
+	//error_log('entramos');
 		global $conn;
 		$jsondata = array();
 		$error 	  = '';
@@ -5612,7 +5691,6 @@ function viewgatget(){
                                     </div>
                                   </div>
                           </div>
-
                           <div class=\"card-body\">
                             <div class=\"row\" >
                               <div class=\"col-lg-12\">
@@ -5621,35 +5699,6 @@ function viewgatget(){
 
 // iNICIA PRUEBA fINAL
 
-
- 		$gfg_folderpath = "../../htmls/documents/";
- 		$download = "documents/";
-
-   //$gfg_folderpath = "GeeksForGeeks/";
-// CHECKING WHETHER PATH IS A DIRECTORY OR NOT
-if (is_dir($gfg_folderpath)) {
-    // GETTING INTO DIRECTORY
-    $files = opendir($gfg_folderpath); {
-        // CHECKING FOR SMOOTH OPENING OF DIRECTORY
-    	$count_files = 0;
-        if ($files) {
-            //READING NAMES OF EACH ELEMENT INSIDE THE DIRECTORY
-            $count_files = 0;
-            while (($gfg_subfolder = readdir($files)) !== FALSE) {
-
-            	
-                // CHECKING FOR FILENAME ERRORS
-             if ($gfg_subfolder != '.' && $gfg_subfolder != '..') {
-
-             		$file_c = strtolower(substr($gfg_subfolder, -3));
-												//if ($file_c == "pdf" || $file_c == "jpg" || $file_c == "png" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-
-             						if ($file_c == "pdf" || $file_c == "xls" ||$file_c == "doc" || $file_c== "ocx" || $file_c == "lsx")
-																{
-																	$count_files++;
-												$download = "documents/";
-																	switch ($file_c) {
-/* ---- Esto es main
  		$download = "../../htmls/";
  		//$download = "documents/";
 
@@ -5673,7 +5722,6 @@ if (is_dir($gfg_folderpath)) {
 					{
 						$link_descarga = $download . $url_archivo;
 						switch ($file_c) {
-*/
 																			case 'pdf':
 																				// code...
 																				$image_ico = "mdi-file-pdf";
@@ -5780,7 +5828,6 @@ if (is_dir($gfg_folderpath)) {
                             </div>
                             <div id=\"preview\"></div>
                           </div>
-
                         </div>
                       </div>";
        		}
@@ -5794,6 +5841,7 @@ if (is_dir($gfg_folderpath)) {
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
 }
+
 
 function viewcategoria(){
 		global $conn;
@@ -6023,6 +6071,7 @@ function compartir(){
 	$carpeta 		= "";
 	$rol_id   	= $_SESSION['rol_id'];
 	$link_archivo = "";
+	$compartir = '';
 
 	if (isset($_POST['link'])) {
 		$url = $_POST['link'];
@@ -6034,7 +6083,7 @@ function compartir(){
 								downloads
 							WHERE
 								file_path = '$url'";
-
+error_log($query);
 		$execute_pandora = mysqli_query($conn,$query);
 
 		$fquery  = mysqli_fetch_array($execute_pandora);
@@ -6086,7 +6135,7 @@ function descargar_shared(){
 									downloads
 									WHERE 
 									pandora = '$pandora'";
-			error_log($query);
+			//error_log($query);
 			$execute_query = mysqli_query($conn, $query);
 			$fquery  = mysqli_fetch_array($execute_query);
 
