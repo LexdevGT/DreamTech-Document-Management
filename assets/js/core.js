@@ -2623,7 +2623,7 @@ function compartir(link,type){
                     alert('LINK COPIADO PARA COMPARTIR');
                 })
                     .catch(err => {
-                    console.log('Something went wrong', err);
+                    console.log('No se copio el URL', err);
                 })
                 
             }else{
@@ -2703,6 +2703,84 @@ function compartir(link,type){
         }    
     });
 
+    }
+
+    function uploadarchivos(nombre_doc,autor,) {
+        // body...
+
+        var nombre_doc = $('#name_document').val();
+        var autor      = $('#autor').val();
+        var f_publi    = $('#f_public').val();
+        var isbn       = $('#isbn').val();
+        var pag        = $('#page').val();
+        var descrp     = $('#descripcion').val();
+        var cat        = $('#cat').val();
+        var file       = $('#formFileSm').val();
+        //alert(file);
+
+        var formData = new FormData();
+        formData.append("formFileSm[]", document.getElementById('formFileSm').files[0]);
+
+        formData.append('autor',autor);
+        formData.append('f_publi',f_publi);
+        formData.append('isbn',isbn);
+        formData.append('pag',pag);
+        formData.append('descrp',descrp);
+        formData.append('cat',cat);
+        formData.append('nombre_doc',nombre_doc);
+
+        //alert(files);
+        //console.log(formData['formFileSm']);
+        $.ajax({
+            url: '../assets/php/upload_archivo.php',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(r) {
+                alert('Se guardo exitosamente el archivo');
+                
+                $('#upload').modal('hide');
+                window.location.replace('dashboard.html');
+            }
+        });
+        return false;
+
+
+
+
+
+
+
+
+/*
+        $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            nombre_doc,
+            autor,
+            f_publi,
+            isbn,
+            pag,
+            descrp,
+            cat,
+            file,
+            option: 'upload_Archivos'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                alert('activo');             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });*/
     }
 
 
