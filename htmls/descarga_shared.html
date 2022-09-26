@@ -32,10 +32,54 @@
   <link rel="stylesheet" href="css/vertical-layout-light/style.css">
   <!-- endinject -->
   <!--<link rel="shortcut icon" href="images/favicon.png" />-->
-  
+  <style type="text/css">
+    
+#share-buttons {
+    width: 400px;
+    display:block;
+    margin: 0 auto;
+    -ms-transform: scale(.8,.8);
+    -webkit-transform: scale(.8,.8);
+    transform: scale(.8,.8);
+}
+#share-buttons img {
+    width: 35px;
+    padding: 5px;
+    border: 0;
+    display: inline;
+}
+
+#share-buttons a{
+    width: 50px;
+    height: 50px;
+    display: inline-block;   
+}
+
+#share-buttons i{
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    background-image: url("/images/botones_sociales_compartir.png");
+}
+
+  </style>
+  <script type="text/javascript">
+     var lba = document.getElementsByClassName("social-button")
+
+        function myPopup() {
+            window.open(this.href, 'mywin',
+                    'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
+            event.preventDefault();
+            return false;
+        }
+
+        for (var i = 0; i < lba.length; i++) {
+            lba[i].addEventListener("click", myPopup, false);
+        }
+  </script>
   
 </head>
-<body >
+<body>
   <div class="container-scroller">
     
     <!-- partial:partials/_navbar.html -->
@@ -108,8 +152,8 @@
             </div>
           </li>
         -->
-          <li id="info_notify" class="nav-item dropdown d-none d-lg-block user-dropdown">
-            <i id="notify_info"  class="mdi mdi-bell mdi-24px"></i>
+          <li class="nav-item">
+            <i class="mdi mdi-bell mdi-24px"></i>
             <!--form class="search-form" action="#">
               <i class="icon-search"></i>
               <input type="search" class="form-control" placeholder="Search Here" title="Search here">
@@ -144,94 +188,11 @@
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="home-tab">
-                
-                <div class="tab-content tab-content-basic">
-                  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
-                    <div class="row">
-                      <div class="col-sm-12 ">
-                        <div class="statistics-details align-items-center ">
-                          
-                          <div class="row">
-                            <div class="col-md-10 col-lg-10 ">
-                            
-                            </div>
-                            <div class="col-md-2 col-lg-2 ">
-                            <h4 ><a href="biblioteca.html"><b><span>Ver todo<i class="menu-icon mdi mdi-chevron-right "></i></span></b></a></h4>
-                            </div>
+          
 
-                          </div>
-
-                            <div class="row carp-reciente">
-
-
-                           </div>
-                        </div>
-                      </div>
-                    </div> 
-                  
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="home-tab">
-                
-                <div class="tab-content tab-content-basic">
-                  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
-                    <div class="row">
-                      <div class="col-sm-12 ">
-                        <div class="statistics-details align-items-center ">
-                          <div class="row gatget">
-
-                    
-                     
-                     
-                
-                    <!--  LADO DERECHO TERCER PANEL --->
-
-                    
-                   
-                    
-                    
-
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
-
-
-   <!-- Modal -->
-<div class="modal fade" id="upload" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Subir Archivos</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body subir_archivos">
-
-        
-        
-      </div>
-      
-    </div>
-  </div>
-</div>
    
 
- 
+
 
             
         </div>
@@ -262,7 +223,7 @@
   <!-- inject:js -->
   <script src="js/off-canvas.js"></script>
   <script src="js/hoverable-collapse.js"></script>
-  
+  <script src="js/template.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/todolist.js"></script>
   <!-- endinject -->
@@ -283,24 +244,43 @@
   <script src="vendors/dropzone/js/dropzone.js"></script>
   <script src="vendors/dropzone/js/jquery-ui.min.js"></script>
   
-  <!-- Custom js for this page-->
-  
+  <!-- Custom js for this page
+  <div id="share-buttons">
+        <!-- Facebook 
+        <a class="social-button" href="http://www.facebook.com/sharer.php?u=http://sh.st/UPQTP&t=Cargas asíncronas de imágenes con jQuery en una web">
+            <i class="ti ti-facebook"></i>
+        </a>
 
+        <!-- Google+ 
+        <a class="social-button" href="https://plus.google.com/share?url=http://sh.st/UPQTP">
+            <i class="ti ti-google"></i>
+        </a>
+
+        <!-- LinkedIn 
+        <a class="social-button" href="http://www.linkedin.com/shareArticle?mini=true&url=http://sh.st/UPQTP&title=Cargas asíncronas de imágenes con jQuery en una web">
+            <i class="ti ti-instagram"></i>
+        </a>
+
+        <!-- Tumblr
+        <a class="social-button" href="http://www.tumblr.com/share/link?url=http://sh.st/UPQTP&title=Cargas asíncronas de imágenes con jQuery en una web">
+            <i class="ti ti-tumblr-alt"></i>
+        </a>
+
+        <!-- Twitter 
+        <a class="social-button" href="https://twitter.com/share?url=http://sh.st/UPQTP&text=Cargas asíncronas de imágenes con jQuery en una web">
+            <i class="ti ti-twitter-alt"></i>
+        </a>
+        <h5>Ayúdanos a seguir creciendo#60</h5>
+    </div>-->
+  
   <!-- End custom js for this page-->
 
   <!-- endinject -->
  
 
   <script >
-    
-$(function() {
-
-        security(1,'DASHBOARD');
+    security(1,'DASHBOARD');
     load_dashboard();
-
-
-    notify_info();
-
   </script>
 
   <!-- End custom js for this page-->

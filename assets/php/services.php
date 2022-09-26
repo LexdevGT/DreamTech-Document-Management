@@ -246,6 +246,11 @@
 			case 'load_explorer':
 				loadExplorerFunction();
 				break;
+
+			case 'upload_Archivos':
+				// code...
+			upload_archivos();
+				break;
 		}
 		
 	}
@@ -5572,8 +5577,11 @@ function crearcarpeta(){
     						$query  = "INSERT INTO `categoria`(`name_cat`, `path_cat`) VALUES ('$categoria','$raiz')";
     						$resultado = mysqli_query($conn,$query);
 
+    						error_log($query);
+
     						if($resultado){
     							$query = "SELECT * FROM categoria where name_cat = '$categoria' AND path_cat='$raiz'";
+    							error_log($query);
     							$rquery = mysqli_query($conn,$query);
     							$resultado = mysqli_fetch_array($rquery);
 
@@ -5619,23 +5627,6 @@ function crearcarpeta(){
 }
 
 
-function view_categorias_folder(){
-		global $conn;
-		$jsondata = array();
-		$error 	  = '';
-		$message  = '';
-
-		#codigo................;
-
-
-
-
-		$jsondata['message'] = $message;
-		$jsondata['error']   = $error;
-		echo json_encode($jsondata);
-}
-
-
 function viewgatget(){
 	//error_log('entramos');
 		global $conn;
@@ -5652,6 +5643,9 @@ function viewgatget(){
 		$ar ="";
 		$rol_name = $_SESSION['rol_name'];
 		$rol_id   = $_SESSION['rol_id'];
+		$name = array();
+		$num = array();
+		$row = array();
 
 
 
@@ -5757,7 +5751,7 @@ function viewgatget(){
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
                                     <a class=\"dropdown-item\" href=\"#\" onclick=\"descargar_archivo('$url_archivo');return false;\">Descargar</a>
-                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$url_archivo');return false;\">Compartir Link</a>
+                                    <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$url_archivo','archivo');return false;\">Compartir Link</a>
                                   </div>
                                   <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file</b>
                                 </li>";
@@ -5782,8 +5776,25 @@ function viewgatget(){
                         </div>
                       </div>";
 		#codigo................;
+       $query = "SELECT 
+       							c.name_cat As nameCat, 
+       							count('d.cat1') As conteo 
+       						FROM 
+       							categoria c 
+       						INNER JOIN documentation d 
+       						ON c.idCat = d.cat1 
+       						group by d.cat1 ";
+       	$execute_query = mysqli_query($conn,$query);
 
+       //$cont = 0;
+$row = mysqli_fetch_assoc($execute_query);
+   $names = $row['nameCat'];
+   $nume = $row['conteo'];
+   //$cont++;
 
+   
+
+//error_log(print_r($row));
         $graficas .=  "<div class=\"col-sm-$n stretch-card \">
                       <div class=\"card card-rounded\">
                         <div class=\"card-head p-3\" >
@@ -5798,10 +5809,31 @@ function viewgatget(){
                           </div>
                         </div>
                         <div class=\"card-body p-6\">
-                          <canvas id=\"pieChart\"></canvas>
+                          <canvas id=\"GraphDash\"  ></canvas>
                         </div>
                       </div>
                     </div>";
+
+          $graficas.= "<script >
+    
+											$(function() {
+												var ctx = $('#GraphDash');
+											        //const ctx = document.getElementById('GraphDash').getContext('2d');
+											        alert(ctx);
+
+											        var grafica = new Chart(ctx,{
+											            type:\"pie\",
+											            data:{
+											                labels:".$names.",
+											                datasets:[{
+											                    label:'num datos',
+											                    data:".$nume.",
+											                }],
+											            }
+											        });
+											        });
+											</script>
+        												";
 
          	if ($rol_id == "1") {
        		// code...
@@ -5921,7 +5953,7 @@ function viewCategoriaDash(){
 		$categoria 	= "";
 		$rol_id   	= $_SESSION['rol_id'];
 		
-		$query = "SELECT file_path_carpeta,SUM(file_download_amount) AS total, count(file_path_carpeta) As total_arch FROM downloads GROUP BY file_path_carpeta ORDER BY total DESC ";
+		$query = "SELECT file_path_carpeta,SUM(file_download_amount) AS total, count(file_path_carpeta) As total_arch FROM downloads GROUP BY file_path_carpeta ORDER BY total DESC LIMIT 4";
 
 		$execute_query =  mysqli_query($conn, $query);
 
@@ -6029,19 +6061,19 @@ function DescargaArchivo(){
 			// code...
 			$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
 					VALUES
-					('$name','$url','1','$carpeta',md5('$url'))
+					('$name','$url','1','$carpeta',MD5('$url'))
 					ON DUPLICATE KEY UPDATE 
 					file_download_amount	= file_download_amount + VALUES(file_download_amount),
 					file_path_carpeta = '$carpeta',
-					pandora = md5('$url')  ";
-					
+					pandora = MD5('$url')";
+					error_log($query);
 					$insert_query = mysqli_query($conn, $query);
 
 		if ($insert_query) {
 			// code...
 			$link_archivo = $url;
 			$loginsert = "Download-$url-1-$username";
-			error_log($loginsert);
+//			error_log($loginsert);
 			insert_log($loginsert);
 		}
 
@@ -6196,7 +6228,8 @@ function	mostrar_upload(){
 		$execute_query = mysqli_query($conn,$query);
 
 
-		$form_upload .= "<form class=\"row g-3\">
+		$form_upload .= "
+				<div class=\"row\">
         <div class=\"col-md-12\">
           <label for=\"inputEmail4\" class=\"form-label\">Nombre de Documento</label>
           <input type=\"text\" class=\"form-control\" id=\"name_document\" required>
@@ -6211,7 +6244,7 @@ function	mostrar_upload(){
         </div>
         <div class=\"col-6\">
           <label for=\"inputAddress\" class=\"form-label\">ISBN</label>
-          <input type=\"date\" class=\"form-control\" id=\"isbn\" required>
+          <input type=\"text\" class=\"form-control\" id=\"isbn\" required>
         </div>
         <div class=\"col-6\">
           <label for=\"inputAddress\" class=\"form-label\">cantidad de paginas</label>
@@ -6224,30 +6257,32 @@ function	mostrar_upload(){
         
         <div class=\"col-md-12 sele_cat\">
           <label for=\"inputState\" class=\"form-label\">Categoria</label>
-          <select id=\"inputState\" class=\"form-select\" required>
-          <option selected>Selecciona una opcion</option>";
+          <select id=\"cat\" class=\"form-select\" required>
+          <option value=\"\" selected>Selecciona una opcion</option>";
 
 
         while ($fquery = mysqli_fetch_array($execute_query)) {
         	// code...
         	$name_cat = $fquery['name_cat'];
         	$path_cat = $fquery['path_cat'];
-        	$form_upload .= "<option>$name_cat</option>";
+        	$id_cat = $fquery['idCat'];
+        	$form_upload .= "<option value=\"$id_cat\">$name_cat</option>";
         }
     
     $form_upload .= "
     		</select>
     		</div>
         <div class=\"col-md-12\">
-          <label for=\"formFileSm\" class=\"form-label\">Small file input example</label>
-          <input class=\"form-control form-control-sm\" id=\"formFileSm\" type=\"file\" required>
+         
+          <input class=\"form-control form-control-sm\" id=\"formFileSm\" type=\"file\" required >
         </div>
         
         
         <div class=\"col-12\">
-          <button type=\"submit\" class=\"btn btn-primary\">Subir Archivo rt</button>
+          <button type=\"submit\" class=\"form-control btn btn-outline-primary\" onclick=\"uploadarchivos();return false;\">Subir Archivo</button>
         </div>
-      </form>";
+        <div>
+      ";
 	$jsondata	['form']		= $form_upload;
 	$jsondata['message'] 	= $message;
 	$jsondata['error']   	= $error;
@@ -6255,7 +6290,122 @@ function	mostrar_upload(){
 }
 
 function upload_archivos(){
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$form_upload = "";
+	$nombre_doc  = $_POST['nombre_doc'];
+  $autor       = $_POST['autor'];
+  $f_publi     = $_POST['f_publi'];
+  $isbn        = $_POST['isbn'];
+  $pag         = $_POST['pag'];
+  $descrp      = $_POST['descrp'];
+  $cat         = $_POST['cat'];
+  
+
+  $query = "SELECT
+  								path_cat
+  								FROM 
+  								categoria
+  								WHERE
+  								idCat = '$cat'";
+error_log($query);
+
+  		$execute_query = mysqli_query($conn,$query);
+  		$rquery = mysqli_fetch_array($execute_query);
+
+  		$pathcat = $rquery['path_cat'];
+
+  if (!empty($nombre_doc)) {
+  	// code...
+  	$nombre_archivo = $_FILES['file']['name'];
+		$tipo_archivo = $_FILES['file']['type'];
+		$tamano_archivo = $_FILES['file']['size'];
+
+		error_log($tipo_archivo);
+  	if (!((strpos($tipo_archivo, "png") || strpos($tipo_archivo, "jpeg")))) {
+  		$error.="no es archivo";
+  	}else{
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $pathcat.$_FILES['file']['name'])) {
+        //more code here...
+        echo $pathcat.$_FILES['file']['name'];
+    } else {
+        $error.="NO es formato";
+    }
+} /*else {
+    $error.="no hay archivo";
+}*/
+  	/*if (isset($_FILES['file'])) {
+
+  		$query = "SELECT
+  								path_cat
+  								FROM 
+  								categoria
+  								WHERE
+  								idCat = '$cat'";
+error_log($query);
+
+  		$execute_query = mysqli_query($conn,$query);
+  		$rquery = mysqli_fetch_array($execute_query);
+
+  		$pathcat = $rquery['path_cat'];
+
+error_log($pathcat);
+
+
+  		$countfiles = count($_FILES['file']['name']);
+			//$upload_location = '../../htmls/hojas_de_vida/';
+error_log($countfiles);
+			for($index = 0;$index < $countfiles;$index++){
+
+	   // File name
+	   $filename = $_FILES['file']['name'][$index];
+	   $sizefile = $_FILES['file']['size'][$index];
+//error_log($filename);
+	   // Get extension
+	   $ext = pathinfo($filename, PATHINFO_EXTENSION);
+	   //$new_name = $u.time().'.'.$ext;
+	   // Valid image extension
+	   $valid_ext = array("pdf","jpg","xlsx","jpeg","xls","doc","docx","png");
+
+	   // Check extension
+	   if(in_array($ext,$valid_ext)){
+
+	     // File path
+	     //$path = $upload_location.$filename;
+	   	$path = $upload_location.$new_name;
+
+	     // Upload file
+		     if(move_uploaded_file($_FILES['file']['tmp_name'][$index],$pathcat)){
+		        $files_arr[] = $path;
+		        $query = "
+							INSERT INTO documentation(display_name,file_name,description,size,cat1,ISBN,pages_qty,author,file_path)
+							VALUES
+							('$filename','$filename','$descrp','$sizefile','$cat','$isbn','$pag','$autor','$pathcat')";
+							error_log($query);
+		        $conn->query($query);
+				//echo "Archivo Subido!";
+		     }
+		}
+	}
+
+
+  }else{
+  	$error.="no hay archivo";
+  }*/
+}else{
+	$error.="nombre vacio";
+}
+
+
 	
+
+	//$jsondata	['form']		= $form_upload;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
 }
   
 ?>

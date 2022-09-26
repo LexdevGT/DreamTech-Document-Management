@@ -1,7 +1,15 @@
 $(function(){
     load_sidebar();
     load_headbar();
-    //shared_descarga();
+
+     const queryString = window.location.search;
+            console.log(queryString);
+    if (queryString!=="") {
+        shared_descarga(queryString);
+    }
+
+    viewcarpeta();
+
 
     
 
@@ -2801,6 +2809,7 @@ function viewcarpeta(directorio){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
+                //alert('prueba');
                 $('.viewcategoria').html(r.carpetas);
                 $('.patchbtn').html(r.pathbtn);
                 /* No code */
@@ -2850,7 +2859,7 @@ function descargar_archivo(link){
 
 }
 
-function compartir(link){
+function compartir(link,type){
     //alert('preciono el boton de compartir');
     //alert(link);
     $.ajax({
@@ -2859,6 +2868,7 @@ function compartir(link){
         url: "../assets/php/services.php",
         data: ({
             link,
+            type,
             option: 'compartir'                   
         }),
         dataType: "json",        
@@ -2874,7 +2884,7 @@ function compartir(link){
                     alert('LINK COPIADO PARA COMPARTIR');
                 })
                     .catch(err => {
-                    console.log('Something went wrong', err);
+                    console.log('No se copio el URL', err);
                 })
                 
             }else{
@@ -2886,11 +2896,10 @@ function compartir(link){
 
     }
 
-    function shared_descarga(){
-        const queryString = window.location.search;
-            console.log(queryString);
-
-        const urlParams = new URLSearchParams(queryString);
+    function shared_descarga(veri){
+       
+        console.log('Entro a descargar shared');
+        const urlParams = new URLSearchParams(veri);
 
         const pandora = urlParams.get('share')
         console.log(pandora);
@@ -2955,6 +2964,84 @@ function compartir(link){
         }    
     });
 
+    }
+
+    function uploadarchivos(nombre_doc,autor,) {
+        // body...
+
+        var nombre_doc = $('#name_document').val();
+        var autor      = $('#autor').val();
+        var f_publi    = $('#f_public').val();
+        var isbn       = $('#isbn').val();
+        var pag        = $('#page').val();
+        var descrp     = $('#descripcion').val();
+        var cat        = $('#cat').val();
+        var file       = $('#formFileSm').val();
+        //alert(file);
+
+        var formData = new FormData();
+        formData.append("formFileSm[]", document.getElementById('formFileSm').files[0]);
+
+        formData.append('autor',autor);
+        formData.append('f_publi',f_publi);
+        formData.append('isbn',isbn);
+        formData.append('pag',pag);
+        formData.append('descrp',descrp);
+        formData.append('cat',cat);
+        formData.append('nombre_doc',nombre_doc);
+
+        //alert(files);
+        //console.log(formData['formFileSm']);
+        $.ajax({
+            url: '../assets/php/upload_archivo.php',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(r) {
+                alert('Se guardo exitosamente el archivo');
+                
+                $('#upload').modal('hide');
+                window.location.replace('dashboard.html');
+            }
+        });
+        return false;
+
+
+
+
+
+
+
+
+/*
+        $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            nombre_doc,
+            autor,
+            f_publi,
+            isbn,
+            pag,
+            descrp,
+            cat,
+            file,
+            option: 'upload_Archivos'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                alert('activo');             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    });*/
     }
 
 
