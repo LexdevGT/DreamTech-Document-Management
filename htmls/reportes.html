@@ -13,16 +13,16 @@
   <link rel="stylesheet" href="vendors/typicons/typicons.css">
   <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
-  <link rel="stylesheet" href="vendors/pickadate/themes/default.css">
-  <link rel="stylesheet" href="vendors/pickadate/themes/default.date.css">
+
   <!-- endinject -->
   <!-- Plugin css for this page -->
   <!--
   <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
 -->
   <link rel="stylesheet" href="js/select.dataTables.min.css">
-  <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
+  
   <link rel="stylesheet" href="css/font-awesome.min.css">
+   <link rel="stylesheet" href="css/daterangepicker.css">
   <!-- Plugin css for this page -->
   <link rel="stylesheet" href="./vendors/select2/select2.min.css">
   <!-- <link rel="stylesheet" href="./vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
@@ -115,27 +115,17 @@
                                       <div class="row">
 
                                         <!--Grid column-->
-                                        <div class="col-md-6 mb-4">
+                                        <div class="col-md-8">
 
                                           <div class="md-form">
                                             <!--The "from" Date Picker -->
-                                            <label>Fecha inicial</label>
-                                            <input type="date" id="startingDate" class="form-control datepicker" onchange="filtros();">
+                                            <label>Fecha Inicial / Fecha Final</label>
+                                             <input type="text" id="date_range" name="date_range" class="form-control" >
                                             
                                           </div>
 
-                                        </div>
-                                        <!--Grid column-->
-
-                                        <!--Grid column-->
-                                        <div class="col-md-6 mb-4">
-
-                                          <div class="md-form">
-                                             <label>Fecha final</label>
-                                            <!--The "to" Date Picker -->
-                                            <input placeholder="Selected ending date" type="date" id="endingDate" class="form-control datepicker" onchange="filtros();">
-                                            
-                                          </div>
+                                        
+                                        
 
                                         </div>
                                         <!--Grid column-->
@@ -146,26 +136,13 @@
                                   </div>
 
 
-                                  <div class="col-sm-4 form-group">
-                                    <select class="form-control select2  " id="reportes_filtros_select_categoria" onchange="filtros();">
-                                      <option>Seleccione Categoria...</option>
-                                      <option>Manual</option>
-                                      <option>Institucional</option>
-                                      <option>Facturas</option>
-                                      <option>MARN</option>
-                                    </select>
+                                  <div class="col-sm-4 form-group select_categorias">
+                                    
                                   </div>
-                                  <div class="col-sm-4">
-                                  <div class="form-group">
-                                    <select class="form-control select2-selection select2-selection-single w-100 " id="reportes_filtros_select_categoria" onchange="filtros();">
-                                      <option>Seleccione Archivo...</option>
-                                      <option>Estrategia Nacional.doc</option>
-                                      <option>Manual2020costo.xlsx</option>
-                                      <option>Manual de Procedimiento para Optar a los incentivos.pdf</option>
-                                      <option>Recursos_genet.jpg</option>
-                                      <option>Manual de Educacion Ambiental sobre el recurso hibrido Br1.pdf</option>
-                                    </select>
-                                  </div>
+                                  <div class="col-sm-4 select_archivo">
+                                  
+                                    
+                                  
                                 </div>
                                 </div>  
                           </div>
@@ -181,27 +158,13 @@
                     <div class="row">
                       <div class="col-sm-6 stretch-card">
                             <div class="card card-rounded">
+                              <div class="card-subtitle align-self-center"><h5>Cantidad de Archivos por categorias</h5></div>
                               <div class="card-body">
                                 
                                 <div class="row">
                                   <div class="table-responsive  mt-2">
                                   <table class="table select-table" id="tablareportes_categoria" >
-                                    <thead>
-                                      <tr>
-                                        <th>Fecha</th>
-                                        <th>Categoria</th>
-                                        <th>No. Documento</th>
-                                        
-                                      </tr>
-                                    </thead>
-                                    <tbody id="procesos_table_content_categoria">
-                                     <tr>
-                                        <td>01/05/2022</td>
-                                        <td>Manuales</td>
-                                        <td>2</td>
-                                        
-                                      </tr>
-                                    </tbody>
+                                    
                                   </table>
                                 </div>
                               </div>
@@ -212,28 +175,14 @@
 
                           <div class="col-sm-6 stretch-card">
                             <div class="card card-rounded">
+                              <div class="card-subtitle align-self-center"><h5>Cantidad de Usuarios con inicio de sesion</h5></div>
                               <div class="card-body">
                                 
 
                                 <div class="row">
                                   <div class="table-responsive  mt-2">
-                                  <table class="table select-table" id="tablareportes_categoria" >
-                                    <thead>
-                                      <tr>
-                                        <th>Fecha</th>
-                                        <th>cantidad de Usuarios</th>
-                                        
-                                        
-                                      </tr>
-                                    </thead>
-                                    <tbody id="procesos_table_content_categoria">
-                                     <tr>
-                                        <td>01/05/2022</td>
-                                        <td>4</td>
-                                        
-                                        
-                                      </tr>
-                                    </tbody>
+                                  <table class="table select-table" id="tablareportes_usuario" >
+                                    
                                   </table>
                                 </div>
                               </div>
@@ -251,28 +200,14 @@
                     <div class="row">
                       <div class="col-sm-6 stretch-card">
                         <div class="card card-rounded">
+                          <div class="card-subtitle align-self-center"><h5>Descargas de archivos</h5></div>
                           <div class="card-body">
                             
 
                                 <div class="row">
                                   <div class="table-responsive  mt-2">
-                                  <table class="table select-table" id="tablareportes_categoria" >
-                                    <thead>
-                                      <tr>
-                                        <th>Fecha</th>
-                                        <th>Categoria</th>
-                                        <th>No. Documento</th>
-                                        
-                                      </tr>
-                                    </thead>
-                                    <tbody id="procesos_table_content_categoria">
-                                     <tr>
-                                        <td>01/05/2022</td>
-                                        <td>Manuales</td>
-                                        <td>2</td>
-                                        
-                                      </tr>
-                                    </tbody>
+                                  <table class="table select-table" id="tablareportes_descargas" >
+                                    
                                   </table>
                                 </div>
                               </div>
@@ -329,8 +264,7 @@
   <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
   <script src="vendors/progressbar.js/progressbar.min.js"></script>
 
-  <script src="vendors/pickadate/lib/picker.date.js"></script>
-  <script src="vendors/pickadate/lib/picker.js"></script>
+  
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
@@ -354,9 +288,19 @@
   <script src="./js/chart.js"></script>
   <script src="./js/bootstrap-datepicker.min.js"></script>
   <script src="./js/bootstrap.bundle.min.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/daterangepicker.js"></script>
   <script >
+    $('#date_range').daterangepicker();
     security(3,'REPORTES');
     load_filtros();
+    select_filtro_categoria();
+    $('#date_range').change(function(){
+      filtros();
+    });
+
+    
+    
   </script>
 </body>
 

@@ -251,6 +251,19 @@
 				// code...
 			upload_archivos();
 				break;
+			case 'MostrarSelect':
+				// code...
+			select_view();
+				break;
+
+			case 'select_view_archivo':
+				// code...
+			select_view_archivo();
+				break;
+				case 'datos_filtros':
+					// code...
+				datos_filtros_view();
+					break;
 		}
 		
 	}
@@ -6388,67 +6401,7 @@ function upload_archivos(){
     } else {
         $error.="NO es formato";
     }
-} /*else {
-    $error.="no hay archivo";
-}*/
-  	/*if (isset($_FILES['file'])) {
-
-  		$query = "SELECT
-  								path_cat
-  								FROM 
-  								categoria
-  								WHERE
-  								idCat = '$cat'";
-error_log($query);
-
-  		$execute_query = mysqli_query($conn,$query);
-  		$rquery = mysqli_fetch_array($execute_query);
-
-  		$pathcat = $rquery['path_cat'];
-
-error_log($pathcat);
-
-
-  		$countfiles = count($_FILES['file']['name']);
-			//$upload_location = '../../htmls/hojas_de_vida/';
-error_log($countfiles);
-			for($index = 0;$index < $countfiles;$index++){
-
-	   // File name
-	   $filename = $_FILES['file']['name'][$index];
-	   $sizefile = $_FILES['file']['size'][$index];
-//error_log($filename);
-	   // Get extension
-	   $ext = pathinfo($filename, PATHINFO_EXTENSION);
-	   //$new_name = $u.time().'.'.$ext;
-	   // Valid image extension
-	   $valid_ext = array("pdf","jpg","xlsx","jpeg","xls","doc","docx","png");
-
-	   // Check extension
-	   if(in_array($ext,$valid_ext)){
-
-	     // File path
-	     //$path = $upload_location.$filename;
-	   	$path = $upload_location.$new_name;
-
-	     // Upload file
-		     if(move_uploaded_file($_FILES['file']['tmp_name'][$index],$pathcat)){
-		        $files_arr[] = $path;
-		        $query = "
-							INSERT INTO documentation(display_name,file_name,description,size,cat1,ISBN,pages_qty,author,file_path)
-							VALUES
-							('$filename','$filename','$descrp','$sizefile','$cat','$isbn','$pag','$autor','$pathcat')";
-							error_log($query);
-		        $conn->query($query);
-				//echo "Archivo Subido!";
-		     }
-		}
-	}
-
-
-  }else{
-  	$error.="no hay archivo";
-  }*/
+} 
 }else{
 	$error.="nombre vacio";
 }
@@ -6457,6 +6410,236 @@ error_log($countfiles);
 	
 
 	//$jsondata	['form']		= $form_upload;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
+}
+
+function select_view(){
+	
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$select_cat	 =	"";
+	
+	$select_archivo = "";
+
+	$query = "SELECT
+							*
+						FROM
+							categoria
+						WHERE
+							status=1";
+	$query_execute = mysqli_query($conn,$query);
+
+	
+
+
+
+	$select_cat .="<label>Categorias</label><select class=\"form-control js-example-basic-single w-100\" id=\"reportes_filtros_select_categoria\" onchange=\"select_filtro_archivo(this.value);\">
+                                      <option value=\"\">Seleccione Categoria...</option>";
+
+    while ($queryf =	mysqli_fetch_array($query_execute)) {
+    	// code...
+
+    	$idCat = $queryf['idCat'];
+    	$nameCat = $queryf['name_cat'];
+    
+    	$select_cat .="<option value=\"$idCat\">$nameCat</option>";
+      }
+         $select_cat .="</select>
+                        ";
+
+     
+
+ 
+  $jsondata['selectCat']= $select_cat;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
+}
+function select_view_archivo(){
+	
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$select_cat	 =	"";
+	$id_cat 		= $_POST['cat'];
+	$select_archivo = "";
+
+	
+      $select_archivo.= "<label>Archivos</label><select class=\"form-control js-example-basic-single w-100\" id=\"reportes_filtros_select_archivo\" onchange=\"filtros();\">
+                                      <option value=\"\">Seleccione Archivo...</option>";
+
+               $query = "SELECT
+               							display_name,
+               							file_id
+               							FROM
+               							documentation
+               							WHERE
+               							cat1='$id_cat'";
+               	$query_exe = mysqli_query($conn,$query);
+                while ($row_exe = mysqli_fetch_array($query_exe)	) {
+
+                	$name_archi = $row_exe['display_name'];
+                	$id_arch    = $row_exe['file_id'];
+                 	// code...
+								$select_archivo.= "<option value=\"$id_arch\">$name_archi</option>";
+
+                }
+                                      
+                        $select_archivo.= "     </select>
+                        <script src=\"js/select2.js\"></script>";
+
+  $jsondata['selecArchivo'] = $select_archivo;
+  
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
+}
+
+function datos_filtros_view(){
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$select_cat	 =	"";
+	$select_archivo = "";
+	$fecha_rango = "";
+
+	$filtro_usuarios = "";
+	$filtro_categorias = "";
+	$filtro_descargas = "";
+
+	$select_cat = $_POST['select_cat'];
+	$select_archivo = $_POST['select_arch'];
+	$fecha_rango = $_POST['fecha_rango'];
+
+	$f_explod = explode("-", $fecha_rango);
+	$f_inic  = explode("/", $f_explod[0]);
+	$f_fin  = explode("/", $f_explod[1]);
+	$fecha_i = str_replace(" ","",$f_inic[2])."-".$f_inic[0]."-".$f_inic[1];
+	$fecha_f = str_replace(" ","",$f_fin[2])."-".str_replace(" ","",$f_fin[0])."-".$f_fin[1];
+	//error_log($fecha_i);
+	//error_log($fecha_f);
+
+	$fecha_inicial = $fecha_i." 00:00:00";
+	$fecha_final = $fecha_f." 23:59:59";
+
+	//error_log($fecha_inicial);
+	//error_log($fecha_final);
+
+		$query="SELECT count('description')as de,description FROM log WHERE description Like 'LOG IN%' AND date_time>'$fecha_inicial' AND date_time<'$fecha_final' GROUP BY description";
+		$query_exe = mysqli_query($conn,$query);
+		$sum = 0;
+		while ($row = mysqli_fetch_array($query_exe)) {
+			// code...
+			$cantidad = $row['de'];
+
+			$sum = $cantidad + $sum;
+		}
+		//error_log($sum);
+
+
+
+
+	$filtro_usuarios .= "<thead>
+                                      <tr>
+                                        
+                                        <th>cantidad de Usuarios con inicio de sesion</th>
+                                        
+                                        
+                                      </tr>
+                                    </thead>
+                                    <tbody id=\"procesos_table_content_categoria\">
+                                     <tr>
+                                        
+                                        <td><h1>$sum</h1></td>
+                                        
+                                        
+                                      </tr>
+                                    </tbody>";
+
+     $query = "SELECT 
+								count('d.cat1')As co, 
+								c.name_cat As name
+							FROM 
+								documentation d 
+								INNER JOIN categoria c 
+								ON c.idCat = d.cat1 
+								Where d.cat1='$select_cat'
+								GROUP BY d.cat1";
+
+		$jquery_exe = mysqli_query($conn,$query);
+
+		
+
+  $filtro_categorias .= "<thead>
+                                      <tr>
+                                        
+                                        <th>Categoria</th>
+                                        <th>No. Documento</th>
+                                        
+                                      </tr>
+                                    </thead>
+                                    <tbody id=\"procesos_table_content_categoria\">";
+
+               while ($row = mysqli_fetch_array($jquery_exe)) {
+			// code...
+					$count = $row['co'];
+					$name = $row['name'];
+
+           $filtro_categorias .= "   <tr>
+                                        
+                                        <td>$name</td>
+                                        <td>$count</td>
+                                        
+                                      </tr>";
+                                      }
+                  $filtro_categorias .= "</tbody>";
+
+      $query = "SELECT count('description')as de,description FROM docummng.log Where description Like 'Download%' AND date_time>'$fecha_inicial' AND date_time<'$fecha_final' GROUP BY description";
+      $query_exe = mysqli_query($conn,$query);
+
+
+  $filtro_descargas .= "<thead>
+                                      <tr>
+                                        
+                                        <th>Archivo</th>
+                                        <th>Descargas</th>
+                                        
+                                      </tr>
+                                    </thead>
+                                    <tbody id=\"procesos_table_content_categoria\">";
+
+
+      while ($row = mysqli_fetch_array($query_exe)) {
+      	// code...
+      	$descr = $row['description'];
+      	$name = explode("-",$descr);
+      	
+      	$nam = $name[1];
+      	$num   = $row['de'];
+      	error_log($nam);
+      	$filtro_descargas .= "<tr>
+                                <td>$nam</td>
+                                <td>$num</td>
+                              </tr>";
+      }
+                                     
+        $filtro_descargas .="</tbody>";
+
+
+
+
+  $jsondata['filtro_usuarios'] 	= $filtro_usuarios;
+  $jsondata['filtro_categorias'] 	= $filtro_categorias;
+  $jsondata['filtro_descargas'] 	= $filtro_descargas;
 	$jsondata['message'] 	= $message;
 	$jsondata['error']   	= $error;
 	echo json_encode($jsondata);

@@ -3019,9 +3019,93 @@ function compartir(link,type){
 
 function filtros() {
     // body...
-    var f_inicio = $('#startingDate').val();
-   alert(f_inicio); 
+    var fecha_rango = $('#date_range').val();
+    var select_cat = $('#reportes_filtros_select_categoria').val();
+    var select_arch = $('#reportes_filtros_select_archivo').val();
+   //alert(f_inicio); 
+   //alert(select_cat);
+   //alert(select_arch);
+   $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            fecha_rango,
+            select_cat,
+            select_arch,
+            option: 'datos_filtros'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                $('#tablareportes_usuario').html(r.filtro_usuarios);
+                $('#tablareportes_categoria').html(r.filtro_categorias);
+                $('#tablareportes_descargas').html(r.filtro_descargas);
+
+                
+             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    }); return false;
 
 }
 
+function select_filtro_categoria() {
+    // body...
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            
+            option: 'MostrarSelect'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                $('.select_categorias').html(r.selectCat);
+                
+             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    }); return false;
+}
+
+function select_filtro_archivo(cat=0) {
+    // body...
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            cat,
+            option: 'select_view_archivo'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                
+                $('.select_archivo').html(r.selecArchivo);
+             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    }); return false;
+}
 
