@@ -3014,36 +3014,14 @@ function compartir(link,type){
 
 
 
-
-
-/*
-        $.ajax({
-        contentType: "application/x-www-form-urlencoded",
-        type: "POST",
-        url: "../assets/php/services.php",
-        data: ({
-            nombre_doc,
-            autor,
-            f_publi,
-            isbn,
-            pag,
-            descrp,
-            cat,
-            file,
-            option: 'upload_Archivos'                   
-        }),
-        dataType: "json",        
-        success: function(r) {
-
-            //alert(r.link);                                                   
-            if(r.error == ''){
-                alert('activo');             
-            }else{
-                alert(r.error);
-                //window.location.replace('../dashboard.html');
-            }
-        }    
-    });*/
     }
+
+
+function filtros() {
+    // body...
+    var f_inicio = $('#startingDate').val();
+   alert(f_inicio); 
+
+}
 
 

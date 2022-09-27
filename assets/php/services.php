@@ -558,11 +558,15 @@ error_log(print_r($data,true));
 				VALUES ('$email','$names','$last_names',1,5,MD5('$pass'),1,'$id_document','$user_sex','$birthday','$academic_level',$phone)
 			";
 
-//error_log($query_save_ciudadano);
+error_log($query_save_ciudadano);
 		$execute_save_ciudadano = $conn->query($query_save_ciudadano);
 
 		if($execute_save_ciudadano){
 			$message = "Ciudadano guardado";
+			$descrp = "NuevoUsuario-$email";
+      
+      insert_log($descrp);
+
 		}else{
 			$error = "No se pudo guardar ciudadano!";
 		}
@@ -5574,19 +5578,19 @@ function crearcarpeta(){
 					if(!file_exists($carpeta)) {
     					if(mkdir($carpeta, 0777, true)){
 
-    						$query  = "INSERT INTO `categoria`(`name_cat`, `path_cat`) VALUES ('$categoria','$raiz')";
+    						$query  = "INSERT INTO `categoria`(`name_cat`, `path_cat`,`pandora`) VALUES ('$categoria','$raiz',md5('$raiz'))";
     						$resultado = mysqli_query($conn,$query);
 
-    						error_log($query);
+    						//error_log($query);
 
     						if($resultado){
     							$query = "SELECT * FROM categoria where name_cat = '$categoria' AND path_cat='$raiz'";
-    							error_log($query);
+    							//error_log($query);
     							$rquery = mysqli_query($conn,$query);
     							$resultado = mysqli_fetch_array($rquery);
 
     							$id  =  $resultado['idCat'];
-    							$msg = "Se creo la categoria-$categoria-$raiz-$id";
+    							$msg = "Nueva_categoria-$categoria-$raiz-$id";
 
     						insert_log($msg);
     						$sucess .= "La categoria se creo exitosamente";
@@ -5645,7 +5649,7 @@ function viewgatget(){
 		$rol_id   = $_SESSION['rol_id'];
 		$name = array();
 		$num = array();
-		$row = array();
+		//$row = array();
 
 
 
@@ -5685,7 +5689,7 @@ function viewgatget(){
                                     </div>
                                   </div>
                           </div>
-                          <div class=\"card-body\">
+                          <div class=\"card-body p-1\">
                             <div class=\"row\" >
                               <div class=\"col-lg-12\">
                                 
@@ -5787,14 +5791,20 @@ function viewgatget(){
        	$execute_query = mysqli_query($conn,$query);
 
        //$cont = 0;
-$row = mysqli_fetch_assoc($execute_query);
-   $names = $row['nameCat'];
+       	/*
+while($row = mysqli_fetch_array($execute_query)){
+   $cat = $row['nameCat'];
    $nume = $row['conteo'];
+
+   array_push($name, $cat);
+   array_push($num, $nume);
    //$cont++;
+}*/
+   //error_log(print_r($name[0]));
+$name = array("hola","como","esta");
+$num 	=	array(23,24,98);
 
-   
-
-//error_log(print_r($row));
+//print_r($name);
         $graficas .=  "<div class=\"col-sm-$n stretch-card \">
                       <div class=\"card card-rounded\">
                         <div class=\"card-head p-3\" >
@@ -5819,14 +5829,14 @@ $row = mysqli_fetch_assoc($execute_query);
 											$(function() {
 												var ctx = $('#GraphDash');
 											        
-
+													
 											        var grafica = new Chart(ctx,{
 											            type:\"pie\",
 											            data:{
-											                labels:".$names.",
+											                labels:['cat1','cat2'],
 											                datasets:[{
 											                    label:'num datos',
-											                    data:".$nume.",
+											                    data:[122,123],
 											                }],
 											            }
 											        });
@@ -5951,6 +5961,7 @@ function viewCategoriaDash(){
 		$message  	= '';
 		$categoria 	= "";
 		$rol_id   	= $_SESSION['rol_id'];
+		$pandora 		= "";
 		
 		$query = "SELECT file_path_carpeta,SUM(file_download_amount) AS total, count(file_path_carpeta) As total_arch FROM downloads GROUP BY file_path_carpeta ORDER BY total DESC LIMIT 4";
 
@@ -5958,6 +5969,7 @@ function viewCategoriaDash(){
 
 		while($fetch_query = mysqli_fetch_array($execute_query)){
 			$total_archivos = $fetch_query['total_arch'];
+			
 			$dir_cat	=	$fetch_query['file_path_carpeta'];
 			$divide = explode('/',$dir_cat);
 			$count_array = count($divide);
@@ -5965,6 +5977,16 @@ function viewCategoriaDash(){
 			$name_cat = mysqli_real_escape_string($conn,$divide[$count_name]);
 			//$id_cat   = $fetch_query['idCat'];
 		//	$path     = $fetch_query['path_cat'];
+			$extra = "../../htmls/";
+			$url_com = $extra.$dir_cat;
+			//error_log($url_com);
+			$quer = "SELECT * FROM categoria WHERE path_cat ='$url_com' ";
+			$quer_execute	= mysqli_query($conn,$quer);
+			$query_f =	mysqli_fetch_array($quer_execute);
+
+			$pandora = $query_f['pandora'];
+
+			//error_log($pandora);
 
 			//$divi_path = explode("htmls", $path);
 
@@ -5981,7 +6003,7 @@ function viewCategoriaDash(){
                                       <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuIconButton1\">
                                           
                                           
-                                          <a class=\"dropdown-item\" href=\"#\">Compartir Link</a>
+                                          <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$pandora','categorias');return false;\">Compartir Link</a>
                                           
                                         </div>
                                       </div>
@@ -6103,33 +6125,64 @@ function compartir(){
 	$rol_id   	= $_SESSION['rol_id'];
 	$link_archivo = "";
 	$compartir = '';
+	$type = "";
 
 	if (isset($_POST['link'])) {
 		$url = $_POST['link'];
+		$type = $_POST['type'];
 
-		$query = "SELECT
+		if ($type==="archivo") {
+			// code...
+		
+			$query = "SELECT
 								pandora,
 								shared
 							FROM
 								downloads
 							WHERE
 								file_path = '$url'";
-error_log($query);
+
+		//error_log($query);
 		$execute_pandora = mysqli_query($conn,$query);
 
 		$fquery  = mysqli_fetch_array($execute_pandora);
 
 		$pandora = $fquery['pandora'];
 		$shared = $fquery['shared'];
+	}else{
 
+		$pandora = $url;
+
+	}
 		if ($pandora!="") {
 			// code...
-			$raiz = "http://161.35.13.96/htmls/dashboard.html?share=";
-			$compartir = $raiz.$pandora."&type=archivo";
-			$query = "UPDATE downloads set shared = '$shared'+1 where pandora = '$pandora'";
-			//error_log($query);
+			
+			
+			switch ($type) {
+				case 'archivo':
+					// code...
+				$raiz = "http://161.35.13.96/htmls/dashboard.html?share=";
+				$compartir = $raiz.$pandora."&type=archivo";
+				$query = "UPDATE downloads set shared = '$shared'+1 where pandora = '$pandora'";
+				$insert_query = mysqli_query($conn, $query);
+
+				insert_log("compartir-archivo-$pandora");
+					break;
+
+					case 'categorias':
+					// code...
+					$raiz = "http://161.35.13.96/htmls/biblioteca.html?share=";
+					$compartir = $raiz.$pandora."&type=categoria";
+					insert_log("compartir-categoria-$pandora");
+					break;
+				
+				
+			}
+			
+			
+			//error_log($compartir);
 					
-					$insert_query = mysqli_query($conn, $query);
+					
 		}
 
 	}
@@ -6173,7 +6226,7 @@ function descargar_shared(){
 			$link_archivo = $fquery['file_path'];
 			//$adicion = "../../htmls/";
 			//$link_archivo = $adicion.$link_archivo;
-			error_log($link_archivo);
+			//error_log($link_archivo);
 			$file_download_amount=$fquery['file_download_amount'];
 			$name = $fquery['file_name'];
 
@@ -6188,8 +6241,8 @@ function descargar_shared(){
 		if ($insert_query) {
 			// code...
 			$link = $link_archivo;
-			$loginsert = "Download-$url-1-$username";
-			error_log($loginsert);
+			$loginsert = "Download-$name-1-$username";
+			//error_log($loginsert);
 			insert_log($loginsert);
 		}
 
@@ -6311,7 +6364,7 @@ function upload_archivos(){
   								categoria
   								WHERE
   								idCat = '$cat'";
-error_log($query);
+//error_log($query);
 
   		$execute_query = mysqli_query($conn,$query);
   		$rquery = mysqli_fetch_array($execute_query);
@@ -6324,13 +6377,14 @@ error_log($query);
 		$tipo_archivo = $_FILES['file']['type'];
 		$tamano_archivo = $_FILES['file']['size'];
 
-		error_log($tipo_archivo);
+		//error_log($tipo_archivo);
   	if (!((strpos($tipo_archivo, "png") || strpos($tipo_archivo, "jpeg")))) {
   		$error.="no es archivo";
   	}else{
     if (move_uploaded_file($_FILES["file"]["tmp_name"], $pathcat.$_FILES['file']['name'])) {
         //more code here...
         echo $pathcat.$_FILES['file']['name'];
+        insert_log("Nuevo_documento-$nombre_archivo");
     } else {
         $error.="NO es formato";
     }

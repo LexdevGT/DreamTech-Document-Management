@@ -119,7 +119,8 @@
 
                                           <div class="md-form">
                                             <!--The "from" Date Picker -->
-                                            <input placeholder=" Selected starting date" type="date" id="startingDate" class="form-control datepicker">
+                                            <label>Fecha inicial</label>
+                                            <input type="date" id="startingDate" class="form-control datepicker" onchange="filtros();">
                                             
                                           </div>
 
@@ -130,8 +131,9 @@
                                         <div class="col-md-6 mb-4">
 
                                           <div class="md-form">
+                                             <label>Fecha final</label>
                                             <!--The "to" Date Picker -->
-                                            <input placeholder="Selected ending date" type="date" id="endingDate" class="form-control datepicker">
+                                            <input placeholder="Selected ending date" type="date" id="endingDate" class="form-control datepicker" onchange="filtros();">
                                             
                                           </div>
 
@@ -145,7 +147,7 @@
 
 
                                   <div class="col-sm-4 form-group">
-                                    <select class="form-control select2  " id="reportes_filtros_select_categoria">
+                                    <select class="form-control select2  " id="reportes_filtros_select_categoria" onchange="filtros();">
                                       <option>Seleccione Categoria...</option>
                                       <option>Manual</option>
                                       <option>Institucional</option>
@@ -155,7 +157,7 @@
                                   </div>
                                   <div class="col-sm-4">
                                   <div class="form-group">
-                                    <select class="form-control select2-selection select2-selection-single w-100 " id="reportes_filtros_select_categoria">
+                                    <select class="form-control select2-selection select2-selection-single w-100 " id="reportes_filtros_select_categoria" onchange="filtros();">
                                       <option>Seleccione Archivo...</option>
                                       <option>Estrategia Nacional.doc</option>
                                       <option>Manual2020costo.xlsx</option>
