@@ -237,7 +237,9 @@ function new_function(){
     });
 }
 
-function load_explorer(directory=''){
+
+
+function load_explorer(directory='',flag=0){
 
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -245,7 +247,8 @@ function load_explorer(directory=''){
         url: "../assets/php/services.php",
         data: ({
             option: 'load_explorer',
-            directory
+            directory,
+            flag
         }),
         dataType: "json",        
         success: function(r) {                                                   

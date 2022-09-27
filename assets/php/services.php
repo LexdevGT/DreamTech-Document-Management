@@ -275,31 +275,59 @@
 		$message  = '';
 		$html = '';
 		$retorno = '';
+		$count = 0;
+		$flag = $_POST['flag'];
 		//unset($_SESSION['exp_path']);
 		$dir_var = $_POST['directory'];
+		if($dir_var == ''){
+			unset($_SESSION['exp_path']);
+		}
 		if(isset($_SESSION['exp_path'])){
 			$dir = $_SESSION['exp_path'];
-			$retorno = $dir;
 		}else{
 			$dir = "../../htmls/documents/"; 
-			$retorno = "../../htmls/documents/";
 		}
-		
+
 		if($dir_var != ''){
-			$dir .= "$dir_var/";
+			if($flag==0){
+				$dir .= "$dir_var/";	
+			}else{
+				if($dir_var!='#'){
+					$dir = str_replace($dir_var.'/', '', $dir);
+				}
+			}
+			
 		}
+error_log("directory: $dir");
+		$retorno_partes = explode('/', $dir);
+error_log(print_r($retorno_partes,TRUE));
+		array_pop($retorno_partes); 
+error_log(print_r($retorno_partes,TRUE));
+
+		//$r = $retorno_partes[count($retorno_partes)-1];
+//error_log("result: $r");
+
+			$r = $retorno_partes[count($retorno_partes)-1];
+			if($r == 'documents'){
+				$dir = "../../htmls/documents/"; 
+				$retorno = "#";
+			}else{
+				$retorno = $r;
+			}
+		
+		
 
 		$_SESSION['exp_path'] = $dir;
 
-error_log($dir);
+error_log("RETORNO: $retorno");
 		$data = scandir($dir);
-error_log(print_r($data,true));
+//error_log(print_r($data,true));
 		$count = 0;
 
 		$html .= "
 			<div class=\"row\">
         <div class=\"col-sm-3 nav-item\">
-						<a class=\"nav-link\" href='$retorno'>
+						<a class=\"nav-link\" href='#' onclick=\"load_explorer('$retorno',1)\">
            <i class=\"mdi mdi-step-backward menu-icon\"><span class=\"menu-title\">Regresar</span></i>
             </a>
         </div>
