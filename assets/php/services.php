@@ -298,11 +298,11 @@
 			}
 			
 		}
-error_log("directory: $dir");
+//error_log("directory: $dir");
 		$retorno_partes = explode('/', $dir);
-error_log(print_r($retorno_partes,TRUE));
+//error_log(print_r($retorno_partes,TRUE));
 		array_pop($retorno_partes); 
-error_log(print_r($retorno_partes,TRUE));
+//error_log(print_r($retorno_partes,TRUE));
 
 		//$r = $retorno_partes[count($retorno_partes)-1];
 //error_log("result: $r");
@@ -319,7 +319,7 @@ error_log(print_r($retorno_partes,TRUE));
 
 		$_SESSION['exp_path'] = $dir;
 
-error_log("RETORNO: $retorno");
+//error_log("RETORNO: $retorno");
 		$data = scandir($dir);
 //error_log(print_r($data,true));
 		$count = 0;
@@ -336,24 +336,68 @@ error_log("RETORNO: $retorno");
 		
 		foreach ($data as $key => $value) {
 			if($value !== '.' && $value !== '..'){
-				
+//error_log($value);
 				if($count ==0){
 					$html .= '<div class="row mt-2">';
 				}
 
 				if($count <=3){
-					$html .= "
-						<div class=\"col-sm-3 nav-item\">
-						<a class=\"nav-link\" onclick=\"load_explorer('$value')\" href='#'>
-              <div class=\"card\">
-                <div class=\"card-body\">
-                  <i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>
-                </div>
-              </div>
-            </a>
-             </div>
-					";
-				$count++;
+					/*
+					if(file_exists(filename))
+					 <img src="..." alt="..." class="img-thumbnail">
+					 
+					 */
+					if (strpos($value, '.png') !== false) {
+						   
+					}else{
+						if (strpos($value, '.') !== false) {
+							$file = substr($value, 0,-3);
+							$file .= 'png';
+							$file = $dir.$file;
+							//$file = substr($file, 0,12);
+							//$file = str_replace('../../htmls/', '', $file);
+//error_log($file);
+							if(file_exists($file)){
+								$img_file = str_replace('../../htmls/', '', $file);
+								$image_line = "<img src=\"$img_file\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$value</span>";
+							}else{
+								$image_line = "<i class=\" mdi mdi-file-document menu-icon\"><span class=\"menu-title\">$value</span></i>";
+							}
+						}else{
+							$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>";
+						}
+
+
+						if(strpos($value, '.xls') !== false || strpos($value, '.xlsx') !== false || strpos($value, '.doc') !== false || strpos($value, '.docx') !== false || strpos($value, '.pdf') !== false){
+							$download_file = $dir.$value;
+							$download_file = str_replace('../../htmls/', '', $download_file);
+							$html .= "
+								<div class=\"col-sm-3 nav-item\">
+								<a class=\"nav-link\" href=\"$download_file\" target=\"_blank\">
+		              <div class=\"card\">
+		                <div class=\"card-body\">
+		                  $image_line
+		                </div>
+		              </div>
+		            </a>
+		             </div>
+							";
+						}else{
+							$html .= "
+								<div class=\"col-sm-3 nav-item\">
+								<a class=\"nav-link\" onclick=\"load_explorer('$value')\" href='#'>
+		              <div class=\"card\">
+		                <div class=\"card-body\">
+		                  $image_line
+		                </div>
+		              </div>
+		            </a>
+		             </div>
+							";
+						}
+						
+						$count++;
+					}
 				}else{
 					$count = 0;
 					$html .= '</div>';
