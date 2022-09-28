@@ -5761,24 +5761,25 @@ function viewgatget(){
 
 
 		$archivos_recientes .= "<div class=\"col-sm-$n stretch-card \">
-                        <div class=\"card card-rounded\">
-                          <div class=\"card-head p-3\" >
-                            <div class=\"row justify-content-end\">
-                              <div class=\"col-6\">
-                            <h4><b>Archivos recientes</b></h4>
-                            </div>
-                            <div class=\"col-3\">
-                            </div>
-                                    <div class=\"col-3\">
-                                      <span>Ver todo<i class=\"menu-icon mdi mdi-chevron-right\"></i></span>
-                                    </div>
+                        			<div class=\"card card-rounded\">
+                          			<div class=\"card-head p-3\" >
+                           				<div class=\"row justify-content-end\">
+                              			<div class=\"col-6\">
+                            					<h5><b>Archivos recientes</b></h5>
+                            				</div>
+                            				<div class=\"col-2\">
+                            				</div>
+                                  	<div class=\"col-4\">
+                                  	<a class=\"nav-link\" href=\"explorador.html\" style=\"padding:0;text-align:right;\"><h5><b><span>Ver todo<i class=\"menu-icon mdi mdi-chevron-right \"></i></span></b></h5></a>
+                                    
+                                  	</div>
                                   </div>
-                          </div>
+                          			</div>
                           <div class=\"card-body p-1\">
-                            <div class=\"row\" >
-                              <div class=\"col-lg-12\">
-                                
-                              <ul class=\"list-group list-group-flush nav\">";
+                            
+                                <div class=\"table-responsive\">
+                              <table width=\"100%\" >
+                              <tbody>";
 
 // iNICIA PRUEBA fINAL
 
@@ -5836,14 +5837,15 @@ function viewgatget(){
 																				break;
 																		}
 
-						$archivos_recientes .= "<li class=\"item\">
+						$archivos_recientes .= "<tr>
+																	<td class\"\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
                                     <a class=\"dropdown-item\" href=\"#\" onclick=\"descargar_archivo('$url_archivo');return false;\">Descargar</a>
                                     <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$url_archivo','archivo');return false;\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file</b>
-                                </li>";
+                                  </div></td><td>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> </td><td>$file</td>
+                                </tr>";
 
 					}
 
@@ -5857,10 +5859,11 @@ function viewgatget(){
 
          
                                 
-        $archivos_recientes .= "</ul>
+        $archivos_recientes .= "</tbody>
+        											</table>
                                 
                               </div>
-                            </div>
+                            
                           </div>
                         </div>
                       </div>";
