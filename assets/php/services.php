@@ -286,8 +286,32 @@
 		$jsondata = array();
 		$error 	  = '';
 		$message  = '';
-		$info 		= array(12,12,19,36);
-		$names 		= array('Institucional','Tierra','Aire','Documentación');
+		$info 		= array();
+		$names 		= array();
+
+		$query = "SELECT 
+       							c.name_cat As nameCat, 
+       							count('d.cat1') As conteo 
+       						FROM 
+       							categoria c 
+       						INNER JOIN documentation d 
+       						ON c.idCat = d.cat1 
+       						group by d.cat1 ";
+       	$execute_query = mysqli_query($conn,$query);
+
+       $cont = 0;
+       	
+while($row = mysqli_fetch_array($execute_query)){
+   $names[$cont] = $row['nameCat'];
+   $info[$cont] = $row['conteo'];
+
+   $cont++;
+
+   
+}
+
+
+
 		
 		$jsondata['data_names'] = $names;
 		$jsondata['data_info'] = $info;
@@ -5776,24 +5800,25 @@ function viewgatget(){
 
 
 		$archivos_recientes .= "<div class=\"col-sm-$n stretch-card \">
-                        <div class=\"card card-rounded\">
-                          <div class=\"card-head p-3\" >
-                            <div class=\"row justify-content-end\">
-                              <div class=\"col-6\">
-                            <h4><b>Archivos recientes</b></h4>
-                            </div>
-                            <div class=\"col-3\">
-                            </div>
-                                    <div class=\"col-3\">
-                                      <span>Ver todo<i class=\"menu-icon mdi mdi-chevron-right\"></i></span>
-                                    </div>
+                        			<div class=\"card card-rounded\">
+                          			<div class=\"card-head p-3\" >
+                           				<div class=\"row justify-content-end\">
+                              			<div class=\"col-6\">
+                            					<h5><b>Archivos recientes</b></h5>
+                            				</div>
+                            				<div class=\"col-2\">
+                            				</div>
+                                  	<div class=\"col-4\">
+                                  	<a class=\"nav-link\" href=\"explorador.html\" style=\"padding:0;text-align:right;\"><h5><b><span>Ver todo<i class=\"menu-icon mdi mdi-chevron-right \"></i></span></b></h5></a>
+                                    
+                                  	</div>
                                   </div>
-                          </div>
+                          			</div>
                           <div class=\"card-body p-1\">
-                            <div class=\"row\" >
-                              <div class=\"col-lg-12\">
-                                
-                              <ul class=\"list-group list-group-flush nav\">";
+                            
+                                <div class=\"table-responsive\">
+                              <table width=\"100%\" >
+                              <tbody>";
 
 // iNICIA PRUEBA fINAL
 
@@ -5851,14 +5876,15 @@ function viewgatget(){
 																				break;
 																		}
 
-						$archivos_recientes .= "<li class=\"item\">
+						$archivos_recientes .= "<tr>
+																	<td class\"\">
                                   <iconify-icon icon=\"feather:more-vertical\" style=\"padding-bottom: 3%;\" type=\"button\" id=\"archivosRecientes1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
                                   <div class=\"dropdown-menu\" aria-labelledby=\"archivosRecientes1\">
                                     <a class=\"dropdown-item\" href=\"#\" onclick=\"descargar_archivo('$url_archivo');return false;\">Descargar</a>
                                     <a class=\"dropdown-item\" href=\"#\" onclick=\"compartir('$url_archivo','archivo');return false;\">Compartir Link</a>
-                                  </div>
-                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> <b>$file</b>
-                                </li>";
+                                  </div></td><td>
+                                  <i class=\"mdi $image_ico menu-icon mdi-48px mdi-set\"></i> </td><td>$file</td>
+                                </tr>";
 
 					}
 
@@ -5872,39 +5898,18 @@ function viewgatget(){
 
          
                                 
-        $archivos_recientes .= "</ul>
+        $archivos_recientes .= "</tbody>
+        											</table>
                                 
                               </div>
-                            </div>
+                            
                           </div>
                         </div>
                       </div>";
 		#codigo................;
-       $query = "SELECT 
-       							c.name_cat As nameCat, 
-       							count('d.cat1') As conteo 
-       						FROM 
-       							categoria c 
-       						INNER JOIN documentation d 
-       						ON c.idCat = d.cat1 
-       						group by d.cat1 ";
-       	$execute_query = mysqli_query($conn,$query);
+       
+       	
 
-       //$cont = 0;
-       	/*
-while($row = mysqli_fetch_array($execute_query)){
-   $cat = $row['nameCat'];
-   $nume = $row['conteo'];
-
-   array_push($name, $cat);
-   array_push($num, $nume);
-   //$cont++;
-}*/
-   //error_log(print_r($name[0]));
-$name = array("hola","como","esta");
-$num 	=	array(23,24,98);
-
-//print_r($name);
         $graficas .=  "<div class=\"col-sm-$n stretch-card \">
                       <div class=\"card card-rounded\">
                         <div class=\"card-head p-3\" >
@@ -5925,22 +5930,51 @@ $num 	=	array(23,24,98);
                     </div>";
 
           $graficas.= "<script >
-    
-											$(function() {
-												var ctx = $('#GraphDash');
-											        
-													
-											        var grafica = new Chart(ctx,{
-											            type:\"pie\",
-											            data:{
-											                labels:['cat1','cat2'],
-											                datasets:[{
-											                    label:'num datos',
-											                    data:[122,123],
-											                }],
-											            }
-											        });
-											        });
+    function category_graphic(data_info,data_names){
+   			var doughnutPieData = {
+    datasets: [{
+      label:'Prueba',
+      //data: [12, 12, 12, 12],
+      data: data_info,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: data_names
+  };
+  var doughnutPieOptions = {
+    responsive: true,
+    animation: {
+      animateScale: true,
+      animateRotate: true
+    }
+  };
+
+    if ($(\"#GraphDash\").length) {
+        var pieChartCanvas = $(\"#GraphDash\").get(0).getContext(\"2d\");
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: doughnutPieData,
+            options: doughnutPieOptions
+        });
+    }
+
+}
 											</script>
         												";
 
