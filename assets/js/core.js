@@ -368,7 +368,10 @@ function load_dashboard(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                
+                //[12, 12, 12, 12]
+
+                category_graphic(r.data_info,r.data_names);
+                //alert('info bien');
             }else{
                 alert(r.error);
                 window.location.replace('dashboard.html');

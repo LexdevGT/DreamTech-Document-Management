@@ -54,11 +54,12 @@ function datos(){
 }
 
 
-function category_graphic(){
+function category_graphic(data_info,data_names){
    var doughnutPieData = {
     datasets: [{
       label:'Prueba',
-      data: [12, 12, 12, 12],
+      //data: [12, 12, 12, 12],
+      data: data_info,
       backgroundColor: [
         'rgba(255, 99, 132, 0.5)',
         'rgba(54, 162, 235, 0.5)',
@@ -78,12 +79,7 @@ function category_graphic(){
     }],
 
     // These labels appear in the legend and in the tooltips when hovering different arcs
-    labels: [
-      'Manual',
-      'Institucional',
-      'Facturacion',
-      'MARN',
-    ]
+    labels: data_names
   };
   var doughnutPieOptions = {
     responsive: true,
