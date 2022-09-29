@@ -189,7 +189,7 @@
 				loadSuscripcionesFunction();
 				break;
 			case 'load_dashboard':
-				
+				loadDashboardFunction();
 				break;
 			case 'load_filtros':
 				loadFiltrosFunction();
@@ -276,6 +276,21 @@
 
 		#codigo................;
 
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadDashboardFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$info 		= array(12,12,19,36);
+		$names 		= array('Institucional','Tierra','Aire','Documentación');
+		
+		$jsondata['data_names'] = $names;
+		$jsondata['data_info'] = $info;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
