@@ -33,8 +33,8 @@ $(function(){
     });
 
     $(".exportToExcel_filtros").click(function(e){
-        //alert('something');
-        var table = $('#tablareportes');
+        alert('something');
+        /*var table = $('#tablareportes');
         if(table && table.length){
             var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
             $(table).table2excel({
@@ -47,7 +47,7 @@ $(function(){
                 exclude_inputs: true,
                 preserveColors: preserveColors
             });
-        }
+        }*/
     });
 
     $('#enviar-email').click(function(){
