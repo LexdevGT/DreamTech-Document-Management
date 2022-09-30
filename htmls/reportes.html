@@ -139,7 +139,7 @@
                                   <div class="col-sm-4 form-group select_categorias">
                                     
                                   </div>
-                                  <div class="col-sm-4 select_archivo">
+                                  <div class="col-sm-4 form-group select_archivo">
                                   
                                     
                                   
@@ -219,7 +219,7 @@
                       <div class="col-sm-6 stretch-card">
                         <div class="card card-rounded">
                           <div class="card-body">
-                            <h4 class="card-title">Horas de Descarga</h4>
+                            <h4 class="card-title">Descarga</h4>
                             <canvas id="areaChart"></canvas>
 
                           </div>
@@ -285,7 +285,7 @@
   <script src="../assets/js/core.js"></script>
   <script src="../assets/js/data_selector_group.js"></script>
   <!-- Custom js for this page-->
-  <script src="./js/chart.js"></script>
+  <script src="./js/graficas_dash.js"></script>
   <script src="./js/bootstrap-datepicker.min.js"></script>
   <script src="./js/bootstrap.bundle.min.js"></script>
   <script src="js/moment.js"></script>
@@ -297,8 +297,9 @@
     select_filtro_categoria();
     $('#date_range').change(function(){
       filtros();
+      load_reporte_graf();
     });
-
+    //category_graphic_reporte();
     
     
   </script>

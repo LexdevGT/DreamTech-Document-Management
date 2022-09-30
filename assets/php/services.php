@@ -260,10 +260,14 @@
 				// code...
 			select_view_archivo();
 				break;
-				case 'datos_filtros':
+			case 'datos_filtros':
 					// code...
 				datos_filtros_view();
 					break;
+			case 'load_reporte_grafica':
+				// code...
+			loadReporteGraficas();
+				break;
 		}
 		
 	}
@@ -303,6 +307,40 @@
        	
 while($row = mysqli_fetch_array($execute_query)){
    $names[$cont] = $row['nameCat'];
+   $info[$cont] = $row['conteo'];
+
+   $cont++;
+
+   
+}
+
+
+
+		
+		$jsondata['data_names'] = $names;
+		$jsondata['data_info'] = $info;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+	function loadReporteGraficas(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$info 		= array();
+		$names 		= array();
+
+		$f_inicial = $_SESSION['fecha_inicial'];
+		$f_final   = $_SESSION['fecha_final'];
+
+		$query = "SELECT DATE(date_time) As fecha, count(date_time) As conteo FROM log where description LIKE 'Download%' and (date_time) >'$f_inicial' AND DATE(date_time) < '$f_final' Group by DATE(date_time)";
+       	$execute_query = mysqli_query($conn,$query);
+       	//error_log($query);
+       $cont = 0;
+       	
+while($row = mysqli_fetch_array($execute_query)){
+   $names[$cont] = $row['fecha'];
    $info[$cont] = $row['conteo'];
 
    $cont++;
@@ -6121,6 +6159,7 @@ function viewCategoriaDash(){
 			$pandora = $query_f['pandora'];
 
 			//error_log($pandora);
+			//error_log($url_com);
 
 			//$divi_path = explode("htmls", $path);
 
@@ -6651,6 +6690,9 @@ function datos_filtros_view(){
 
 	$fecha_inicial = $fecha_i." 00:00:00";
 	$fecha_final = $fecha_f." 23:59:59";
+
+	$_SESSION['fecha_inicial'] = $fecha_i;
+	$_SESSION['fecha_final'] = $fecha_f;
 
 	//error_log($fecha_inicial);
 	//error_log($fecha_final);

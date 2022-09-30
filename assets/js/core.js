@@ -380,6 +380,30 @@ function load_dashboard(){
     });
 }
 
+function load_reporte_graf(){
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'load_reporte_grafica'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                //[12, 12, 12, 12]
+
+                category_graphic_reporte(r.data_info,r.data_names);
+                //alert('info bien');
+            }else{
+                alert(r.error);
+                //window.location.replace('dashboard.html');
+            }
+        }    
+    });
+}
+
 function load_suscripciones(){
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
