@@ -33,21 +33,51 @@ $(function(){
     });
 
     $(".exportToExcel_filtros").click(function(e){
-        alert('something');
-        /*var table = $('#tablareportes');
-        if(table && table.length){
-            var preserveColors = (table.hasClass('table2excel_with_colors') ? true : false);
-            $(table).table2excel({
+        //alert('something');
+        var table1 = $('#tablareportes_descargas');
+        var table2 = $('#tablareportes_categoria');
+        var table3 = $('#tablareportes_usuario');
+        if(table1 && table1.length){
+            var preserveColors = (table1.hasClass('table2excel_with_colors') ? true : false);
+            $(table1).table2excel({
                 exclude: ".noExl",
                 name: "Excel Document Name",
-                filename: "Reporte" + new Date().toISOString().replace(/[\-\:\.]/g, "") + ".xls",
+                filename: "Reporte_descargas" + new Date().toISOString().replace(/[\-\:\.]/g, "") + ".xls",
                 fileext: ".xls",
                 exclude_img: true,
                 exclude_links: true,
                 exclude_inputs: true,
                 preserveColors: preserveColors
             });
-        }*/
+        }
+
+        if(table2 && table2.length){
+            var preserveColors = (table2.hasClass('table2excel_with_colors') ? true : false);
+            $(table2).table2excel({
+                exclude: ".noExl",
+                name: "Excel Document Name",
+                filename: "Reporte_categorias" + new Date().toISOString().replace(/[\-\:\.]/g, "") + ".xls",
+                fileext: ".xls",
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true,
+                preserveColors: preserveColors
+            });
+        }
+
+        if(table3 && table3.length){
+            var preserveColors = (table3.hasClass('table2excel_with_colors') ? true : false);
+            $(table3).table2excel({
+                exclude: ".noExl",
+                name: "Excel Document Name",
+                filename: "Reporte_iniciosSesion" + new Date().toISOString().replace(/[\-\:\.]/g, "") + ".xls",
+                fileext: ".xls",
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true,
+                preserveColors: preserveColors
+            });
+        }
     });
 
     $('#enviar-email').click(function(){

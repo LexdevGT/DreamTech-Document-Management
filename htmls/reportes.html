@@ -109,7 +109,7 @@
                         <div class="card card-rounded">
                           <div class="card-body">
                             <div class="row" id="botonera_procesos">
-                                  <div class="col-sm-4">
+                                  <div class="col-sm-3">
                                     
                                       <!--Grid row-->
                                       <div class="row">
@@ -136,17 +136,24 @@
                                   </div>
 
 
-                                  <div class="col-sm-3 form-group select_categorias">
+                                  <div class="col-sm-3 form-group ">
+                                    <label>Categorias</label><select class="form-control js-example-basic-single w-100 select_categorias" id="reportes_filtros_select_categoria" onchange="select_filtro_archivo(this.value);">
+                                      
+
+                                      </select>
+                        
                                     
                                   </div>
-                                  <div class="col-sm-3 form-group select_archivo">
-                                  
+                                  <div class="col-sm-3 form-group ">
+                                  <label>Archivos</label><select class="form-control js-example-basic-single w-100 select_archivo" id="reportes_filtros_select_archivo" onchange="filtros();">
+
+                                    </select>
                                     
                                   
                                 </div>
-                                <div class="col-sm-2 form-group btnDownload">
+                                <div class="col-sm-3 form-group btnDownload">
                                   <button class="btn btn-outline-success btn-sm"><i class="mdi mdi-file-excel-box mdi-48px exportToExcel_filtros"></i></button>
-                                  <button class="btn btn-outline-success btn-sm"><i class="mdi mdi-file-pdf-box mdi-48px"></i></button>
+                                  <!--<button class="btn btn-outline-success btn-sm"><i class="mdi mdi-file-pdf-box mdi-48px"></i></button>-->
                                     
                                   
                                 </div>
@@ -296,6 +303,7 @@
   <script src="./js/bootstrap.bundle.min.js"></script>
   <script src="js/moment.js"></script>
   <script src="js/daterangepicker.js"></script>
+  <script src="js/select2.js"></script>
   <script >
     $('#date_range').daterangepicker();
     security(3,'REPORTES');
@@ -306,6 +314,11 @@
       load_reporte_graf();
     });
     //category_graphic_reporte();
+
+    $('#reportes_filtros_select_categoria').change(function(){
+      filtros();
+      
+    });
     
     
   </script>
