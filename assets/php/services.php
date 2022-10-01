@@ -6266,7 +6266,7 @@ function DescargaArchivo(){
 		if ($insert_query) {
 			// code...
 			$link_archivo = $url;
-			$loginsert = "Download|$url|1|$username";
+			$loginsert = "Download|$url|1";
 //			error_log($loginsert);
 			insert_log($loginsert);
 		}
@@ -6414,7 +6414,7 @@ function descargar_shared(){
 		if ($insert_query) {
 			// code...
 			$link = $link_archivo;
-			$loginsert = "Download|$name|1|$username";
+			$loginsert = "Download|$name|1";
 			//error_log($loginsert);
 			insert_log($loginsert);
 		}
