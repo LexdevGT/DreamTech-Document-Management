@@ -268,6 +268,9 @@
 				// code...
 			loadReporteGraficas();
 				break;
+			case 'user_read_notification':
+				userReadNotificationFuncion();
+				break;
 		}
 		
 	}
@@ -279,6 +282,28 @@
 		$message  = '';
 
 		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function userReadNotificationFuncion(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$u = $_SESSION['user_email'];
+
+		$query_notification_read = "
+				UPDATE notifications
+				SET estado = 1
+				WHERE user = '$u'
+				AND estado = 0
+			";
+		
+//error_log($query_notification_read);
+		$execute_notification_read = $conn->query($query_notification_read);
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -347,8 +372,6 @@ while($row = mysqli_fetch_array($execute_query)){
 
    
 }
-
-
 
 		
 		$jsondata['data_names'] = $names;
@@ -631,10 +654,16 @@ while($row = mysqli_fetch_array($execute_query)){
 		$error 	  = '';
 		$message  = '';
 		$notificacion = '';
+		$u = $_SESSION['user_email'];
 		
 
-		$readnotquery  	="SELECT * FROM notifications WHERE estado = 0";
-		$execute_rquery 	= mysqli_query($conn, $readnotquery);
+		$readnotquery  	="SELECT * FROM notifications WHERE estado = 0 AND user = '$u'";
+//error_log($readnotquery);
+		$execute_rquery 	= $conn->query($readnotquery);
+		$readnotquantity  ="SELECT COUNT(*) c FROM notifications WHERE estado = 0 AND user = '$u'";
+		$execute_readnotquantity = $conn->query($readnotquantity);
+		$result = $execute_readnotquantity->fetch_array();
+		$count = $result['c'];
 
 		$notificacion .='<div id = "dropdownNotify" class="dropdown-menu dropdown-menu-right navbar-dropdown">';
 		$notificacion .=  '<div class="dropdown-header text-center">';
@@ -652,11 +681,11 @@ while($row = mysqli_fetch_array($execute_query)){
 
 
 		$notificacion .= '</div>';
-		$notificacion .=  '<a class="dropdown-item"href="#" id="read_notify"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Entendido</a>';
+		$notificacion .=  '<a class="dropdown-item"href="#" id="read_notify" onclick="read_notification()"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Entendido</a>';
 		$notificacion .= '</div>';
 
 
-
+		$jsondata['contador'] = $count;
 		$jsondata['notificacion_read']= $notificacion;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -675,25 +704,31 @@ while($row = mysqli_fetch_array($execute_query)){
 		$notificacion = isset($_POST['notification'])?$_POST['notification']:"";
 		$title = isset($_POST['title'])?$_POST['title']:"";
 		$datetm = "CURRENT_TIMESTAMP";
-		$user = $_SESSION['user_email'];
+		$admin_user = $_SESSION['user_email'];
+		$flag = "";
 
-		if(!empty($notificacion)&&!empty($user)){
+		if(!empty($notificacion)&&!empty($admin_user)){
 
-		$query_insert_notify = "
-					INSERT INTO notifications (notification,title,date_time,estado,user)
-					VALUES ('$notificacion','$title',$datetm,0,'$user')
+			$query_discover_users = "
+					SELECT user_email
+					FROM users
+					WHERE user_status = 1
+					AND user_company = 1
+				";
+			$execute_discover_user = $conn->query($query_discover_users);
+			
+			while($row = $execute_discover_user->fetch_array()){
+				$user = $row['user_email'];
+				$query_insert_notify = "
+					INSERT INTO notifications (notification,title,date_time,estado,user,admin_user)
+					VALUES ('$notificacion','$title',NOW(),0,'$user','$admin_user')
 							   ";
 
-							   //print_r($query_insert_notify);
 					$execute_insert_access = $conn->query($query_insert_notify);
-		}
 
-		if($execute_insert_access){
-			$message = "Notificación enviada";
-		}else{
-			$error = "No se pudo enviar la notificación";
+			}
+		
 		}
-
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
