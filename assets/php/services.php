@@ -260,10 +260,14 @@
 				// code...
 			select_view_archivo();
 				break;
-				case 'datos_filtros':
+			case 'datos_filtros':
 					// code...
 				datos_filtros_view();
 					break;
+			case 'load_reporte_grafica':
+				// code...
+			loadReporteGraficas();
+				break;
 		}
 		
 	}
@@ -303,6 +307,40 @@
        	
 while($row = mysqli_fetch_array($execute_query)){
    $names[$cont] = $row['nameCat'];
+   $info[$cont] = $row['conteo'];
+
+   $cont++;
+
+   
+}
+
+
+
+		
+		$jsondata['data_names'] = $names;
+		$jsondata['data_info'] = $info;
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+	function loadReporteGraficas(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$info 		= array();
+		$names 		= array();
+
+		$f_inicial = $_SESSION['fecha_inicial'];
+		$f_final   = $_SESSION['fecha_final'];
+
+		$query = "SELECT DATE(date_time) As fecha, count(date_time) As conteo FROM log where description LIKE 'Download%' and (date_time) >'$f_inicial' AND DATE(date_time) < '$f_final' Group by DATE(date_time)";
+       	$execute_query = mysqli_query($conn,$query);
+       	//error_log($query);
+       $cont = 0;
+       	
+while($row = mysqli_fetch_array($execute_query)){
+   $names[$cont] = $row['fecha'];
    $info[$cont] = $row['conteo'];
 
    $cont++;
@@ -5714,7 +5752,7 @@ function crearcarpeta(){
     							$resultado = mysqli_fetch_array($rquery);
 
     							$id  =  $resultado['idCat'];
-    							$msg = "Nueva_categoria-$categoria-$raiz-$id";
+    							$msg = "Nueva_categoria|$categoria|$raiz|$id";
 
     						insert_log($msg);
     						$sucess .= "La categoria se creo exitosamente";
@@ -6121,6 +6159,7 @@ function viewCategoriaDash(){
 			$pandora = $query_f['pandora'];
 
 			//error_log($pandora);
+			//error_log($url_com);
 
 			//$divi_path = explode("htmls", $path);
 
@@ -6227,7 +6266,7 @@ function DescargaArchivo(){
 		if ($insert_query) {
 			// code...
 			$link_archivo = $url;
-			$loginsert = "Download-$url-1-$username";
+			$loginsert = "Download|$url|1";
 //			error_log($loginsert);
 			insert_log($loginsert);
 		}
@@ -6300,7 +6339,7 @@ function compartir(){
 				$query = "UPDATE downloads set shared = '$shared'+1 where pandora = '$pandora'";
 				$insert_query = mysqli_query($conn, $query);
 
-				insert_log("compartir-archivo-$pandora");
+				insert_log("compartir|archivo|$pandora");
 					break;
 
 					case 'categorias':
@@ -6375,7 +6414,7 @@ function descargar_shared(){
 		if ($insert_query) {
 			// code...
 			$link = $link_archivo;
-			$loginsert = "Download-$name-1-$username";
+			$loginsert = "Download|$name|1";
 			//error_log($loginsert);
 			insert_log($loginsert);
 		}
@@ -6518,7 +6557,7 @@ function upload_archivos(){
     if (move_uploaded_file($_FILES["file"]["tmp_name"], $pathcat.$_FILES['file']['name'])) {
         //more code here...
         echo $pathcat.$_FILES['file']['name'];
-        insert_log("Nuevo_documento-$nombre_archivo");
+        insert_log("Nuevo_documento|$nombre_archivo");
     } else {
         $error.="NO es formato";
     }
@@ -6559,8 +6598,7 @@ function select_view(){
 
 
 
-	$select_cat .="<label>Categorias</label><select class=\"form-control js-example-basic-single w-100\" id=\"reportes_filtros_select_categoria\" onchange=\"select_filtro_archivo(this.value);\">
-                                      <option value=\"\">Seleccione Categoria...</option>";
+	$select_cat .= "<option value=\"t\">Todos</option>";
 
     while ($queryf =	mysqli_fetch_array($query_execute)) {
     	// code...
@@ -6570,8 +6608,7 @@ function select_view(){
     
     	$select_cat .="<option value=\"$idCat\">$nameCat</option>";
       }
-         $select_cat .="</select>
-                        ";
+         
 
      
 
@@ -6592,8 +6629,8 @@ function select_view_archivo(){
 	$id_cat 		= $_POST['cat'];
 	$select_archivo = "";
 
-	
-      $select_archivo.= "<label>Archivos</label><select class=\"form-control js-example-basic-single w-100\" id=\"reportes_filtros_select_archivo\" onchange=\"filtros();\">
+		
+      $select_archivo.= "
                                       <option value=\"\">Seleccione Archivo...</option>";
 
                $query = "SELECT
@@ -6613,9 +6650,7 @@ function select_view_archivo(){
 
                 }
                                       
-                        $select_archivo.= "     </select>
-                        <script src=\"js/select2.js\"></script>";
-
+                        
   $jsondata['selecArchivo'] = $select_archivo;
   
 	$jsondata['message'] 	= $message;
@@ -6639,6 +6674,15 @@ function datos_filtros_view(){
 
 	$select_cat = $_POST['select_cat'];
 	$select_archivo = $_POST['select_arch'];
+error_log($select_archivo);
+	/*if (empty($select_archivo)) {
+		// code...
+		$select_archivo="";
+	}else{
+		
+		error_log($select_archivo);
+	}*/
+	
 	$fecha_rango = $_POST['fecha_rango'];
 
 	$f_explod = explode("-", $fecha_rango);
@@ -6651,6 +6695,9 @@ function datos_filtros_view(){
 
 	$fecha_inicial = $fecha_i." 00:00:00";
 	$fecha_final = $fecha_f." 23:59:59";
+
+	$_SESSION['fecha_inicial'] = $fecha_i;
+	$_SESSION['fecha_final'] = $fecha_f;
 
 	//error_log($fecha_inicial);
 	//error_log($fecha_final);
@@ -6685,7 +6732,20 @@ function datos_filtros_view(){
                                         
                                       </tr>
                                     </tbody>";
+                                    //error_log($select_cat);
 
+if ($select_cat=="t") {
+	// code...
+	$query = "SELECT 
+								count('d.cat1')As co, 
+								c.name_cat As name
+							FROM 
+								documentation d 
+								INNER JOIN categoria c 
+								ON c.idCat = d.cat1 
+								
+								GROUP BY d.cat1";
+}else{
      $query = "SELECT 
 								count('d.cat1')As co, 
 								c.name_cat As name
@@ -6695,10 +6755,11 @@ function datos_filtros_view(){
 								ON c.idCat = d.cat1 
 								Where d.cat1='$select_cat'
 								GROUP BY d.cat1";
+								}
 
 		$jquery_exe = mysqli_query($conn,$query);
 
-		
+		//rror_log($query);
 
   $filtro_categorias .= "<thead>
                                       <tr>
@@ -6724,7 +6785,45 @@ function datos_filtros_view(){
                                       }
                   $filtro_categorias .= "</tbody>";
 
-      $query = "SELECT count('description')as de,description FROM docummng.log Where description Like 'Download%' AND date_time>'$fecha_inicial' AND date_time<'$fecha_final' GROUP BY description";
+                  
+    $proceso = 0;
+if ($select_cat>0 && $select_archivo=="") {
+	// code...
+	$query = "SELECT * FROM categoria where idCat = $select_cat";
+	$query_execute = mysqli_query($conn,$query);
+	$query_aray = mysqli_fetch_array($query_execute);
+
+	$cat_link = $query_aray['path_cat'];
+
+	$divi_path = explode('documents', $cat_link);
+
+	$link_cat = "documents".$divi_path[1];
+
+	//error_log($cat_link);
+      $proceso = 1;
+}
+if ($select_cat>0 && $select_archivo>0) {
+	// code...
+	$query = "SELECT * FROM categoria where idCat = $select_cat";
+	$query_execute = mysqli_query($conn,$query);
+	$query_aray = mysqli_fetch_array($query_execute);
+
+	$cat_link = $query_aray['path_cat'];
+
+	$divi_path = explode('documents', $cat_link);
+
+	$link_cat = "documents".$divi_path[1];
+
+	$query = "SELECT file_name FROM documentation Where file_id =$select_archivo";
+	$query_execute = mysqli_query($conn,$query);
+	$array_query = mysqli_fetch_array($query_execute);
+
+	$file_n = $array_query['file_name'];
+
+	$proceso = 2;
+
+}
+	$query = "SELECT count('description')as de,description FROM docummng.log Where description Like 'Download%' AND date_time>'$fecha_inicial' AND date_time<'$fecha_final' GROUP BY description";
       $query_exe = mysqli_query($conn,$query);
 
 
@@ -6742,15 +6841,47 @@ function datos_filtros_view(){
       while ($row = mysqli_fetch_array($query_exe)) {
       	// code...
       	$descr = $row['description'];
-      	$name = explode("-",$descr);
+      	$name = explode("|",$descr);
       	
-      	$nam = $name[1];
+      	$nam = basename($name[1]);
+      	$link_cat2 = dirname($name[1])."/";
       	$num   = $row['de'];
-      	error_log($nam);
-      	$filtro_descargas .= "<tr>
+      	if($proceso==0){
+      		
+      		$filtro_descargas .= "<tr>
                                 <td>$nam</td>
                                 <td>$num</td>
                               </tr>";
+      	}
+      	if ($proceso==1) {
+      		// code...
+
+      		//error_log($link_cat2);
+      		//error_log($link_cat);
+      		if ($link_cat2 == $link_cat) {
+      			// code...
+      			$filtro_descargas .= "<tr>
+                                <td>$nam</td>
+                                <td>$num</td>
+                              </tr>";
+
+
+      		}
+      	}
+      	if ($proceso==2) {
+      		// code...
+      		if ($link_cat2==$link_cat && $nam == $file_n) {
+      			// code...
+      			$filtro_descargas .= "<tr>
+                                <td>$nam</td>
+                                <td>$num</td>
+                              </tr>";
+      		}
+      	}
+      	
+      	
+      	//error_log($nam);
+      	
       }
                                      
         $filtro_descargas .="</tbody>";
