@@ -58,24 +58,40 @@ function datos(){
 function category_graphic(data_info,data_names){
    var doughnutPieData = {
     datasets: [{
-      label:'Prueba',
+      label:'Grafica',
       //data: [12, 12, 12, 12],
       data: data_info,
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(255, 206, 86, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(153, 102, 255, 0.5)',
-        'rgba(255, 159, 64, 0.5)'
+      backgroundColor: ["#0074D9", 
+      "#FF4136", 
+      "#2ECC40", 
+      "#FF851B", 
+      "#7FDBFF", 
+      "#B10DC9", 
+      "#FFDC00", 
+      "#001f3f", 
+      "#39CCCC", 
+      "#01FF70", 
+      "#85144b", 
+      "#F012BE", 
+      "#3D9970", 
+      "#111111", 
+      "#AAAAAA"
       ],
-      borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
+      borderColor: ["#0074D9", 
+      "#FF4136", 
+      "#2ECC40", 
+      "#FF851B", 
+      "#7FDBFF", 
+      "#B10DC9", 
+      "#FFDC00", 
+      "#001f3f", 
+      "#39CCCC", 
+      "#01FF70", 
+      "#85144b", 
+      "#F012BE", 
+      "#3D9970", 
+      "#111111", 
+      "#AAAAAA"
       ],
     }],
 
@@ -98,5 +114,6 @@ function category_graphic(data_info,data_names){
             options: doughnutPieOptions
         });
     }
+
 
 }
