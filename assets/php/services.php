@@ -293,30 +293,64 @@
 		$info 		= array();
 		$names 		= array();
 
-		$query = "SELECT 
+		/*$query = "SELECT 
        							c.name_cat As nameCat, 
        							count('d.cat1') As conteo 
        						FROM 
        							categoria c 
        						INNER JOIN documentation d 
        						ON c.idCat = d.cat1 
-       						group by d.cat1 ";
+       						group by d.cat1 ";*/
+      $query = "SELECT
+ 									file_path_carpeta,
+                           count(file_name)As can_file,
+                           count(file_download_amount)As can_down
+ 								FROM
+ 									downloads
+								Group by 
+									file_path_carpeta
+ 								order by
+                                can_down
+									desc LIMIT 10";
        	$execute_query = mysqli_query($conn,$query);
 
-       $cont = 0;
-       	
-while($row = mysqli_fetch_array($execute_query)){
-   $names[$cont] = $row['nameCat'];
-   $info[$cont] = $row['conteo'];
 
-   $cont++;
+
+       	//$i = 0;
+       $cont = 0;
+       	$cat = "";
+       	$name_cat="";
+       	$info = "";
+
+while($row = mysqli_fetch_array($execute_query)){
+  $name_cat = $row['file_path_carpeta'];
+   //$info[$cont] = $row['conteo'];
+  // error_log($name_cat);
+  $name_e = explode("/", $name_cat);
+  $coun_ex=count($name_e);
+  $coun_c = $coun_ex - 2;
+  $n = $name_e[$coun_c];
+  $names[$cont] = $n;
+
+   	//error_log($n);
+   	// $names[$cont] = $row['file_path_carpeta'];
+	$info[$cont] = $row['can_file'];
+       	 
+       	 $cont++; 
+       	 //error_log($cont);
+   
+   
+   
+
+   //$i++;
+   
 
    
 }
 
 
 
-		
+		//error_log(print_r($names_t));
 		$jsondata['data_names'] = $names;
 		$jsondata['data_info'] = $info;
 		$jsondata['message'] = $message;
@@ -5975,20 +6009,38 @@ function viewgatget(){
       //data: [12, 12, 12, 12],
       data: data_info,
       backgroundColor: [
-        'rgba(255, 99, 132, 0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(255, 206, 86, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(153, 102, 255, 0.5)',
-        'rgba(255, 159, 64, 0.5)'
+        '#0074D9', 
+      '#FF4136', 
+      '#2ECC40', 
+      '#FF851B', 
+      '#7FDBFF', 
+      '#B10DC9', 
+      '#FFDC00', 
+      '#001f3f', 
+      '#39CCCC', 
+      '#01FF70', 
+      '#85144b', 
+      '#F012BE', 
+      '#3D9970', 
+      '#111111', 
+      '#AAAAAA'
       ],
       borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
+        '#0074D9', 
+      '#FF4136', 
+      '#2ECC40', 
+      '#FF851B', 
+      '#7FDBFF', 
+      '#B10DC9', 
+      '#FFDC00', 
+      '#001f3f', 
+      '#39CCCC', 
+      '#01FF70', 
+      '#85144b', 
+      '#F012BE', 
+      '#3D9970', 
+      '#111111', 
+      '#AAAAAA'
       ],
     }],
 
