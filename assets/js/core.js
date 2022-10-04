@@ -267,7 +267,26 @@ function new_function(){
     });
 }
 
-
+function load_busqueda_avanzada(){
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'load_busqueda_avanzada'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('#select_tipo_doc').html(r.list_type_doc);
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
 
 function load_explorer(directory='',flag=0){
 

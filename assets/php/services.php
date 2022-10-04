@@ -274,6 +274,10 @@
 			case 'insert_download':
 				insertDownloadFuncion();
 				break;
+			case 'load_busqueda_avanzada':
+				loadBusquedaAvanzadaFunction();
+				break;
+
 		}
 		
 	}
@@ -285,6 +289,19 @@
 		$message  = '';
 
 		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadBusquedaAvanzadaFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+
+		
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;

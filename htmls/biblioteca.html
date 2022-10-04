@@ -207,7 +207,7 @@
 
 
           <div class="row stretch-card ">
-            <div class="col-sm-3 stretch-card ">
+           <!-- <div class="col-sm-3 stretch-card ">
               <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
                   <ul  style="width: 100%; height: 100%;" class="navbar-nav">
                     <li  style="width: 100%; height: 100%;" class="nav-item font-weight-semibold d-none d-lg-block ms-0">
@@ -215,7 +215,7 @@
                     </li>
                   </ul>
               </div>
-            </div>
+            </div>-->
              <div class="col-sm-3">
               <div style="width: 100%; height: 100%;" class="navbar-menu-wrapper d-flex align-items-top"> 
                   <ul style="width: 100%; height: 100%;" class="navbar-nav">
@@ -235,6 +235,7 @@
                     Búsqueda Rápida
                     <br>
                   </label></b></div>
+                  <!--
                   <div class="col-sm-12">
                     <div class="row">
                       <div id="nuevo1" class="input-group">
@@ -284,14 +285,8 @@
                     </div>
 
                   </div>
+                -->
 
-<!--/*<<<<<<< Benito
-
-            </div>
-
-             <div id="avanzado" style="display: none;" class="row">
-
-=======*/ -->
                 </div>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-8 card card-rounded">
@@ -544,11 +539,12 @@
     security(2,'DOCUMENTOS');
     //load_dashboard();
     avanzado_display();
-    display_categoria();
-    display_author();
+    load_busqueda();
+    //display_categoria();
+    //display_author();
     //display_busqueda();
     //seach_result_display();
-    seach_result_display_1();
+    //seach_result_display_1();
 $(function() {
   $('input[id="dtRange"]').daterangepicker({
     timePicker: true,
