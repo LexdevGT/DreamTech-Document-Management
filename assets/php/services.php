@@ -315,8 +315,12 @@
 		$message  	= '';
 		$file_path 	= $_POST['file_path'];
 		$file_name 	= $_POST['file_name'];
-		$dir 			= $_POST['dir'];
+		/*$dir 			= $_POST['dir'];*/
+		$dir = '';
 		$pandora 	= $_POST['pandora'];
+
+		$dir = str_replace('../../htmls/', '', $file_path);
+//error_log($dir);
 
 		$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
 					VALUES
@@ -6252,7 +6256,7 @@ function viewCategoriaDash(){
 //error_log($last);
 				$query_cat_insert = "
 						INSERT INTO categoria (name_cat,path_cat,status,f_creacion,pandora)
-						VALUES ('$name_cat','$dir_cat',1,NOW(),md5('$url_com'))
+						VALUES ('$name_cat','$url_com',1,NOW(),md5('$url_com'))
 					";
 				$execute_cat_insert = $conn->query($query_cat_insert);
 				$error = 'need reset!';

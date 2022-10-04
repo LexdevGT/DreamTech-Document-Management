@@ -22,7 +22,7 @@ function categorias_folder(){
                 $('.carp-reciente').html(r.categoria);
                 //alert(categoria);
             }else{
-                //alert(r.error);
+                alert(r.error);
                 //window.location.replace('../dashboard.html');
                 location.reload();
             }
