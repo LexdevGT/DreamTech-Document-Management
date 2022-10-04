@@ -6220,6 +6220,7 @@ function viewCategoriaDash(){
 		$pandora 		= "";
 		
 		$query = "SELECT file_path_carpeta,SUM(file_download_amount) AS total, count(file_path_carpeta) As total_arch FROM downloads GROUP BY file_path_carpeta ORDER BY total DESC LIMIT 4";
+//error_log($query);
 
 		$execute_query =  mysqli_query($conn, $query);
 
@@ -6235,12 +6236,29 @@ function viewCategoriaDash(){
 		//	$path     = $fetch_query['path_cat'];
 			$extra = "../../htmls/";
 			$url_com = $extra.$dir_cat;
-			//error_log($url_com);
-			$quer = "SELECT * FROM categoria WHERE path_cat ='$url_com' ";
+			$quer = "SELECT pandora,count(*) c FROM categoria WHERE path_cat ='$url_com' GROUP BY pandora";
+//error_log("SELECT#1:$quer");
+
 			$quer_execute	= mysqli_query($conn,$quer);
 			$query_f =	mysqli_fetch_array($quer_execute);
 
-			$pandora = $query_f['pandora'];
+			if($query_f['c']>0){
+				$pandora = $query_f['pandora'];
+//error_log("PANDORA: $pandora");
+			}else{
+				$convert_category_name = explode('/', $url_com);
+				array_pop($convert_category_name);
+				$name_cat = array_pop($convert_category_name);
+//error_log($last);
+				$query_cat_insert = "
+						INSERT INTO categoria (name_cat,path_cat,status,f_creacion,pandora)
+						VALUES ('$name_cat','$dir_cat',1,NOW(),md5('$url_com'))
+					";
+				$execute_cat_insert = $conn->query($query_cat_insert);
+				$error = 'need reset!';
+//error_log($query_cat_insert);
+			}
+			
 
 			//error_log($pandora);
 			//error_log($url_com);
