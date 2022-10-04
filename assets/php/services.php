@@ -297,14 +297,28 @@
 
 	function loadBusquedaAvanzadaFunction(){
 		global $conn;
-		$jsondata = array();
-		$error 	  = '';
-		$message  = '';
+		$jsondata 			= array();
+		$error 	 			= '';
+		$message  			= '';
+		$list_categories 	= '';
 
+		$dir = "../../htmls/documents/"; 
+		$data = scandir($dir);
+
+		foreach ($data as $key => $value) {
+			if($value != '.' && $value != '..'){
+				
+				$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
+//error_log($ext);
+				if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg' && $ext != 'pdf' && $ext != 'xls' && $ext != 'xlsx' && $ext != 'doc' && $ext != 'docx'){
+					$list_categories .= "<option value = '$value'>$value</option>";
+				}
+			}
+		}
 		
-
-		$jsondata['message'] = $message;
-		$jsondata['error']   = $error;
+		$jsondata['list_categories'] 	= $list_categories;
+		$jsondata['message'] 			= $message;
+		$jsondata['error']   			= $error;
 		echo json_encode($jsondata);
 	}
 

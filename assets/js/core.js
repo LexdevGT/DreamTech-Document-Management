@@ -242,8 +242,6 @@ $(function(){
         save_ciudadano_login();
     });
 
-
-
 });
 
 function new_function(){
@@ -279,7 +277,7 @@ function load_busqueda_avanzada(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                $('#select_tipo_doc').html(r.list_type_doc);
+                $('#select_categoria').html(r.list_categories);
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');

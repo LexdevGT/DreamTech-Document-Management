@@ -324,12 +324,10 @@
                   <div class="col-sm">
                      <h5 class="welcome-text"><span class="text-black fw-bold">Tipo de documento</span> </h5>
                       <select class="js-example-basic-multiple w-100"s placeholder="Tipo de documento" id="select_tipo_doc" name="">
-                                <option selected value="Todo">Todo</option>
+                                <option selected value="todo">Todo</option>
                                 <option  value="pdf">PDF</option>
                                 <option  value="xlsx">EXCEL</option>
-                                <option  value="xdoc">WORD</option>
-                                <option  value="jpg_png">IMAGEN</option>
-                                <option  value="jpg_png">VIDEO</option>
+                                <option  value="docx">WORD</option>
                       </select>
                   </div>
 
@@ -539,7 +537,7 @@
     security(2,'DOCUMENTOS');
     //load_dashboard();
     avanzado_display();
-    load_busqueda();
+    load_busqueda_avanzada();
     //display_categoria();
     //display_author();
     //display_busqueda();
