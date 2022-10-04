@@ -268,6 +268,16 @@
 				// code...
 			loadReporteGraficas();
 				break;
+			case 'user_read_notification':
+				userReadNotificationFuncion();
+				break;
+			case 'insert_download':
+				insertDownloadFuncion();
+				break;
+			case 'load_busqueda_avanzada':
+				loadBusquedaAvanzadaFunction();
+				break;
+
 		}
 		
 	}
@@ -285,13 +295,99 @@
 		echo json_encode($jsondata);
 	}
 
-	function loadDashboardFunction(){
+	function loadBusquedaAvanzadaFunction(){
+		global $conn;
+		$jsondata 			= array();
+		$error 	 			= '';
+		$message  			= '';
+		$list_categories 	= '';
+
+		$dir = "../../htmls/documents/"; 
+		$data = scandir($dir);
+
+		foreach ($data as $key => $value) {
+			if($value != '.' && $value != '..'){
+				
+				$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
+//error_log($ext);
+				if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg' && $ext != 'pdf' && $ext != 'xls' && $ext != 'xlsx' && $ext != 'doc' && $ext != 'docx'){
+					$list_categories .= "<option value = '$value'>$value</option>";
+				}
+			}
+		}
+		
+		$jsondata['list_categories'] 	= $list_categories;
+		$jsondata['message'] 			= $message;
+		$jsondata['error']   			= $error;
+		echo json_encode($jsondata);
+	}
+
+	function insertDownloadFuncion(){
+		global $conn;
+		$jsondata 	= array();
+		$error 	  	= '';
+		$message  	= '';
+		$file_path 	= $_POST['file_path'];
+		$file_name 	= $_POST['file_name'];
+		/*$dir 			= $_POST['dir'];*/
+		$dir = '';
+		$pandora 	= $_POST['pandora'];
+
+		$dir = str_replace('../../htmls/', '', $file_path);
+//error_log($dir);
+
+		$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
+					VALUES
+					('$file_name','$file_path','1','$dir',MD5('$pandora'))
+					ON DUPLICATE KEY UPDATE 
+					-- file_download_amount	= file_download_amount + VALUES(file_download_amount),
+					file_download_amount	= file_download_amount + 1,
+					file_path_carpeta = '$dir',
+					pandora = MD5('$pandora')";
+//error_log($query);
+		$execute_query = $conn->query($query);
+
+		if($execute_query){
+			$message = 'Descargando archivo con éxito';
+		}else{
+			$error = 'No se pudo descargar el archivo de forma correcta!!!';
+		}
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function userReadNotificationFuncion(){
 		global $conn;
 		$jsondata = array();
 		$error 	  = '';
 		$message  = '';
+		$u = $_SESSION['user_email'];
+
+		$query_notification_read = "
+				UPDATE notifications
+				SET estado = 1
+				WHERE user = '$u'
+				AND estado = 0
+			";
+		
+//error_log($query_notification_read);
+		$execute_notification_read = $conn->query($query_notification_read);
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadDashboardFunction(){
+		global $conn;
+		$jsondata 	= array();
+		$error 	  	= '';
+		$message  	= '';
 		$info 		= array();
 		$names 		= array();
+
 
 		/*$query = "SELECT 
        							c.name_cat As nameCat, 
@@ -350,13 +446,15 @@ while($row = mysqli_fetch_array($execute_query)){
 
 
 
-		//error_log(print_r($names_t));
+
+
 		$jsondata['data_names'] = $names;
-		$jsondata['data_info'] = $info;
-		$jsondata['message'] = $message;
-		$jsondata['error']   = $error;
+		$jsondata['data_info'] 	= $info;
+		$jsondata['message'] 	= $message;
+		$jsondata['error']   	= $error;
 		echo json_encode($jsondata);
 	}
+
 	function loadReporteGraficas(){
 		global $conn;
 		$jsondata = array();
@@ -373,16 +471,14 @@ while($row = mysqli_fetch_array($execute_query)){
        	//error_log($query);
        $cont = 0;
        	
-while($row = mysqli_fetch_array($execute_query)){
-   $names[$cont] = $row['fecha'];
-   $info[$cont] = $row['conteo'];
+		while($row = mysqli_fetch_array($execute_query)){
+		   $names[$cont] = $row['fecha'];
+		   $info[$cont] = $row['conteo'];
 
-   $cont++;
+		   $cont++;
 
-   
-}
-
-
+		   
+		}
 
 		
 		$jsondata['data_names'] = $names;
@@ -438,8 +534,6 @@ while($row = mysqli_fetch_array($execute_query)){
 			}else{
 				$retorno = $r;
 			}
-		
-		
 
 		$_SESSION['exp_path'] = $dir;
 
@@ -495,9 +589,10 @@ while($row = mysqli_fetch_array($execute_query)){
 						if(strpos($value, '.xls') !== false || strpos($value, '.xlsx') !== false || strpos($value, '.doc') !== false || strpos($value, '.docx') !== false || strpos($value, '.pdf') !== false){
 							$download_file = $dir.$value;
 							$download_file = str_replace('../../htmls/', '', $download_file);
+							$pandora = $download_file;
 							$html .= "
 								<div class=\"col-sm-3 nav-item\">
-								<a class=\"nav-link\" href=\"$download_file\" target=\"_blank\">
+								<a class=\"nav-link\" href=\"$download_file\" target=\"_blank\" onclick=\"insert_download('$download_file','$value','$dir','$pandora');\">
 		              <div class=\"card\">
 		                <div class=\"card-body\">
 		                  $image_line
@@ -665,10 +760,16 @@ while($row = mysqli_fetch_array($execute_query)){
 		$error 	  = '';
 		$message  = '';
 		$notificacion = '';
+		$u = $_SESSION['user_email'];
 		
 
-		$readnotquery  	="SELECT * FROM notifications WHERE estado = 0";
-		$execute_rquery 	= mysqli_query($conn, $readnotquery);
+		$readnotquery  	="SELECT * FROM notifications WHERE estado = 0 AND user = '$u'";
+//error_log($readnotquery);
+		$execute_rquery 	= $conn->query($readnotquery);
+		$readnotquantity  ="SELECT COUNT(*) c FROM notifications WHERE estado = 0 AND user = '$u'";
+		$execute_readnotquantity = $conn->query($readnotquantity);
+		$result = $execute_readnotquantity->fetch_array();
+		$count = $result['c'];
 
 		$notificacion .='<div id = "dropdownNotify" class="dropdown-menu dropdown-menu-right navbar-dropdown">';
 		$notificacion .=  '<div class="dropdown-header text-center">';
@@ -686,11 +787,11 @@ while($row = mysqli_fetch_array($execute_query)){
 
 
 		$notificacion .= '</div>';
-		$notificacion .=  '<a class="dropdown-item"href="#" id="read_notify"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Entendido</a>';
+		$notificacion .=  '<a class="dropdown-item"href="#" id="read_notify" onclick="read_notification()"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Entendido</a>';
 		$notificacion .= '</div>';
 
 
-
+		$jsondata['contador'] = $count;
 		$jsondata['notificacion_read']= $notificacion;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -709,25 +810,31 @@ while($row = mysqli_fetch_array($execute_query)){
 		$notificacion = isset($_POST['notification'])?$_POST['notification']:"";
 		$title = isset($_POST['title'])?$_POST['title']:"";
 		$datetm = "CURRENT_TIMESTAMP";
-		$user = $_SESSION['user_email'];
+		$admin_user = $_SESSION['user_email'];
+		$flag = "";
 
-		if(!empty($notificacion)&&!empty($user)){
+		if(!empty($notificacion)&&!empty($admin_user)){
 
-		$query_insert_notify = "
-					INSERT INTO notifications (notification,title,date_time,estado,user)
-					VALUES ('$notificacion','$title',$datetm,0,'$user')
+			$query_discover_users = "
+					SELECT user_email
+					FROM users
+					WHERE user_status = 1
+					AND user_company = 1
+				";
+			$execute_discover_user = $conn->query($query_discover_users);
+			
+			while($row = $execute_discover_user->fetch_array()){
+				$user = $row['user_email'];
+				$query_insert_notify = "
+					INSERT INTO notifications (notification,title,date_time,estado,user,admin_user)
+					VALUES ('$notificacion','$title',NOW(),0,'$user','$admin_user')
 							   ";
 
-							   //print_r($query_insert_notify);
 					$execute_insert_access = $conn->query($query_insert_notify);
-		}
 
-		if($execute_insert_access){
-			$message = "Notificación enviada";
-		}else{
-			$error = "No se pudo enviar la notificación";
+			}
+		
 		}
-
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -6188,6 +6295,7 @@ function viewCategoriaDash(){
 		$pandora 		= "";
 		
 		$query = "SELECT file_path_carpeta,SUM(file_download_amount) AS total, count(file_path_carpeta) As total_arch FROM downloads GROUP BY file_path_carpeta ORDER BY total DESC LIMIT 4";
+//error_log($query);
 
 		$execute_query =  mysqli_query($conn, $query);
 
@@ -6203,12 +6311,29 @@ function viewCategoriaDash(){
 		//	$path     = $fetch_query['path_cat'];
 			$extra = "../../htmls/";
 			$url_com = $extra.$dir_cat;
-			//error_log($url_com);
-			$quer = "SELECT * FROM categoria WHERE path_cat ='$url_com' ";
+			$quer = "SELECT pandora,count(*) c FROM categoria WHERE path_cat ='$url_com' GROUP BY pandora";
+//error_log("SELECT#1:$quer");
+
 			$quer_execute	= mysqli_query($conn,$quer);
 			$query_f =	mysqli_fetch_array($quer_execute);
 
-			$pandora = $query_f['pandora'];
+			if($query_f['c']>0){
+				$pandora = $query_f['pandora'];
+//error_log("PANDORA: $pandora");
+			}else{
+				$convert_category_name = explode('/', $url_com);
+				array_pop($convert_category_name);
+				$name_cat = array_pop($convert_category_name);
+//error_log($last);
+				$query_cat_insert = "
+						INSERT INTO categoria (name_cat,path_cat,status,f_creacion,pandora)
+						VALUES ('$name_cat','$url_com',1,NOW(),md5('$url_com'))
+					";
+				$execute_cat_insert = $conn->query($query_cat_insert);
+				$error = 'need reset!';
+//error_log($query_cat_insert);
+			}
+			
 
 			//error_log($pandora);
 			//error_log($url_com);
@@ -6726,7 +6851,7 @@ function datos_filtros_view(){
 
 	$select_cat = $_POST['select_cat'];
 	$select_archivo = $_POST['select_arch'];
-error_log($select_archivo);
+//error_log($select_archivo);
 	/*if (empty($select_archivo)) {
 		// code...
 		$select_archivo="";

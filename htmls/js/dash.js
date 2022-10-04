@@ -23,7 +23,8 @@ function categorias_folder(){
                 //alert(categoria);
             }else{
                 alert(r.error);
-                window.location.replace('../dashboard.html');
+                //window.location.replace('../dashboard.html');
+                location.reload();
             }
         }    
     });

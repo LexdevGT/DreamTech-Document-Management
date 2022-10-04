@@ -3,7 +3,7 @@ $(function(){
     load_headbar();
 
      const queryString = window.location.search;
-            console.log(queryString);
+            //console.log(queryString);
     if (queryString!=="") {
         shared_descarga(queryString);
     }
@@ -242,8 +242,6 @@ $(function(){
         save_ciudadano_login();
     });
 
-
-
 });
 
 function new_function(){
@@ -267,7 +265,26 @@ function new_function(){
     });
 }
 
-
+function load_busqueda_avanzada(){
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'load_busqueda_avanzada'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('#select_categoria').html(r.list_categories);
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
 
 function load_explorer(directory='',flag=0){
 
@@ -385,6 +402,33 @@ function load_filtros(){
             }
         }    
     });
+}
+
+function insert_download(file_path,file_name,dir,pandora){
+    //alert('FILE_PATH: '+file_path+' FILE_NAME: '+file_name+' DIRICTORY: '+dir+' PANDORA: '+dir);
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'insert_download',
+            file_path,
+            file_name,
+            dir,
+            pandora
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                alert(r.message);
+            }else{
+                alert(r.error);
+                window.location.replace('dashboard.html');
+            }
+        }    
+    });
+    
 }
 
 function load_dashboard(){
@@ -573,18 +617,21 @@ function notify_info() {
         success: function(r) {                                                   
           
             //alert(r.notificacion_read);
-
-            window.setInterval(function() {$('#notify_info').effect( "shake",1000);}, 5000);
-            $("#info_notify").append(r.notificacion_read);
-            $('#notify_info').css({ color: "red"});
-            $('#notify_info').click(function() {
-                   $("#dropdownNotify").show();
-            });
-                
+            if(r.contador>0){
+                window.setInterval(function() {$('#notify_info').effect( "shake",1000);}, 5000);
+                $("#info_notify").append(r.notificacion_read);
+                $('#notify_info').css({ color: "red"});
+                $('#notify_info').click(function() {
+                       $("#dropdownNotify").show();
+                });
+            }
+            
+            
            $("#read_notify").click(function() {
                    $("#dropdownNotify").hide();
                    read_notifications();
-                   window.setInterval(function() {$('#notify_info').effect( "shake",1000);}, 5000);
+                   //$('#notify_info').css({ color: "grey"});
+                   //$('#notify_info').effect( "shake", {times:3}, 10);
             });
              
 
@@ -592,11 +639,37 @@ function notify_info() {
         }    
     });
 
-
-
 }
 
+function read_notification() {
+   
+   //alert('lectura');
+    
+   $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'user_read_notification'
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                //$('#notify_info').effect( "shake");
+                $('#notify_info').css({ color: "grey"});
+                location.reload(true)
+            }else{
+                alert(r.error);
+                window.location.replace('notificacion.html');
+            }
 
+        
+        }    
+    });
+    
+}
+
+/*
 function notification_send(title,notification){
 
     $.ajax({
@@ -614,7 +687,7 @@ function notification_send(title,notification){
     });
 
 }
-
+*/
 
 function notification_send(title,notification){
 

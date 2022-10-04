@@ -32,51 +32,6 @@
   <link rel="stylesheet" href="css/vertical-layout-light/style.css">
   <!-- endinject -->
   <!--<link rel="shortcut icon" href="images/favicon.png" />-->
-  <style type="text/css">
-    
-#share-buttons {
-    width: 400px;
-    display:block;
-    margin: 0 auto;
-    -ms-transform: scale(.8,.8);
-    -webkit-transform: scale(.8,.8);
-    transform: scale(.8,.8);
-}
-#share-buttons img {
-    width: 35px;
-    padding: 5px;
-    border: 0;
-    display: inline;
-}
-
-#share-buttons a{
-    width: 50px;
-    height: 50px;
-    display: inline-block;   
-}
-
-#share-buttons i{
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-    background-image: url("/images/botones_sociales_compartir.png");
-}
-
-  </style>
-  <script type="text/javascript">
-     var lba = document.getElementsByClassName("social-button")
-
-        function myPopup() {
-            window.open(this.href, 'mywin',
-                    'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
-            event.preventDefault();
-            return false;
-        }
-
-        for (var i = 0; i < lba.length; i++) {
-            lba[i].addEventListener("click", myPopup, false);
-        }
-  </script>
   
 </head>
 <body>
@@ -191,21 +146,20 @@
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-pyramid-funnel.min.js"></script>
 
-  <script src="js/dashboard.js"></script>
-  <script src="js/dash.js"></script>
-
   <script src="../assets/js/core.js"></script>
   <script src="js/Chart.roundedBarCharts.js"></script>
   <script src="vendors/uploader-master/dist/js/jquery.dm-uploader.min.js"></script>
   <script src="vendors/mdb-ui-kit-master/js/mdb.min.js"></script>
   <script src="vendors/dropzone/js/dropzone.js"></script>
   <script src="vendors/dropzone/js/jquery-ui.min.js"></script>
+
   
   <!-- Custom js for this page-->
   <script src="js/graficas_dash.js"></script>
   <script src="js/upload.js"></script>
   <script src="js/autologout.js"></script>
   <!-- End custom js for this page-->
+
 
   <!-- endinject -->
  
