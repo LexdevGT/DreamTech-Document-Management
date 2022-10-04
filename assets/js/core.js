@@ -387,6 +387,33 @@ function load_filtros(){
     });
 }
 
+function insert_download(file_path,file_name,dir,pandora){
+    //alert('FILE_PATH: '+file_path+' FILE_NAME: '+file_name+' DIRICTORY: '+dir+' PANDORA: '+dir);
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'insert_download',
+            file_path,
+            file_name,
+            dir,
+            pandora
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                alert(r.message);
+            }else{
+                alert(r.error);
+                window.location.replace('dashboard.html');
+            }
+        }    
+    });
+    
+}
+
 function load_dashboard(){
     $.ajax({
         contentType: "application/x-www-form-urlencoded",

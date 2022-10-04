@@ -271,6 +271,9 @@
 			case 'user_read_notification':
 				userReadNotificationFuncion();
 				break;
+			case 'insert_download':
+				insertDownloadFuncion();
+				break;
 		}
 		
 	}
@@ -282,6 +285,38 @@
 		$message  = '';
 
 		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function insertDownloadFuncion(){
+		global $conn;
+		$jsondata 	= array();
+		$error 	  	= '';
+		$message  	= '';
+		$file_path 	= $_POST['file_path'];
+		$file_name 	= $_POST['file_name'];
+		$dir 			= $_POST['dir'];
+		$pandora 	= $_POST['pandora'];
+
+		$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
+					VALUES
+					('$file_name','$file_path','1','$dir',MD5('$pandora'))
+					ON DUPLICATE KEY UPDATE 
+					-- file_download_amount	= file_download_amount + VALUES(file_download_amount),
+					file_download_amount	= file_download_amount + 1,
+					file_path_carpeta = '$dir',
+					pandora = MD5('$pandora')";
+//error_log($query);
+		$execute_query = $conn->query($query);
+
+		if($execute_query){
+			$message = 'Descargando archivo con éxito';
+		}else{
+			$error = 'No se pudo descargar el archivo de forma correcta!!!';
+		}
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -312,42 +347,40 @@
 
 	function loadDashboardFunction(){
 		global $conn;
-		$jsondata = array();
-		$error 	  = '';
-		$message  = '';
+		$jsondata 	= array();
+		$error 	  	= '';
+		$message  	= '';
 		$info 		= array();
 		$names 		= array();
 
 		$query = "SELECT 
-       							c.name_cat As nameCat, 
-       							count('d.cat1') As conteo 
-       						FROM 
-       							categoria c 
-       						INNER JOIN documentation d 
-       						ON c.idCat = d.cat1 
-       						group by d.cat1 ";
-       	$execute_query = mysqli_query($conn,$query);
+ 							c.name_cat As nameCat, 
+ 							count('d.cat1') As conteo 
+ 						FROM 
+ 							categoria c 
+ 						INNER JOIN documentation d 
+ 						ON c.idCat = d.cat1 
+ 						group by d.cat1 ";
+//error_log($query);
+    	$execute_query = mysqli_query($conn,$query);
 
-       $cont = 0;
+      $cont = 0;
        	
-while($row = mysqli_fetch_array($execute_query)){
-   $names[$cont] = $row['nameCat'];
-   $info[$cont] = $row['conteo'];
+		while($row = mysqli_fetch_array($execute_query)){
+		   $names[$cont] = $row['nameCat'];
+		   $info[$cont] = $row['conteo'];
 
-   $cont++;
+		   $cont++;
+		   
+		}
 
-   
-}
-
-
-
-		
 		$jsondata['data_names'] = $names;
-		$jsondata['data_info'] = $info;
-		$jsondata['message'] = $message;
-		$jsondata['error']   = $error;
+		$jsondata['data_info'] 	= $info;
+		$jsondata['message'] 	= $message;
+		$jsondata['error']   	= $error;
 		echo json_encode($jsondata);
 	}
+
 	function loadReporteGraficas(){
 		global $conn;
 		$jsondata = array();
@@ -364,14 +397,14 @@ while($row = mysqli_fetch_array($execute_query)){
        	//error_log($query);
        $cont = 0;
        	
-while($row = mysqli_fetch_array($execute_query)){
-   $names[$cont] = $row['fecha'];
-   $info[$cont] = $row['conteo'];
+		while($row = mysqli_fetch_array($execute_query)){
+		   $names[$cont] = $row['fecha'];
+		   $info[$cont] = $row['conteo'];
 
-   $cont++;
+		   $cont++;
 
-   
-}
+		   
+		}
 
 		
 		$jsondata['data_names'] = $names;
@@ -427,8 +460,6 @@ while($row = mysqli_fetch_array($execute_query)){
 			}else{
 				$retorno = $r;
 			}
-		
-		
 
 		$_SESSION['exp_path'] = $dir;
 
@@ -484,9 +515,10 @@ while($row = mysqli_fetch_array($execute_query)){
 						if(strpos($value, '.xls') !== false || strpos($value, '.xlsx') !== false || strpos($value, '.doc') !== false || strpos($value, '.docx') !== false || strpos($value, '.pdf') !== false){
 							$download_file = $dir.$value;
 							$download_file = str_replace('../../htmls/', '', $download_file);
+							$pandora = $download_file;
 							$html .= "
 								<div class=\"col-sm-3 nav-item\">
-								<a class=\"nav-link\" href=\"$download_file\" target=\"_blank\">
+								<a class=\"nav-link\" href=\"$download_file\" target=\"_blank\" onclick=\"insert_download('$download_file','$value','$dir','$pandora');\">
 		              <div class=\"card\">
 		                <div class=\"card-body\">
 		                  $image_line
@@ -6709,7 +6741,7 @@ function datos_filtros_view(){
 
 	$select_cat = $_POST['select_cat'];
 	$select_archivo = $_POST['select_arch'];
-error_log($select_archivo);
+//error_log($select_archivo);
 	/*if (empty($select_archivo)) {
 		// code...
 		$select_archivo="";
