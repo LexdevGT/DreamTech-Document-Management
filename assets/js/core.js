@@ -242,6 +242,10 @@ $(function(){
         save_ciudadano_login();
     });
 
+    $('#select_categoria').change(function(){
+        get_name_files();
+    });
+
 });
 
 function new_function(){
@@ -257,6 +261,29 @@ function new_function(){
         success: function(r) {                                                   
             if(r.error == ''){
                 /* No code */
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function get_name_files(){
+    var category = $('#select_categoria').val();
+    //alert(category);
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'get_files_names',
+            category                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('#select_documento').html(r.list_documentos);
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');

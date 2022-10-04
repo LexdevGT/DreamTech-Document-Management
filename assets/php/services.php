@@ -277,7 +277,9 @@
 			case 'load_busqueda_avanzada':
 				loadBusquedaAvanzadaFunction();
 				break;
-
+			case 'get_files_names':
+				getFilesNamesFunction();
+				break;
 		}
 		
 	}
@@ -295,6 +297,35 @@
 		echo json_encode($jsondata);
 	}
 
+	function getFilesNamesFunction(){
+		global $conn;
+		$jsondata 			= array();
+		$error 	 			= '';
+		$message  			= '';
+		$list_documentos 	= '';
+		$category 			= $_POST['category'];
+
+		$dir = "../../htmls/documents/$category"; 
+		$data = scandir($dir);
+
+		foreach ($data as $key => $value) {
+			if($value != '.' && $value != '..'){
+				
+				$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
+error_log($ext);
+
+				if($ext == 'pdf' || $ext == 'xls' || $ext == 'xlsx' || $ext == 'doc' || $ext == 'docx'){
+					$list_documentos .= "<option value = '$value'>$value</option>";
+				}
+			}
+		}
+		
+		$jsondata['list_documentos'] 	= $list_documentos;
+		$jsondata['message'] 			= $message;
+		$jsondata['error']   			= $error;
+		echo json_encode($jsondata);
+	}
+
 	function loadBusquedaAvanzadaFunction(){
 		global $conn;
 		$jsondata 			= array();
@@ -304,10 +335,11 @@
 
 		$dir = "../../htmls/documents/"; 
 		$data = scandir($dir);
+		$list_categories .= "<option value = ''>Selecciona una categoría</option>";
 
 		foreach ($data as $key => $value) {
 			if($value != '.' && $value != '..'){
-				
+
 				$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
 //error_log($ext);
 				if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg' && $ext != 'pdf' && $ext != 'xls' && $ext != 'xlsx' && $ext != 'doc' && $ext != 'docx'){
