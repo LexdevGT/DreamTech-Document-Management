@@ -280,6 +280,9 @@
 			case 'get_files_names':
 				getFilesNamesFunction();
 				break;
+			case 'get_search_result':
+				getSearchResult();
+				break;
 		}
 		
 	}
@@ -294,6 +297,137 @@
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+
+	function getSearchResult(){
+		global $conn;
+		$jsondata 			= array();
+		$error 	  			= '';
+		$message  			= '';
+		$type_doc 			= $_POST['type_doc'];
+		$category 			= $_POST['category'];
+		$document_name 	= $_POST['document_name'];
+		$author 				= $_POST['author'];
+		$publish_date 		= $_POST['publish_date'];
+		$search_result 	= '';
+		$filter_doc_type 	= '';
+		$filter_category 	= '';
+		$filter_doc_name 	= '';
+		$filter_publish 	= '';
+		$filter_author 	= '';
+
+		$convert_publish_date = explode(' - ',$publish_date);
+	
+		$start_date = date("Y-m-d",strtotime($convert_publish_date[0]));
+		$end_date 	= date("Y-m-d",strtotime($convert_publish_date[1]));
+
+		if($type_doc != ''){
+			$filter_doc_type = "AND file_name LIKE '%$type_doc'";	
+		}
+
+		if($category != ''){
+			$filter_category = "AND file_path LIKE '%$category%'";	
+		}
+//error_log($document_name);
+		if($document_name != ''){
+			$filter_doc_name = "AND file_name LIKE '$document_name'";	
+		}
+
+		if($start_date != '' && $end_date != ''){
+			$filter_publish = "AND publish_date BETWEEN '$start_date' AND '$end_date'";	
+		}
+
+		if($author != ''){
+			$filter_author = "AND author LIKE '$author'";	
+		}
+
+		$query_advanced_search = "
+				SELECT file_name
+					,file_path
+					,publish_date
+					,author
+					,pages_qty
+					,size
+					,others
+				FROM documentation
+				WHERE 1 = 1
+				$filter_doc_type
+				$filter_category
+				$filter_doc_name
+				$filter_publish
+				$filter_author
+			";
+//error_log($query_advanced_search);
+
+		$execute_advanced_search = $conn->query($query_advanced_search);
+		while($row_search = $execute_advanced_search->fetch_array()){
+			$f_name 		= utf8_encode($row_search['file_name']);
+			$f_path 		= utf8_encode($row_search['file_path']);
+			$f_publish 	= $row_search['publish_date'];
+			$f_author 	= utf8_encode($row_search['author']);
+			$f_pages 	= $row_search['pages_qty'];
+			$f_size 		= $row_search['size'];
+			$f_others 	= $row_search['others'];
+
+			$new_f_path = explode('.',$f_name);
+			$img_path 	= substr($f_path.$new_f_path[0].'.png',1);
+			$download_file = substr($f_path.$f_name,1);
+			$carpeta = str_replace($f_name, '', $download_file);
+//error_log($f_name);
+//error_log($download_file);
+//error_log($carpeta);
+
+//error_log(print_r($new_f_path,true));
+//error_log($img_path);
+			if(file_exists('../../htmls/'.$img_path)){
+//error_log('Existe: '.$img_path);
+				$img_text = "<img class=\"img-sm rounded-10\" src=\"$img_path\" alt=\"IMAGEN\">";
+			}else{
+//error_log('No existe!');
+				$img_text = '<i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i>';
+
+			}
+			/*onclick=\"insert_download('$download_file','$f_name','$carpeta','$download_file');*/
+			$search_result .= "
+				<div class=\"wrapper d-flex align-items-center justify-content-between py-2 border-bottom\">
+				
+             <div class=\"d-flex\">
+               $img_text
+               <div class=\"wrapper ms-3\">
+               <a class=\"nav-link\" href=\"$download_file\" onclick=\"insert_download('$download_file','$f_name','$carpeta','$download_file');\" target=\"_blank\" \">
+                 <p class=\"ms-1 mb-1 fw-bold\">$f_name </p>
+                 </a>
+                 <small class=\"text-muted mb-0\">Publicación: $f_publish</small>
+               </div>
+             </div>
+             <div class=\"text-muted text-small mb-0\">
+               <p class=\"ms-1 mb-1 fw-bold\">&nbsp;</p>
+               Cantidad de páginas: $f_pages
+             </div>
+            
+             <div class=\"text-muted text-small mb-0\">
+               <p class=\"ms-1 mb-1 fw-bold\">&nbsp;</p>
+               Autor: $f_author
+             </div>
+             <div class=\"text-muted text-small mb-0\">
+               <p class=\"ms-1 mb-1 fw-bold\">&nbsp;</p>
+               Peso: $f_size
+             </div>
+             
+             <div class=\"text-muted text-small\">
+               <!--<button class=\"btn btn-light\" style=\"width: 100%; height: 100%;\" onclick=\"modalProperties();\"><span>Propiedades</span> </button>-->
+               <button class=\"btn btn-light\" style=\"width: 100%; height: 100%;\" onclick=\"modalComments('$f_others');\"><span>Comentarios</span> </button>
+             </div>
+           </div>
+									";
+		}
+
+//error_log($search_result);
+		$jsondata['search_result'] = $search_result;
+		$jsondata['message'] 		= $message;
+		$jsondata['error']   		= $error;
 		echo json_encode($jsondata);
 	}
 
@@ -381,6 +515,7 @@
 		$pandora 	= $_POST['pandora'];
 
 		$dir = str_replace('../../htmls/', '', $file_path);
+		$dir = str_replace($file_name,'',$dir);
 //error_log($dir);
 
 		$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora,f_creacion)
@@ -391,7 +526,7 @@
 					-- file_download_amount	= file_download_amount + 1,
 					-- file_path_carpeta = '$dir',
 					-- pandora = MD5('$pandora')";
-error_log($query);
+//error_log($query);
 		$execute_query = $conn->query($query);
 
 		if($execute_query){

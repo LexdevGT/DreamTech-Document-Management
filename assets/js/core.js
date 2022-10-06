@@ -280,30 +280,35 @@ function get_search_result(){
     var publish_date    = $('#dtRange').val();
     var author          = $('#select_author').val();
 
-    alert(type_doc);
-    alert(category);
-    alert(document_name);
-    alert(publish_date);
-    alert(author);
-    /*
+    //alert(type_doc);
+    //alert(category);
+    //alert(document_name);
+    //alert(publish_date);
+    //alert(author);
+    
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
         url: "../assets/php/services.php",
         data: ({
-            option: 'get_files_names',
-            category                   
+            option: 'get_search_result',
+            type_doc,
+            category,
+            document_name,
+            author,
+            publish_date             
         }),
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                $('#select_documento').html(r.list_documentos);
+                //alert('llego');
+                $('#search_result').html(r.search_result);
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');
             }
         }    
-    });*/
+    });
 }
 
 function get_name_files(){
@@ -351,6 +356,7 @@ function load_busqueda_avanzada(){
         }    
     });
 }
+
 
 function load_explorer(directory='',flag=0){
 
