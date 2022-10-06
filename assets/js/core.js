@@ -246,6 +246,10 @@ $(function(){
         get_name_files();
     });
 
+    $('#advanced_search_btn').click(function(){
+        get_search_result();
+    })
+
 });
 
 function new_function(){
@@ -267,6 +271,39 @@ function new_function(){
             }
         }    
     });
+}
+
+function get_search_result(){
+    var type_doc        = $('#select_tipo_doc').val();
+    var category        = $('#select_categoria').val();
+    var document_name   = $('#select_documento').val();
+    var publish_date    = $('#dtRange').val();
+    var author          = $('#select_author').val();
+
+    alert(type_doc);
+    alert(category);
+    alert(document_name);
+    alert(publish_date);
+    alert(author);
+    /*
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'get_files_names',
+            category                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('#select_documento').html(r.list_documentos);
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });*/
 }
 
 function get_name_files(){
@@ -304,7 +341,9 @@ function load_busqueda_avanzada(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
+                //alert('llegamos');
                 $('#select_categoria').html(r.list_categories);
+                $('#select_author').html(r.list_author);
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');
@@ -3128,7 +3167,7 @@ function compartir(link,type){
 
     }
 
-    function uploadarchivos(nombre_doc,autor,) {
+    function uploadarchivos() {
         // body...
 
         var nombre_doc = $('#name_document').val();
@@ -3168,11 +3207,6 @@ function compartir(link,type){
             }
         });
         return false;
-
-
-
-
-
 
     }
 
