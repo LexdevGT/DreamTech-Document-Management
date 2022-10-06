@@ -312,7 +312,7 @@
 			if($value != '.' && $value != '..'){
 				
 				$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
-error_log($ext);
+//error_log($ext);
 
 				if($ext == 'pdf' || $ext == 'xls' || $ext == 'xlsx' || $ext == 'doc' || $ext == 'docx'){
 					$list_documentos .= "<option value = '$value'>$value</option>";
@@ -332,6 +332,7 @@ error_log($ext);
 		$error 	 			= '';
 		$message  			= '';
 		$list_categories 	= '';
+		$list_authors 		= '';
 
 		$dir = "../../htmls/documents/"; 
 		$data = scandir($dir);
@@ -347,7 +348,21 @@ error_log($ext);
 				}
 			}
 		}
+
+		$query_get_authors = "
+				SELECT DISTINCT(author) a
+				FROM documentation
+				WHERE author IS NOT NULL
+			";
+
+		$execute_get_authors = $conn->query($query_get_authors);
+		$list_authors .= "<option value = ''>Selecciona un autor</option>";
+		while($row_authors = $execute_get_authors->fetch_array()){
+			$author = utf8_encode($row_authors['a']);
+			$list_authors .= "<option value = '$author'>$author</option>";
+		}
 		
+		$jsondata['list_author'] 		= $list_authors;
 		$jsondata['list_categories'] 	= $list_categories;
 		$jsondata['message'] 			= $message;
 		$jsondata['error']   			= $error;
@@ -368,15 +383,15 @@ error_log($ext);
 		$dir = str_replace('../../htmls/', '', $file_path);
 //error_log($dir);
 
-		$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
+		$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora,f_creacion)
 					VALUES
-					('$file_name','$file_path','1','$dir',MD5('$pandora'))
-					ON DUPLICATE KEY UPDATE 
+					('$file_name','$file_path',1,'$dir',MD5('$pandora'),NOW())
+					-- ON DUPLICATE KEY UPDATE 
 					-- file_download_amount	= file_download_amount + VALUES(file_download_amount),
-					file_download_amount	= file_download_amount + 1,
-					file_path_carpeta = '$dir',
-					pandora = MD5('$pandora')";
-//error_log($query);
+					-- file_download_amount	= file_download_amount + 1,
+					-- file_path_carpeta = '$dir',
+					-- pandora = MD5('$pandora')";
+error_log($query);
 		$execute_query = $conn->query($query);
 
 		if($execute_query){
@@ -6038,12 +6053,13 @@ function viewgatget(){
 
  			$query = "SELECT
  									file_name,
- 									file_path
+ 									file_path,
+									count(file_download_amount) amount
  								FROM
  									downloads
- 								ORDER BY
- 									file_download_amount
- 									DESC LIMIT 5";
+								GROUP BY file_name,file_path
+								ORDER BY amount DESC
+								LIMIT 6";
 
  			$execute_query = mysqli_query($conn,$query);
 
@@ -6227,7 +6243,7 @@ function viewgatget(){
                             <div class=\"drop-area\">
                             	
                             	<span></span>
-                            	<button type=\"submit\" id=\"subir_archivos\" onclick=\"subir_archivos();return false;\">Sube tu archivos</button>
+                            	<button type=\"submit\" id=\"subir_archivos\" onclick=\"subir_archivos();return false;\">Sube tu archivo</button>
                             	
                             </div>
                             <div id=\"preview\"></div>
@@ -6240,7 +6256,7 @@ function viewgatget(){
         $segundafila = $archivos_recientes . $graficas;
 
 
-        $jsondata['datos2'] = $segundafila;
+      $jsondata['datos2'] = $segundafila;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
@@ -6462,14 +6478,14 @@ function DescargaArchivo(){
 
 		if ($name !="") {
 			// code...
-			$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora)
+			$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora,f_creacion)
 					VALUES
-					('$name','$url','1','$carpeta',MD5('$url'))
-					ON DUPLICATE KEY UPDATE 
-					file_download_amount	= file_download_amount + VALUES(file_download_amount),
-					file_path_carpeta = '$carpeta',
-					pandora = MD5('$url')";
-					error_log($query);
+					('$name','$url','1','$carpeta',MD5('$url'),NOW())
+					-- ON DUPLICATE KEY UPDATE 
+					-- file_download_amount	= file_download_amount + VALUES(file_download_amount),
+					-- file_path_carpeta = '$carpeta',
+					-- pandora = MD5('$url')";
+//error_log($query);
 					$insert_query = mysqli_query($conn, $query);
 
 		if ($insert_query) {
@@ -6656,12 +6672,14 @@ function	mostrar_upload(){
 	$message  	 = '';
 	$form_upload = "";
 	
+	/*
 		$query = "SELECT	
 								*
 								FROM
 								categoria 
 								";
 		$execute_query = mysqli_query($conn,$query);
+*/
 
 
 		$form_upload .= "
@@ -6696,15 +6714,28 @@ function	mostrar_upload(){
           <select id=\"cat\" class=\"form-select\" required>
           <option value=\"\" selected>Selecciona una opcion</option>";
 
-
+/*
         while ($fquery = mysqli_fetch_array($execute_query)) {
         	// code...
-        	$name_cat = $fquery['name_cat'];
-        	$path_cat = $fquery['path_cat'];
+        	$name_cat = utf8_decode($fquery['name_cat']);
+        	$path_cat =load_explorerload_explorer $fquery['path_cat'];
         	$id_cat = $fquery['idCat'];
         	$form_upload .= "<option value=\"$id_cat\">$name_cat</option>";
-        }
-    
+        }*/
+   $dir = "../../htmls/documents/"; 
+	$data = scandir($dir);
+
+//error_log(print_r($data,true));
+
+	foreach ($data as $key => $value) {
+		if($value != '.' && $value !='..'){
+//error_log($value);
+			$path = $dir.$value;
+			$form_upload .= "<option value=\"$path\">$value</option>";
+		}
+
+	}
+
     $form_upload .= "
     		</select>
     		</div>
@@ -6719,6 +6750,8 @@ function	mostrar_upload(){
         </div>
         <div>
       ";
+
+//error_log($form_upload);
 	$jsondata	['form']		= $form_upload;
 	$jsondata['message'] 	= $message;
 	$jsondata['error']   	= $error;
