@@ -9,6 +9,8 @@ $nombre_doc  = $_POST['nombre_doc'];
   $pag         = $_POST['pag'];
   $descrp      = $_POST['descrp'];
   $cat         = $_POST['cat'];
+  $subcat1     = $_POST['subcat1'];
+  $subcat2     = $_POST['subcat2'];
   $username   = $_SESSION['username'];
 
 //error_log("CAT: $cat");
@@ -42,7 +44,17 @@ error_log($query);
   	if ($extension === "pdf" || $extension=== "vnd.openxmlformats-officedocument.spreadsheetml.sheet" || $extension ==='vnd.openxmlformats-officedocument.wordprocessingml.document' || $extension === 'jpg' || $extension==='jpeg'|| $extension==='png') {
   		
   		/*$ruta = $pathcat .$name_cat."/". $nombre_archivo[0];*/
-      $ruta = $cat."/". $nombre_archivo[0];;
+
+      if ($subcat1=="") {
+        // code...
+         $ruta = $cat."/". $nombre_archivo[0];
+      }elseif ($subcat2=="") {
+        // code...
+        $ruta = $subcat1."/". $nombre_archivo[0];
+      }else{
+        $ruta = $subcat2."/". $nombre_archivo[0];
+      }
+      
   		//error_log(print_r($ruta));
 //error_log("RUTA: $ruta");
     if (move_uploaded_file($_FILES['formFileSm']['tmp_name'][0], $ruta)) {
@@ -72,16 +84,32 @@ error_log($query);
     }
 
     $categoria_array = explode("../../htmls/documents/",$cat);
+    $subcat1_array = explode("../../htmls/documents/",$subcat1);
+    $subcat2_array = explode("../../htmls/documents/",$subcat2);
+
+    $sub1 = array_pop($subcat1_array);
+    $sub2 = array_pop($subcat2_array);
+
 //error_log(print_r($categoria_array,true));
     $categoria = array_pop($categoria_array);
 //error_log($categoria);
-    $ruta_cat = str_replace('../../htmls', '', $cat).'/';
+    
 //error_log($ruta_cat);
 
+    if ($subcat1=="") {
+        // code...
+         $ruta_cat = str_replace('../../htmls', '', $cat).'/';
+      }elseif ($subcat2=="") {
+        // code...
+        $ruta_cat = str_replace('../../htmls', '', $subcat1).'/';
+      }else{
+        $ruta_cat = str_replace('../../htmls', '', $subcat2).'/';
+      }
+      //error_log($ruta_cat);
     $linkcomplete = $link.$nombre_archivo[0];
 
-      $query1 = "INSERT INTO documentation (`display_name`, `file_name`, `description`, `size`, `cat1`, `ISBN`, `pages_qty`, `publish_date`, `author`, `file_path`)VALUES('$nomb','$nombre_archivo[0]','$descrp','$tamano_archivo[0]','$categoria','$isbn','$pag','$f_publi','$autor','$ruta_cat')";
-
+      $query1 = "INSERT INTO documentation (`display_name`, `file_name`, `description`, `size`, `cat1`,`cat2`,`cat3`, `ISBN`, `pages_qty`, `publish_date`, `author`, `file_path`)VALUES('$nomb','$nombre_archivo[0]','$descrp','$tamano_archivo[0]','$categoria','$sub1','$sub2','$isbn','$pag','$f_publi','$autor','$ruta_cat')";
+//error_log($query1);
       
 /*
       $query2 = "INSERT INTO downloads (file_name,file_path,file_path_carpeta,pandora)VALUES('$nombre_archivo[0]','$linkcomplete','$link',MD5('$ruta'))";*/

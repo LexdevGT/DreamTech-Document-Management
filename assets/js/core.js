@@ -3177,6 +3177,8 @@ function compartir(link,type){
         var pag        = $('#page').val();
         var descrp     = $('#descripcion').val();
         var cat        = $('#cat').val();
+        var subcat1    = $('#sub1').val();
+        var subcat2    = $('#sub2').val();
         var file       = $('#formFileSm').val();
         //alert(file);
 
@@ -3189,6 +3191,8 @@ function compartir(link,type){
         formData.append('pag',pag);
         formData.append('descrp',descrp);
         formData.append('cat',cat);
+        formData.append('subcat1',subcat1);
+        formData.append('subcat2',subcat2);
         formData.append('nombre_doc',nombre_doc);
 
         //alert(files);
@@ -3294,6 +3298,63 @@ function select_filtro_archivo(cat=0) {
             if(r.error == ''){
                 
                 $('.select_archivo').html(r.selecArchivo);
+             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    }); return false;
+}
+
+function select_subcat1(){
+
+    var cat1 = $('#cat').val();
+    //alert(cat1);
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            cat1,
+            option: 'subcat1_upload'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                //alert(r.selectSubCat1);
+                $('#sub1').html(r.selectSubCat1);
+             
+            }else{
+                alert(r.error);
+                //window.location.replace('../dashboard.html');
+            }
+        }    
+    }); return false;
+}
+function select_subcat2(){
+
+    var subcat1 = $('#sub1').val();
+    //alert(cat1);
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            subcat1,
+            option: 'update_subcat2'                   
+        }),
+        dataType: "json",        
+        success: function(r) {
+
+            //alert(r.link);                                                   
+            if(r.error == ''){
+                //alert(r.selectSubCat1);
+                $('#sub2').html(r.selectSubCat2);
              
             }else{
                 alert(r.error);

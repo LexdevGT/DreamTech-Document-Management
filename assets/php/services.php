@@ -280,6 +280,15 @@
 			case 'get_files_names':
 				getFilesNamesFunction();
 				break;
+
+			case 'subcat1_upload':
+				// code...
+				update_subcat1();
+				break;
+
+			case 'update_subcat2':
+				update_subcat2();
+				break;
 		}
 		
 	}
@@ -6711,7 +6720,7 @@ function	mostrar_upload(){
         
         <div class=\"col-md-12 sele_cat\">
           <label for=\"inputState\" class=\"form-label\">Categoria</label>
-          <select id=\"cat\" class=\"form-select\" required>
+          <select id=\"cat\" class=\"form-select\" onchange=\"select_subcat1();\" required>
           <option value=\"\" selected>Selecciona una opcion</option>";
 
 /*
@@ -6739,7 +6748,25 @@ function	mostrar_upload(){
     $form_upload .= "
     		</select>
     		</div>
-        <div class=\"col-md-12\">
+    		<div class=\"col-md-12 sele_cat\">
+          <label for=\"inputState\" class=\"form-label\">SubCategoria1</label>
+          <select id=\"sub1\" class=\"form-select\" onchange=\"select_subcat2();\" >
+          
+
+
+    	</select>
+    		</div>
+
+    		<div class=\"col-md-12 sele_cat\">
+          <label for=\"inputState\" class=\"form-label\">SubCategoria1</label>
+          <select id=\"sub2\" class=\"form-select\" >
+          
+
+
+    	</select>
+    		</div>
+
+    	<div class=\"col-md-12\">
          
           <input class=\"form-control form-control-sm\" id=\"formFileSm\" type=\"file\" required >
         </div>
@@ -6757,6 +6784,101 @@ function	mostrar_upload(){
 	$jsondata['error']   	= $error;
 	echo json_encode($jsondata);
 }
+
+function update_subcat1(){
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$form_upload = "";
+	$select_sub1 = "";
+	$dir_cat = $_POST['cat1'];
+
+	$select_sub1 .="<option value=\"\" selected>Selecciona una opcion</option>";
+
+
+    		
+    			$dir =$dir_cat; 
+
+					$data = scandir($dir);
+
+				//error_log(print_r($data,true));
+
+					foreach ($data as $key => $value) {
+						if($value != '.' && $value !='..'){
+							$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
+//error_log($ext);
+
+				if($ext !== 'pdf' && $ext !== 'xls' && $ext !== 'xlsx' && $ext !== 'doc' && $ext !== 'docx'&& $ext !== 'jpg'&& $ext !== 'png' && $ext !== 'jpeg' && $ext !== 'db'){
+					$dir_sub2 = $dir."/".$value;
+					$select_sub1 .= "<option value = '$dir_sub2'>$value</option>";
+						
+								// code...
+
+
+							
+				//error_log($value);
+							//$path = $dir.$value;
+							//$select_sub1 .= "<option value=\"$path\">$value</option>";
+							}
+						}
+
+					}		
+	$jsondata['selectSubCat1'] = $select_sub1;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
+}
+
+function update_subcat2(){
+	global $conn;
+	$jsondata 	 = array();
+	$error 	  	 = '';
+	$message  	 = '';
+	$form_upload = "";
+	$select_sub2 = "";
+	$dir_cat = $_POST['subcat1'];
+
+	$select_sub2 .="<option value=\"\" selected>Selecciona una opcion</option>";
+
+
+    	
+    			$dir = $dir_cat; 
+    			//error_log($dir);
+					$data = scandir($dir);
+
+				//error_log(print_r($data,true));
+
+					foreach ($data as $key => $value) {
+						if($value != '.' && $value !='..'){
+							$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
+//error_log($ext);
+
+				if($ext !== 'pdf' && $ext !== 'xls' && $ext !== 'xlsx' && $ext !== 'doc' && $ext !== 'docx'&& $ext !== 'jpg'&& $ext !== 'png' && $ext !== 'jpeg' && $ext !== 'db'){
+
+					$dir_new = $dir."/".$value;
+
+					$select_sub2 .= "<option value = '$dir_new'>$value</option>";
+
+								// code...
+
+
+							
+				//error_log($value);
+							//$path = $dir.$value;
+							//$select_sub1 .= "<option value=\"$path\">$value</option>";
+							}
+						}
+
+					}		
+	$jsondata['selectSubCat2'] = $select_sub2;
+	$jsondata['message'] 	= $message;
+	$jsondata['error']   	= $error;
+	echo json_encode($jsondata);
+
+}
+
 
 function upload_archivos(){
 	global $conn;
