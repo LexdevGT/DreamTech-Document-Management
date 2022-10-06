@@ -109,7 +109,7 @@ error_log($query);
     $linkcomplete = $link.$nombre_archivo[0];
 
       $query1 = "INSERT INTO documentation (`display_name`, `file_name`, `description`, `size`, `cat1`,`cat2`,`cat3`, `ISBN`, `pages_qty`, `publish_date`, `author`, `file_path`)VALUES('$nomb','$nombre_archivo[0]','$descrp','$tamano_archivo[0]','$categoria','$sub1','$sub2','$isbn','$pag','$f_publi','$autor','$ruta_cat')";
-//error_log($query1);
+error_log($query1);
       
 /*
       $query2 = "INSERT INTO downloads (file_name,file_path,file_path_carpeta,pandora)VALUES('$nombre_archivo[0]','$linkcomplete','$link',MD5('$ruta'))";*/

@@ -283,6 +283,7 @@
 
 			case 'get_search_result':
 				getSearchResult();
+				break;
 			case 'subcat1_upload':
 				update_subcat1();
 				break;
@@ -326,8 +327,17 @@
 
 		$convert_publish_date = explode(' - ',$publish_date);
 	
-		$start_date = date("Y-m-d",strtotime($convert_publish_date[0]));
-		$end_date 	= date("Y-m-d",strtotime($convert_publish_date[1]));
+		$start_date_array = explode('/', $convert_publish_date[0]);
+		$dia = $start_date_array[0];
+		$mes = $start_date_array[1];
+		$year= $start_date_array[2];
+		$start_date = $year.'-'.$mes.'-'.$dia;
+
+		$end_date_array 	= explode('/', $convert_publish_date[1]);
+		$dia = $end_date_array[0];
+		$mes = $end_date_array[1];
+		$year= $end_date_array[2];
+		$end_date = $year.'-'.$mes.'-'.$dia;
 
 		if($type_doc != ''){
 			$filter_doc_type = "AND file_name LIKE '%$type_doc'";	
@@ -365,7 +375,7 @@
 				$filter_publish
 				$filter_author
 			";
-//error_log($query_advanced_search);
+error_log($query_advanced_search);
 
 		$execute_advanced_search = $conn->query($query_advanced_search);
 		while($row_search = $execute_advanced_search->fetch_array()){
@@ -379,7 +389,10 @@
 
 			$new_f_path = explode('.',$f_name);
 			$img_path 	= substr($f_path.$new_f_path[0].'.png',1);
+//error_log("FPATH: $f_path");
+
 			$download_file = substr($f_path.$f_name,1);
+//error_log("DOWNLOAD PATH: $download_file");
 			$carpeta = str_replace($f_name, '', $download_file);
 //error_log($f_name);
 //error_log($download_file);
@@ -387,9 +400,11 @@
 
 //error_log(print_r($new_f_path,true));
 //error_log($img_path);
-			if(file_exists('../../htmls/'.$img_path)){
+//error_log('/htmls/'.$img_path);
+			if(file_exists('/htmls/'.$img_path)){
 //error_log('Existe: '.$img_path);
 				$img_text = "<img class=\"img-sm rounded-10\" src=\"$img_path\" alt=\"IMAGEN\">";
+
 			}else{
 //error_log('No existe!');
 				$img_text = '<i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i>';
@@ -402,7 +417,7 @@
              <div class=\"d-flex\">
                $img_text
                <div class=\"wrapper ms-3\">
-               <a class=\"nav-link\" href=\"$download_file\" onclick=\"insert_download('$download_file','$f_name','$carpeta','$download_file');\" target=\"_blank\" \">
+               <a class=\"nav-link\" href=\"$download_file\" onclick=\"insert_download('$download_file','$f_name','$carpeta','$download_file');\"  \">
                  <p class=\"ms-1 mb-1 fw-bold\">$f_name </p>
                  </a>
                  <small class=\"text-muted mb-0\">Publicación: $f_publish</small>
@@ -742,7 +757,7 @@ while($row = mysqli_fetch_array($execute_query)){
 		
 		foreach ($data as $key => $value) {
 			if($value !== '.' && $value !== '..'){
-//error_log($value);
+
 				if($count ==0){
 					$html .= '<div class="row mt-2">';
 				}
@@ -773,7 +788,7 @@ while($row = mysqli_fetch_array($execute_query)){
 							$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>";
 						}
 
-
+error_log($value);
 						if(strpos($value, '.xls') !== false || strpos($value, '.xlsx') !== false || strpos($value, '.doc') !== false || strpos($value, '.docx') !== false || strpos($value, '.pdf') !== false){
 							$download_file = $dir.$value;
 							$download_file = str_replace('../../htmls/', '', $download_file);
@@ -813,8 +828,10 @@ while($row = mysqli_fetch_array($execute_query)){
 			}
 		}
 
+error_log($html);
+
 		$jsondata['retorno'] = $retorno;
-		$jsondata['html']		 = $html;
+		$jsondata['html']		= $html;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
