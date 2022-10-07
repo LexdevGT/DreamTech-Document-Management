@@ -91,7 +91,6 @@ $(function(){
     $('#ingresar').click(function(){
         log_in();
     });
-	
     $('#iniciar_proceso').click(function(){
         alert('Felicidades por iniciar el proceso!');
         window.location.href = 'inicio_proceso.php';
@@ -540,7 +539,7 @@ function load_reporte_graf(){
             if(r.error == ''){
                 //[12, 12, 12, 12]
 
-                category_graphic_reporte(r.data_info,r.data_names);
+                //category_graphic_reporte(r.data_info,r.data_names);
                 //alert('info bien');
             }else{
                 alert(r.error);
@@ -3248,7 +3247,7 @@ function filtros() {
                 $('#tablareportes_categoria').html(r.filtro_categorias);
                 $('#tablareportes_descargas').html(r.filtro_descargas);
 
-                
+                category_graphic_reporte(r.data_info,r.data_names);
              
             }else{
                 alert(r.error);
@@ -3369,4 +3368,3 @@ function select_subcat2(){
         }    
     }); return false;
 }
-
