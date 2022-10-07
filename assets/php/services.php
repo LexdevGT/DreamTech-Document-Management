@@ -7100,7 +7100,7 @@ function select_view(){
 	
 	$select_archivo = "";
 
-	$query = "SELECT
+	/*$query = "SELECT
 							*
 						FROM
 							categoria
@@ -7108,23 +7108,32 @@ function select_view(){
 							status=1";
 	$query_execute = mysqli_query($conn,$query);
 
-	
+	*/
 
 
 
+	$dir = "../../htmls/documents/";
+	$path = scandir($dir);
 	$select_cat .= "<option value=\"t\">Todos</option>";
 
-    while ($queryf =	mysqli_fetch_array($query_execute)) {
-    	// code...
+	foreach ($path as $key => $value) {
+		// code...
+		if ($value!="." && $value!="..") {
+			$ext  = pathinfo($dir.$value, PATHINFO_EXTENSION);
+//error_log($ext);
 
-    	$idCat = $queryf['idCat'];
-    	$nameCat = $queryf['name_cat'];
+				if($ext != 'pdf' && $ext != 'xls' && $ext != 'xlsx' && $ext != 'doc' && $ext != 'docx' && $ext!='png'){
+
+					$select_cat .="<option value=\"$value\">$value</option>";
+				}
+			
+			// code...
+			
+		}
+		
+
+	}
     
-    	$select_cat .="<option value=\"$idCat\">$nameCat</option>";
-      }
-         
-
-     
 
  
   $jsondata['selectCat']= $select_cat;
@@ -7143,22 +7152,23 @@ function select_view_archivo(){
 	$id_cat 		= $_POST['cat'];
 	$select_archivo = "";
 
-		
+		$link = "documents/".$id_cat;
       $select_archivo.= "
                                       <option value=\"\">Seleccione Archivo...</option>";
 
                $query = "SELECT
-               							display_name,
-               							file_id
+               							file_name 
                							FROM
-               							documentation
+               							downloads
                							WHERE
-               							cat1='$id_cat'";
+               							file_path like '$link%'
+               							Group by file_name";
+               	//error_log($query);
                	$query_exe = mysqli_query($conn,$query);
                 while ($row_exe = mysqli_fetch_array($query_exe)	) {
 
-                	$name_archi = $row_exe['display_name'];
-                	$id_arch    = $row_exe['file_id'];
+                	$name_archi = $row_exe['file_name'];
+                	$id_arch    = $row_exe['file_name'];
                  	// code...
 								$select_archivo.= "<option value=\"$id_arch\">$name_archi</option>";
 
@@ -7189,6 +7199,7 @@ function datos_filtros_view(){
 	$select_cat = $_POST['select_cat'];
 	$select_archivo = $_POST['select_arch'];
 //error_log($select_archivo);
+//error_log($select_cat);
 	/*if (empty($select_archivo)) {
 		// code...
 		$select_archivo="";
@@ -7200,10 +7211,10 @@ function datos_filtros_view(){
 	$fecha_rango = $_POST['fecha_rango'];
 
 	$f_explod = explode("-", $fecha_rango);
-	$f_inic  = explode("/", $f_explod[0]);
-	$f_fin  = explode("/", $f_explod[1]);
-	$fecha_i = str_replace(" ","",$f_inic[2])."-".$f_inic[0]."-".$f_inic[1];
-	$fecha_f = str_replace(" ","",$f_fin[2])."-".str_replace(" ","",$f_fin[0])."-".$f_fin[1];
+	$f_inic  = strtotime($f_explod[0]);
+	$f_fin  = strtotime($f_explod[1]);
+	$fecha_i = date('Y-m-d',$f_inic);
+	$fecha_f = date('Y-m-d',$f_fin);
 	//error_log($fecha_i);
 	//error_log($fecha_f);
 
@@ -7216,7 +7227,7 @@ function datos_filtros_view(){
 	//error_log($fecha_inicial);
 	//error_log($fecha_final);
 
-		$query="SELECT count('description')as de,description FROM log WHERE description Like 'LOG IN%' AND date_time>'$fecha_inicial' AND date_time<'$fecha_final' GROUP BY description";
+		$query="SELECT count('description')as de,description FROM log WHERE description Like 'LOG IN%' AND date(date_time)>='$fecha_i' AND date(date_time)<='$fecha_f' GROUP BY description";
 		$query_exe = mysqli_query($conn,$query);
 		$sum = 0;
 		while ($row = mysqli_fetch_array($query_exe)) {
@@ -7250,29 +7261,33 @@ function datos_filtros_view(){
 
 if ($select_cat=="t") {
 	// code...
-	$query = "SELECT 
-								count('d.cat1')As co, 
-								c.name_cat As name
-							FROM 
-								documentation d 
-								INNER JOIN categoria c 
-								ON c.idCat = d.cat1 
-								
-								GROUP BY d.cat1";
+	$query = "SELECT  
+	file_path_carpeta,
+	count(file_path_carpeta) As co
+	FROM 
+	downloads 
+	Where 
+	date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f'
+	Group by file_path_carpeta";
+	//error_log('ingreso todo');
 }else{
-     $query = "SELECT 
-								count('d.cat1')As co, 
-								c.name_cat As name
-							FROM 
-								documentation d 
-								INNER JOIN categoria c 
-								ON c.idCat = d.cat1 
-								Where d.cat1='$select_cat'
-								GROUP BY d.cat1";
-								}
 
+	$select_cat_f = "documents/".$select_cat;
+
+     $query = "SELECT  
+	file_path_carpeta,
+	count(file_path_carpeta) As co
+	FROM 
+	downloads 
+	WHERE 
+	date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND
+	file_path like '$select_cat_f%' 
+	Group by file_path_carpeta";
+//error_log('ingreso especifico');
+}
 		$jquery_exe = mysqli_query($conn,$query);
 
+//error_log($query);
 		//rror_log($query);
 
   $filtro_categorias .= "<thead>
@@ -7288,7 +7303,7 @@ if ($select_cat=="t") {
                while ($row = mysqli_fetch_array($jquery_exe)) {
 			// code...
 					$count = $row['co'];
-					$name = $row['name'];
+					$name = $row['file_path_carpeta'];
 
            $filtro_categorias .= "   <tr>
                                         
@@ -7301,24 +7316,17 @@ if ($select_cat=="t") {
 
                   
     $proceso = 0;
-if ($select_cat>0 && $select_archivo=="") {
+if ($select_cat=="t" && $select_archivo=="") {
 	// code...
-	$query = "SELECT * FROM categoria where idCat = $select_cat";
-	$query_execute = mysqli_query($conn,$query);
-	$query_aray = mysqli_fetch_array($query_execute);
+	$query = "SELECT   file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f'  Group by file_path";
 
-	$cat_link = $query_aray['path_cat'];
 
-	$divi_path = explode('documents', $cat_link);
-
-	$link_cat = "documents".$divi_path[1];
-
-	//error_log($cat_link);
+	
       $proceso = 1;
-}
-if ($select_cat>0 && $select_archivo>0) {
+}elseif ($select_cat!="t" && $select_archivo=="") {
+	$select_cat_f = "documents/".$select_cat;
 	// code...
-	$query = "SELECT * FROM categoria where idCat = $select_cat";
+	/*$query = "SELECT * FROM categoria where idCat = $select_cat";
 	$query_execute = mysqli_query($conn,$query);
 	$query_aray = mysqli_fetch_array($query_execute);
 
@@ -7332,14 +7340,18 @@ if ($select_cat>0 && $select_archivo>0) {
 	$query_execute = mysqli_query($conn,$query);
 	$array_query = mysqli_fetch_array($query_execute);
 
-	$file_n = $array_query['file_name'];
+	$file_n = $array_query['file_name'];*/
+
+	$query = "SELECT   file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path like '$select_cat_f%' Group by file_path";
 
 	$proceso = 2;
 
+}else{
+		$select_cat_f = "documents/".$select_cat;
+      $query = "SELECT   file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path_carpeta like '$select_cat_f%' AND file_name like '$select_archivo' Group by file_path";
+//error_log($query);
 }
-	$query = "SELECT count('description')as de,description FROM docummng.log Where description Like 'Download%' AND date_time>'$fecha_inicial' AND date_time<'$fecha_final' GROUP BY description";
-      $query_exe = mysqli_query($conn,$query);
-
+$query_exe = mysqli_query($conn,$query);
 
   $filtro_descargas .= "<thead>
                                       <tr>
@@ -7349,18 +7361,27 @@ if ($select_cat>0 && $select_archivo>0) {
                                         
                                       </tr>
                                     </thead>
-                                    <tbody id=\"procesos_table_content_categoria\">";
+                                    <tbody id=\"procesos_table_content_archivos\">";
 
 
       while ($row = mysqli_fetch_array($query_exe)) {
       	// code...
-      	$descr = $row['description'];
-      	$name = explode("|",$descr);
+      	$descr = $row['file_path'];
       	
-      	$nam = basename($name[1]);
-      	$link_cat2 = dirname($name[1])."/";
-      	$num   = $row['de'];
-      	if($proceso==0){
+      	
+      	$nam = basename($descr);
+      	$link_cat2 = dirname($descr)."/";
+      	$num   = $row['co'];
+
+      	$filtro_descargas .= "<tr>
+                                <td>$nam</td>
+                                <td>$num</td>
+                              </tr>";
+      	
+
+
+
+      	/*if($proceso==0){
       		
       		$filtro_descargas .= "<tr>
                                 <td>$nam</td>
@@ -7392,7 +7413,7 @@ if ($select_cat>0 && $select_archivo>0) {
                               </tr>";
       		}
       	}
-      	
+      	*/
       	
       	//error_log($nam);
       	
@@ -7402,12 +7423,55 @@ if ($select_cat>0 && $select_archivo>0) {
 
 
 
+        $info 		= array();
+		$names 		= array();
 
+		
+
+	if ($select_cat=="t" && $select_archivo=="") {
+	
+		$query = "SELECT count(f_creacion) As co,date(f_creacion) As fecha FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' Group by date(f_creacion)";
+
+error_log('todos');
+	
+      $proceso = 1;
+	}elseif ($select_cat!="t" && $select_archivo=="") {
+		$select_cat_f = "documents/".$select_cat;
+	
+
+		$query = "SELECT count(f_creacion) As co,date(f_creacion) As fecha FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path_carpeta like '$select_cat_f%' Group by date(f_creacion)";
+
+		$proceso = 2;
+		error_log('especifico');
+
+	}else{
+		$select_cat_f = "documents/".$select_cat;
+      $query = "SELECT  count(f_creacion) As co,date(f_creacion) As fecha FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path_carpeta like '$select_cat_f%' AND file_name like '$select_archivo' Group by date(f_creacion)";
+
+		}
+
+			error_log($query);
+			$execute_query = mysqli_query($conn,$query);
+       	$cont = 0;
+       	
+		while($row = mysqli_fetch_array($execute_query)){
+		   $names[$cont] = $row['fecha'];
+		   $info[$cont] = $row['co'];
+
+		   $cont++;
+
+		   
+		}
+
+		error_log(print_r($names,true));
+
+  $jsondata['data_names'] 			= $names;
+  $jsondata['data_info'] 			= $info;      
   $jsondata['filtro_usuarios'] 	= $filtro_usuarios;
-  $jsondata['filtro_categorias'] 	= $filtro_categorias;
+  $jsondata['filtro_categorias'] = $filtro_categorias;
   $jsondata['filtro_descargas'] 	= $filtro_descargas;
-	$jsondata['message'] 	= $message;
-	$jsondata['error']   	= $error;
+	$jsondata['message'] 			= $message;
+	$jsondata['error']   			= $error;
 	echo json_encode($jsondata);
 
 }
