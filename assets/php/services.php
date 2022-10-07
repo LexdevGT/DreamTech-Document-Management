@@ -352,7 +352,8 @@
 		}
 
 		if($start_date != '' && $end_date != ''){
-			$filter_publish = "AND publish_date BETWEEN '$start_date' AND '$end_date'";	
+			//$filter_publish = "AND publish_date BETWEEN '$start_date' AND '$end_date'";	
+			$filter_publish = "AND ((publish_date >= '$start_date' AND publish_date <= '$end_date') OR publish_date is null)";
 		}
 
 		if($author != ''){
