@@ -6652,10 +6652,48 @@ function viewcategoria(){
 		$pathbtn = "";
 
 		#codigo................;
+		//error_log($path);
+
+		$path_r = explode("/", $path);
+
+//error_log(print_r($path_r,true));
+
+		$count_path_r = count($path_r);
+
+//error_log($count_path_r);
+
+		$path_return = $path_r[0]."/";
+
+		$n = 1;
+		$w = 1;
+		$e = $count_path_r - 2;
+
+		//error_log($e);
+
+		while ($w <$e) {
+			// code...
+
+			$path_return .=  $path_r[$n]."/";
+			$n++;
+			$w++;
+			
+		}
 		
-		
-				$pathbtn .= "<input type=\"hidden\" id=\"pathCat\" value=\"$path\">
-											<button type=\"submit\" class=\"form-control btn btn-outline-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\"><i class=\"ti ti-plus\"> </i>Agregar</button>";
+		//error_log($path_return);
+
+				$pathbtn .= "
+				<div class=\"col-sm-6\">
+				<input type=\"hidden\" id=\"pathCat\" value=\"$path\">
+											<button type=\"submit\" class=\"form-control btn btn-outline-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#exampleModal\"><i class=\"ti ti-plus\"> </i>Agregar</button></div>";
+
+			if ($count_path_r > 5) {
+				// code...
+				$pathbtn .= "
+				<div class=\"col-sm-6\">
+					<input type=\"hidden\" id=\"pathCat\" value=\"$path\">
+					<button type=\"submit\" class=\"form-control btn btn-outline-primary\" onclick=\"viewcarpeta(this.value)\" value=\"$path_return\"><i class=\"ti ti-angle-left\"> </i>Regresar</button></div>";
+			}
+				
 
 			
 
@@ -6682,11 +6720,11 @@ function viewcategoria(){
 					$path_n = $path . $archivo . "/";
 
 				$carpetas .= "
-                       <div class=\"col-sm-3 stretch-card\">
+                       <div class=\"col-sm-3 d-grid gap-2\">
 
                        <input type=\"hidden\" class=\"directorio\" value=\"$path_n\">
 
-                       <button type=\"submit\" class=\"form-control btn btn-outline-dark\" onclick=\"viewcarpeta(this.value)\" value=\"$path_n\"><i class=\"ti ti-folder\"></i><b>$archivo</b></button>
+                       <button class=\"btn btn-outline-dark\" onclick=\"viewcarpeta(this.value)\" value=\"$path_n\"><i class=\"ti ti-folder\"></i><b>$archivo</b></button>
                        
                       	</div>
                       	";
