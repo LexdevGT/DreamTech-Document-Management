@@ -283,11 +283,18 @@
 
 			case 'get_search_result':
 				getSearchResult();
+				break;
 			case 'subcat1_upload':
 				update_subcat1();
 				break;
 			case 'update_subcat2':
 				update_subcat2();
+				break;
+			case 'interactive_search':
+				interactiveSearchFunction();
+				break;
+			case 'load_user_picture':
+				loadUserPictureFunction();
 				break;
 		}
 		
@@ -303,6 +310,165 @@
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadUserPictureFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$u = $_SESSION['user_email'];
+
+		$query_photo = "
+				SELECT user_photo
+				FROM users
+				WHERE user_email = '$u'
+			";
+error_log($query_photo);
+		$execute_photo = $conn->query($query_photo);
+		$row_photo = $execute_photo->fetch_array();
+		if(isset($row_photo['user_photo'])){
+			
+		}
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function interactiveSearchFunction(){
+		global $conn;
+		$jsondata 		= array();
+		$error 	  		= '';
+		$message  		= '';
+		$search 			= $_POST['b'];
+		$files_matrix 	= array();
+		$html 			=	'';
+
+		$query = "
+				SELECT file_name
+					,file_path
+				FROM documentation
+				WHERE file_name LIKE '%$search%'
+				LIMIT 18;
+			";
+//error_log($query);
+		$execute_query = $conn->query($query);
+		while($row = $execute_query->fetch_array()){
+			$file_name 		= $row['file_name'];
+			$file_path 		= $row['file_path'];
+			$download_link = $file_path.$file_name;
+			$files_matrix[$file_name] = $download_link;
+		}
+
+
+/*---------------- START DISPLAY EXPLORER--------------------------*/
+		/*
+		$html .= "
+					<div class=\"row\">
+		        <div class=\"col-sm-3 nav-item\">
+								<a class=\"nav-link\" href='#' onclick=\"load_explorer('$retorno',1)\">
+		           <i class=\"mdi mdi-step-backward menu-icon\"><span class=\"menu-title\">Regresar</span></i>
+		            </a>
+		        </div>
+		      </div>
+					";
+		*/
+				$count = 0;
+
+				foreach ($files_matrix as $key => $value) {
+					if($value !== '.' && $value !== '..'){
+
+						if($count ==0){
+							$html .= '<div class="row mt-2">';
+						}
+
+						if($count <=3){
+							/*
+							if(file_exists(filename))
+							 <img src="..." alt="..." class="img-thumbnail">
+							 
+							 */
+							if (strpos($key, '.png') !== false) {
+								   
+							}else{
+								if (strpos($key, '.') !== false) {
+									$file = substr($key, 0,-3);
+									$file .= 'png';
+									//$file = $value.$file;
+									$file = substr($value,1);
+									$file = '../../htmls/'.$file;
+									$img  = substr($file, 0,-3).'png'; 
+									$file = utf8_encode($file);
+									$file = substr($file, 0,-3);
+									$file .= 'png';
+//error_log($file);
+	//$img_file = str_replace('../../htmls/', '', $file);
+	//$image_line = "<img src=\"$img_file\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$key</span>";
+//error_log($image_line);
+									if(file_exists($file)){
+										$img_file = str_replace('../../htmls/', '', $img);
+										$image_line = "<img src=\"$img_file\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$key</span>";
+									}else{
+										$image_line = "<i class=\" mdi mdi-file-document menu-icon\"><span class=\"menu-title\">$key</span></i>";
+									}
+								}else{
+									$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$key</span></i>";
+								}
+//error_log($image_line);
+								if(strpos($value, '.xls') !== false || strpos($value, '.xlsx') !== false || strpos($value, '.doc') !== false || strpos($value, '.docx') !== false || strpos($value, '.pdf') !== false){
+									//$download_file = $dir.$value;
+									//$download_file = utf8_encode($value);
+
+									//$download_file = str_replace('../../htmls/', '', $download_file);
+									//$download_file = str_replace('../../', '', $value);
+									$download_file = substr($value, 1);
+									$pandora = $download_file;
+			//error_log($download_file);
+									//$key = utf8_encode($key);
+									$html .= "
+										<div class=\"col-sm-3 nav-item\">
+										<a class=\"nav-link\" href=\"$download_file\" target=\"_blank\" onclick=\"insert_download('$download_file','$key','$value','$pandora');\">
+				              <div class=\"card\">
+				                <div class=\"card-body\">
+				                  $image_line
+				                </div>
+				              </div>
+				            </a>
+				             </div>
+									";
+								}else{
+									$html .= "
+										<div class=\"col-sm-3 nav-item\">
+										<a class=\"nav-link\" onclick=\"load_explorer('$key')\" href='#'>
+				              <div class=\"card\">
+				                <div class=\"card-body\">
+				                  $image_line
+				                </div>
+				              </div>
+				            </a>
+				             </div>
+									";
+								}
+								
+								$count++;
+							}
+						}else{
+							$count = 0;
+							$html .= '</div>';
+						}
+						
+					}
+				}
+/*---------------- FINISH DISPLAY EXPLORER-------------------------*/
+
+//error_log(print_r($files_matrix,true));
+//error_log($html);
+
+		$jsondata['html_eplorer'] 	= utf8_encode($html);
+		$jsondata['message'] 		= $message;
+		$jsondata['error']   		= $error;
 		echo json_encode($jsondata);
 	}
 
@@ -326,8 +492,17 @@
 
 		$convert_publish_date = explode(' - ',$publish_date);
 	
-		$start_date = date("Y-m-d",strtotime($convert_publish_date[0]));
-		$end_date 	= date("Y-m-d",strtotime($convert_publish_date[1]));
+		$start_date_array = explode('/', $convert_publish_date[0]);
+		$dia = $start_date_array[0];
+		$mes = $start_date_array[1];
+		$year= $start_date_array[2];
+		$start_date = $year.'-'.$mes.'-'.$dia;
+
+		$end_date_array 	= explode('/', $convert_publish_date[1]);
+		$dia = $end_date_array[0];
+		$mes = $end_date_array[1];
+		$year= $end_date_array[2];
+		$end_date = $year.'-'.$mes.'-'.$dia;
 
 		if($type_doc != ''){
 			$filter_doc_type = "AND file_name LIKE '%$type_doc'";	
@@ -342,7 +517,8 @@
 		}
 
 		if($start_date != '' && $end_date != ''){
-			$filter_publish = "AND publish_date BETWEEN '$start_date' AND '$end_date'";	
+			//$filter_publish = "AND publish_date BETWEEN '$start_date' AND '$end_date'";	
+			$filter_publish = "AND ((publish_date >= '$start_date' AND publish_date <= '$end_date') OR publish_date is null)";
 		}
 
 		if($author != ''){
@@ -379,7 +555,10 @@
 
 			$new_f_path = explode('.',$f_name);
 			$img_path 	= substr($f_path.$new_f_path[0].'.png',1);
+//error_log("FPATH: $f_path");
+
 			$download_file = substr($f_path.$f_name,1);
+//error_log("DOWNLOAD PATH: $download_file");
 			$carpeta = str_replace($f_name, '', $download_file);
 //error_log($f_name);
 //error_log($download_file);
@@ -387,9 +566,11 @@
 
 //error_log(print_r($new_f_path,true));
 //error_log($img_path);
-			if(file_exists('../../htmls/'.$img_path)){
+//error_log('/htmls/'.$img_path);
+			if(file_exists('/htmls/'.$img_path)){
 //error_log('Existe: '.$img_path);
 				$img_text = "<img class=\"img-sm rounded-10\" src=\"$img_path\" alt=\"IMAGEN\">";
+
 			}else{
 //error_log('No existe!');
 				$img_text = '<i class="mdi mdi-file-pdf menu-icon mdi-48px mdi-set"></i>';
@@ -402,7 +583,7 @@
              <div class=\"d-flex\">
                $img_text
                <div class=\"wrapper ms-3\">
-               <a class=\"nav-link\" href=\"$download_file\" onclick=\"insert_download('$download_file','$f_name','$carpeta','$download_file');\" target=\"_blank\" \">
+               <a class=\"nav-link\" href=\"$download_file\" onclick=\"insert_download('$download_file','$f_name','$carpeta','$download_file');\"  \">
                  <p class=\"ms-1 mb-1 fw-bold\">$f_name </p>
                  </a>
                  <small class=\"text-muted mb-0\">Publicación: $f_publish</small>
@@ -627,12 +808,10 @@ while($row = mysqli_fetch_array($execute_query)){
    
 
    //$i++;
-   
+
 
    
 }
-
-
 
 
 
@@ -678,13 +857,17 @@ while($row = mysqli_fetch_array($execute_query)){
 
 	function loadExplorerFunction(){
 		global $conn;
-		$jsondata = array();
-		$error 	  = '';
-		$message  = '';
-		$html = '';
-		$retorno = '';
-		$count = 0;
-		$flag = $_POST['flag'];
+		$jsondata 		= array();
+		$dir_check 		= array();
+		$files_matrix 	= array();
+		$dir_sub 		= array();
+		$error 	  		= '';
+		$message  		= '';
+		$html 			= '';
+		$retorno 		= '';
+		$count 			= 0;
+		$flag 			= $_POST['flag'];
+		
 		//unset($_SESSION['exp_path']);
 		$dir_var = $_POST['directory'];
 		if($dir_var == ''){
@@ -742,7 +925,7 @@ while($row = mysqli_fetch_array($execute_query)){
 		
 		foreach ($data as $key => $value) {
 			if($value !== '.' && $value !== '..'){
-//error_log($value);
+
 				if($count ==0){
 					$html .= '<div class="row mt-2">';
 				}
@@ -762,7 +945,7 @@ while($row = mysqli_fetch_array($execute_query)){
 							$file = $dir.$file;
 							//$file = substr($file, 0,12);
 							//$file = str_replace('../../htmls/', '', $file);
-//error_log($file);
+error_log("FILE EXPLORER: $file");
 							if(file_exists($file)){
 								$img_file = str_replace('../../htmls/', '', $file);
 								$image_line = "<img src=\"$img_file\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$value</span>";
@@ -773,10 +956,24 @@ while($row = mysqli_fetch_array($execute_query)){
 							$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>";
 						}
 
+/* ------ START OF big search matrix ------------- */						
+						$lupita = $dir.$value;
+
+						if(is_dir($lupita)){
+							$dir_check[$value] = $lupita;
+						}else{
+//error_log("IS FILE");
+							$files_matrix[$value] = $lupita;
+							
+							//array_push($files_matrix, $lupita);
+						}
+
+/* ------ FINISH OF big search matrix ------------- */
 
 						if(strpos($value, '.xls') !== false || strpos($value, '.xlsx') !== false || strpos($value, '.doc') !== false || strpos($value, '.docx') !== false || strpos($value, '.pdf') !== false){
 							$download_file = $dir.$value;
 							$download_file = str_replace('../../htmls/', '', $download_file);
+//error_log($download_file);
 							$pandora = $download_file;
 							$html .= "
 								<div class=\"col-sm-3 nav-item\">
@@ -813,8 +1010,28 @@ while($row = mysqli_fetch_array($execute_query)){
 			}
 		}
 
+//error_log($html);
+		//error_log(print_r($dir_check,true));
+		foreach ($dir_check as $key => $value) {			
+			//error_log($key);
+			if(is_dir($value)){
+//error_log('IS DIR: ');
+				$dir_sub[$key] = $value;
+			}else{
+				$files_matrix[$key] = $value;
+			}
+		}
+/*
+		foreach ($dir_sub as $key => $value) {
+				$data_sub = scandir($value);
+				//error_log(print_r($data_sub,true));
+			}
+*/
+//error_log(print_r($dir_sub,true));
+//error_log(print_r($files_matrix,true));
+//error_log($html);
 		$jsondata['retorno'] = $retorno;
-		$jsondata['html']		 = $html;
+		$jsondata['html']		= $html;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
@@ -5538,6 +5755,14 @@ if($etapa_actual == ''){
 			$error = "No se pudo guardar el usuario! correo esta vacío";
 		}
 		
+		if($correo == ''){
+			$last_id = $conn->insert_id;
+		}else{
+			$last_id = $correo;
+		}
+			
+		$_SESSION['id_user_photo'] = $last_id;	
+//error_log("LAST ID: $last_id");
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;

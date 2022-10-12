@@ -10,7 +10,7 @@ $(function(){
 
     viewcarpeta();
 
-
+    load_user_picture();
     
 
 
@@ -247,7 +247,13 @@ $(function(){
 
     $('#advanced_search_btn').click(function(){
         get_search_result();
-    })
+    });
+
+    $('#explorer_search').keyup(function(){
+        var busqueda = $('#explorer_search').val();
+        //alert('cambio: '+busqueda);
+        interactive_search(busqueda);
+    });
 
 });
 
@@ -264,6 +270,68 @@ function new_function(){
         success: function(r) {                                                   
             if(r.error == ''){
                 /* No code */
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function load_user_picture(){
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'load_user_picture'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                /* No code */
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function interactive_search(b){
+    /*
+    var html = '<div class="row mt-2">'+
+                    '<div class="col-sm-3 nav-item">'+
+                        '<a class="nav-link" href="/documents/PUEBLOS INDÍGENAS/12_Agenda Socio Ambiental, desde el Pensamiento de los Pueblos Indígenas de Guatemala[1].pdf" target="_blank" onclick="insert_download(\'/documents/PUEBLOS INDÍGENAS/12_Agenda Socio Ambiental, desde el Pensamiento de los Pueblos Indígenas de Guatemala[1].pdf\',\'12_Agenda Socio Ambiental, desde el Pensamiento de los Pueblos Indígenas de Guatemala[1].pdf\',\'/documents/PUEBLOS INDÍGENAS/12_Agenda Socio Ambiental, desde el Pensamiento de los Pueblos Indígenas de Guatemala[1].pdf\',\'/documents/PUEBLOS INDÍGENAS/12_Agenda Socio Ambiental, desde el Pensamiento de los Pueblos Indígenas de Guatemala[1].pdf\');">'+
+                            '<div class="card">'+
+                                '<div class="card-body">'+
+                                    '<i class=" mdi mdi-file-document menu-icon"><span class="menu-title">12_Agenda Socio Ambiental, desde el Pensamiento de los Pueblos Indígenas de Guatemala[1].pdf</span></i>'+
+                                '</div>'+
+                              '</div>'+
+                            '</a>'+
+                             '</div>'
+    $('#data_explorer').html(html);*/
+
+    if(b==''){
+        window.location.replace('explorador.html');
+    }
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'interactive_search',
+            b            
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                //alert('llego');
+
+                $('#data_explorer').html(r.html_eplorer);
+
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');
@@ -2644,6 +2712,35 @@ function load_roles(){
     });
 }
 
+function upload_user_photo(){
+    //alert('haciendo upload de la photo');
+    var form_data = new FormData();                  
+    var totalfiles = document.getElementById('ficha_usuario_foto').files.length;
+
+       for (var index = 0; index < totalfiles; index++) {
+          form_data.append("ficha_usuario_foto[]", document.getElementById('ficha_usuario_foto').files[index]);
+       }
+                               
+    $.ajax({
+        url: '../assets/php/upload_usuario_photo.php', 
+        dataType: 'text',  
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,                         
+        type: 'post',
+        success: function(php_script_response){
+            if (php_script_response == "No files") {D
+                //alert('NO SE LOGRO GUARDAR SLIDER PRINCIPAL');
+                return 0;
+            }else{
+                //alert('OK Slider Principal');
+                return 1;
+            }
+        }
+    });
+}
+
 function guardar_usuario(){
 
     var nombre          = $('#nombres').val();
@@ -2681,6 +2778,7 @@ function guardar_usuario(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
+                upload_user_photo();
                 alert('Usuario guardado!');
                 window.location.href = 'manto_usuarios.html';
             }else{
