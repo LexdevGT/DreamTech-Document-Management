@@ -318,20 +318,33 @@
 		$jsondata = array();
 		$error 	  = '';
 		$message  = '';
-		$u = $_SESSION['user_email'];
+		$user_email = $_SESSION['user_email'];
 
+//error_log('Iniciando carga de foto');
 		$query_photo = "
-				SELECT user_photo
-				FROM users
-				WHERE user_email = '$u'
+			SELECT user_photo
+			FROM users
+			WHERE user_email = '$user_email';
 			";
-error_log($query_photo);
+//error_log($query_photo);
 		$execute_photo = $conn->query($query_photo);
 		$row_photo = $execute_photo->fetch_array();
+		
+
+		
+
 		if(isset($row_photo['user_photo'])){
-			
+			$photo = $row_photo['user_photo'];
+			if($photo == null){
+				$photo = 'face8.jpg';
+			}else{
+				$photo = $row_photo['user_photo'];
+			}
+		}else{
+			$photo = 'face8.jpg';
 		}
 
+		$jsondata['photo'] = 'images/faces/'.$photo;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
