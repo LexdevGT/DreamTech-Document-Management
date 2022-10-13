@@ -3037,7 +3037,29 @@ function log_in(){
 
 
 function load_sidebar(){
-    var sidebar_text = '    <ul class="nav">'+
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'load_side_bar'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('#sidebar').html(r.bar);
+            }else{
+                alert(r.error);
+            }
+        }    
+    });
+}
+
+
+function load_sidebar1(){
+    if(u=="ciudadano"){
+        var sidebar_text = '    <ul class="nav">'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" href="dashboard.html">'+
                                   '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
@@ -3068,11 +3090,48 @@ function load_sidebar(){
                                 '<a class="nav-link" href="reportes.html">'+
                                   '<i class="mdi mdi-chart-pie menu-icon"></i>'+
                                   '<span class="menu-title">REPORTES</span>'+
-
                               '</li>'+
                              
-                              
-                              
+                              '<!--<li class="nav-item">'+
+                                '<a class="nav-link" href="#">'+
+                                  '<i class="mdi mdi-shield-key menu-icon"></i>'+
+                                  '<span class="menu-title">Seguridad</span>'+
+                                '</a>'+
+                              '</li>-->'+
+                            '</ul>';
+    }else{
+         var sidebar_text = '    <ul class="nav">'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" href="dashboard.html">'+
+                                  '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
+                                  '<span class="menu-title">DASHBOARD</span>'+
+                                '</a>'+
+                              '</li>'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" href="quienes_somos.html">'+
+                                  '<i class="mdi mdi-barley  menu-icon"></i>'+
+                                  '<span class="menu-title">QUIENES SOMOS</span>'+
+                                '</a>'+
+                              '</li>'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">'+
+                                  '<i class="mdi mdi-folder-open menu-icon"></i>'+
+                                  '<span class="menu-title">DOCUMENTOS</span>'+
+                                '<i class="menu-arrow"></i> '+
+                                '</a>'+
+                                '<div class="collapse" id="documents">'+
+                                  '<ul class="nav flex-column sub-menu">'+
+                                    '<!--<li class="item"><a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>-->'+
+                                    '<li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
+                                    '<li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
+                                  '</ul>'+
+                                '</div>'+
+                              '</li>'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" href="reportes.html">'+
+                                  '<i class="mdi mdi-chart-pie menu-icon"></i>'+
+                                  '<span class="menu-title">REPORTES</span>'+
+                              '</li>'+
                               '<li class="nav-item">'+
                                 '<a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">'+
                                   '<i class="menu-icon mdi mdi-settings "></i>'+
@@ -3083,12 +3142,8 @@ function load_sidebar(){
                                   '<ul class="nav flex-column sub-menu">'+
                                     '<!--<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>-->'+
                                     '<li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
-
                                     '<li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>'+
-
                                     '<li class="item"> <a class="nav-link" href="notificacion.html"><i class="mdi mdi-bell-ring menu-icon"><span class="menu-title">Notificaciones</span></i></a></li>'+
-                                    
-
                                   '</ul>'+
                                 '</div>'+
                               '</li>'+
@@ -3100,6 +3155,8 @@ function load_sidebar(){
                                 '</a>'+
                               '</li>-->'+
                             '</ul>';
+    }
+   
     $('#sidebar').html(sidebar_text);
 
 }

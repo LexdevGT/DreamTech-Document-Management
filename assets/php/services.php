@@ -299,6 +299,9 @@
 			case 'guardar_usuario_modificado':
 				saveGuardarUsuarioModificadoFunction();
 				break;
+			case 'load_side_bar':
+				loadSideBarFunction();
+				break;
 		}
 		
 	}
@@ -311,6 +314,101 @@
 
 		#codigo................;
 
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadSideBarFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$rol = $_SESSION['rol_id'];
+
+		if($rol == 5){
+			$bar = '    <ul class="nav">
+                              <li class="nav-item">
+                                <a class="nav-link" href="dashboard.html">
+                                  <i class="mdi mdi-view-dashboard menu-icon"></i>
+                                  <span class="menu-title">DASHBOARD</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="quienes_somos.html">
+                                  <i class="mdi mdi-barley  menu-icon"></i>
+                                  <span class="menu-title">QUIENES SOMOS</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">
+                                  <i class="mdi mdi-folder-open menu-icon"></i>
+                                  <span class="menu-title">DOCUMENTOS</span>
+                                <i class="menu-arrow"></i> 
+                                </a>
+                                <div class="collapse" id="documents">
+                                  <ul class="nav flex-column sub-menu">
+                                    <li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="reportes.html">
+                                  <i class="mdi mdi-chart-pie menu-icon"></i>
+                                  <span class="menu-title">REPORTES</span>
+                              </li>
+                            </ul>';
+		}else{
+			$bar = '    <ul class="nav">
+                              <li class="nav-item">
+                                <a class="nav-link" href="dashboard.html">
+                                  <i class="mdi mdi-view-dashboard menu-icon"></i>
+                                  <span class="menu-title">DASHBOARD</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="quienes_somos.html">
+                                  <i class="mdi mdi-barley  menu-icon"></i>
+                                  <span class="menu-title">QUIENES SOMOS</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">
+                                  <i class="mdi mdi-folder-open menu-icon"></i>
+                                  <span class="menu-title">DOCUMENTOS</span>
+                                <i class="menu-arrow"></i> 
+                                </a>
+                                <div class="collapse" id="documents">
+                                  <ul class="nav flex-column sub-menu">
+                                    <li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="reportes.html">
+                                  <i class="mdi mdi-chart-pie menu-icon"></i>
+                                  <span class="menu-title">REPORTES</span></a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">
+                                  <i class="menu-icon mdi mdi-settings "></i>
+                                  <span class="menu-title">AJUSTES</span>
+                                  <i class="menu-arrow"></i> 
+                                </a>
+                                <div class="collapse" id="reports-menu">
+                                  <ul class="nav flex-column sub-menu">
+                                    <li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="notificacion.html"><i class="mdi mdi-bell-ring menu-icon"><span class="menu-title">Notificaciones</span></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                            </ul>';
+		}
+
+		$jsondata['bar'] 		= $bar;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
