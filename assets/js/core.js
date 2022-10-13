@@ -157,6 +157,12 @@ $(function(){
         //window.location.href = 'manto_usuarios.html';
     });
 
+    $('#guardar-usuario-modificado').click(function(){
+        guardar_usuario_modificado();
+        //alert('Usuario guardado!');
+        //window.location.href = 'manto_usuarios.html';
+    });
+
     $('#nuevo-rol').click(function(){
         window.location.href = 'ficha_roles.html';
         
@@ -2850,6 +2856,37 @@ function guardar_usuario(){
     });
 }
 
+function guardar_usuario_modificado(){
+
+    
+    var correo          = $('#correo').val();
+    var lista_roles     = $('#lista_roles').val();
+    var lista_estatus   = $('#lista_estatus').val();
+  
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'guardar_usuario_modificado',
+            correo,
+            lista_roles,
+            lista_estatus
+       }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                alert('Usuario modificado!');
+                window.location.href = 'manto_usuarios.html';
+            }else{
+                alert(r.error);
+                window.location.replace('/');
+            }
+        }    
+    });
+}
+
 function load_ficha_usuario(){
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2894,7 +2931,7 @@ function ficha_usuarios(email){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                window.location.replace('ficha_usuarios.html');
+                window.location.replace('ficha_usuarios_modificar.html');
             }else{
                 alert(r.error);
                 window.location.replace('../index.html');
