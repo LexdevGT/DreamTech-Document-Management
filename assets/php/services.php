@@ -7615,7 +7615,7 @@ if ($select_cat=="t") {
     $proceso = 0;
 if ($select_cat=="t" && $select_archivo=="") {
 	// code...
-	$query = "SELECT   file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f'  Group by file_path";
+	$query = "SELECT   date(f_creacion) as f,file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f'  Group by file_path,date(f_creacion)";
 
 
 	
@@ -7639,20 +7639,21 @@ if ($select_cat=="t" && $select_archivo=="") {
 
 	$file_n = $array_query['file_name'];*/
 
-	$query = "SELECT   file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path like '$select_cat_f%' Group by file_path";
+	$query = "SELECT   date(f_creacion) as f,file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path like '$select_cat_f%' Group by file_path,date(f_creacion)";
 
 	$proceso = 2;
 
 }else{
 		$select_cat_f = "documents/".$select_cat;
-      $query = "SELECT   file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path_carpeta like '$select_cat_f%' AND file_name like '$select_archivo' Group by file_path";
+      $query = "SELECT   date(f_creacion) as f,file_path,count(file_path) As co FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path_carpeta like '$select_cat_f%' AND file_name like '$select_archivo' Group by file_path,date(f_creacion)";
 //error_log($query);
 }
 $query_exe = mysqli_query($conn,$query);
+//error_log($query);
 
   $filtro_descargas .= "<thead>
                                       <tr>
-                                        
+                                        <th>Fecha</th>
                                         <th>Archivo</th>
                                         <th>Descargas</th>
                                         
@@ -7664,6 +7665,7 @@ $query_exe = mysqli_query($conn,$query);
       while ($row = mysqli_fetch_array($query_exe)) {
       	// code...
       	$descr = $row['file_path'];
+      	$fe = $row['f'];
       	
       	
       	$nam = basename($descr);
@@ -7671,6 +7673,7 @@ $query_exe = mysqli_query($conn,$query);
       	$num   = $row['co'];
 
       	$filtro_descargas .= "<tr>
+      									<td>$fe</td>
                                 <td>$nam</td>
                                 <td>$num</td>
                               </tr>";
