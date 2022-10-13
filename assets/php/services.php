@@ -334,8 +334,6 @@
 		$row_photo = $execute_photo->fetch_array();
 		
 
-		
-
 		if(isset($row_photo['user_photo'])){
 			$photo = $row_photo['user_photo'];
 			if($photo == null){
@@ -5712,16 +5710,30 @@ if($etapa_actual == ''){
 		$error 	  				= '';
 		$message  				= '';
 		$correo 					= $_POST['correo'];
+		$pass 					= $_POST['pass'];
 		$lista_roles 			= $_POST['lista_roles'];
 		$lista_estatus 		= $_POST['lista_estatus'];
 
-		$query_update_user = "
+
+		if($pass == ''){
+			$query_update_user = "
 				UPDATE users
 				SET user_rol 	= $lista_roles
 				, user_status 	= $lista_estatus
 				WHERE user_email = '$correo' 
 			";
-error_log($query_update_user);
+		}else{
+			$query_update_user = "
+				UPDATE users
+				SET user_rol 	 = $lista_roles
+				, user_status 	 = $lista_estatus
+				, user_password = MD5('$pass')
+				WHERE user_email = '$correo' 
+			";
+		}
+
+		
+//error_log($query_update_user);
 
 		$execute_query = $conn->query($query_update_user);
 
@@ -6841,7 +6853,7 @@ function viewCategoriaDash(){
                                     <div class=\"col-1\">
                                       <div class=\"dropdown\">
                                        
-                                      <iconify-icon icon=\"feather:more-vertical\" type=\"button\" id=\"dropdownMenuIconButton1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>
+                                      <!--<iconify-icon icon=\"feather:more-vertical\" type=\"button\" id=\"dropdownMenuIconButton1\" data-bs-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\"></iconify-icon>-->
                                       <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuIconButton1\">
                                           
                                           
@@ -7717,7 +7729,7 @@ $query_exe = mysqli_query($conn,$query);
 	
 		$query = "SELECT count(f_creacion) As co,date(f_creacion) As fecha FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' Group by date(f_creacion)";
 
-error_log('todos');
+//error_log('todos');
 	
       $proceso = 1;
 	}elseif ($select_cat!="t" && $select_archivo=="") {
@@ -7727,7 +7739,7 @@ error_log('todos');
 		$query = "SELECT count(f_creacion) As co,date(f_creacion) As fecha FROM  downloads Where date(f_creacion) >= '$fecha_i' And date(f_creacion) <= '$fecha_f' AND file_path_carpeta like '$select_cat_f%' Group by date(f_creacion)";
 
 		$proceso = 2;
-		error_log('especifico');
+	//	error_log('especifico');
 
 	}else{
 		$select_cat_f = "documents/".$select_cat;
@@ -7735,7 +7747,7 @@ error_log('todos');
 
 		}
 
-			error_log($query);
+		//	error_log($query);
 			$execute_query = mysqli_query($conn,$query);
        	$cont = 0;
        	
@@ -7748,7 +7760,7 @@ error_log('todos');
 		   
 		}
 
-		error_log(print_r($names,true));
+		//error_log(print_r($names,true));
 
   $jsondata['data_names'] 			= $names;
   $jsondata['data_info'] 			= $info;      

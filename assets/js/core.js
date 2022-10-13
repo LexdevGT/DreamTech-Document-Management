@@ -2862,6 +2862,7 @@ function guardar_usuario_modificado(){
     var correo          = $('#correo').val();
     var lista_roles     = $('#lista_roles').val();
     var lista_estatus   = $('#lista_estatus').val();
+    var pass            = $('#pass').val();
   
     
     $.ajax({
@@ -2872,7 +2873,8 @@ function guardar_usuario_modificado(){
             option: 'guardar_usuario_modificado',
             correo,
             lista_roles,
-            lista_estatus
+            lista_estatus,
+            pass
        }),
         dataType: "json",        
         success: function(r) {                                                   
