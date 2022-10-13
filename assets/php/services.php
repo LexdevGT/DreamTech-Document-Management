@@ -296,6 +296,9 @@
 			case 'load_user_picture':
 				loadUserPictureFunction();
 				break;
+			case 'guardar_usuario_modificado':
+				saveGuardarUsuarioModificadoFunction();
+				break;
 		}
 		
 	}
@@ -318,20 +321,33 @@
 		$jsondata = array();
 		$error 	  = '';
 		$message  = '';
-		$u = $_SESSION['user_email'];
+		$user_email = $_SESSION['user_email'];
 
+//error_log('Iniciando carga de foto');
 		$query_photo = "
-				SELECT user_photo
-				FROM users
-				WHERE user_email = '$u'
+			SELECT user_photo
+			FROM users
+			WHERE user_email = '$user_email';
 			";
-error_log($query_photo);
+//error_log($query_photo);
 		$execute_photo = $conn->query($query_photo);
 		$row_photo = $execute_photo->fetch_array();
+		
+
+		
+
 		if(isset($row_photo['user_photo'])){
-			
+			$photo = $row_photo['user_photo'];
+			if($photo == null){
+				$photo = 'face8.jpg';
+			}else{
+				$photo = $row_photo['user_photo'];
+			}
+		}else{
+			$photo = 'face8.jpg';
 		}
 
+		$jsondata['photo'] = 'images/faces/'.$photo;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
@@ -5690,6 +5706,30 @@ if($etapa_actual == ''){
 		echo json_encode($jsondata);
 	}
 
+	function saveGuardarUsuarioModificadoFunction(){
+		global $conn;
+		$jsondata 				= array();
+		$error 	  				= '';
+		$message  				= '';
+		$correo 					= $_POST['correo'];
+		$lista_roles 			= $_POST['lista_roles'];
+		$lista_estatus 		= $_POST['lista_estatus'];
+
+		$query_update_user = "
+				UPDATE users
+				SET user_rol 	= $lista_roles
+				, user_status 	= $lista_estatus
+				WHERE user_email = '$correo' 
+			";
+error_log($query_update_user);
+
+		$execute_query = $conn->query($query_update_user);
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+
+	}
 	function saveUserFunction(){
 		global $conn;
 		$jsondata 				= array();
@@ -5943,7 +5983,7 @@ if($etapa_actual == ''){
 		$error 	  = '';
 		$message  = '';
 		$email    = $_POST['email'];
-
+//error_log($email);
 		$_SESSION['ficha_usuario_email'] = $email;
 
 		if(!isset($_SESSION['ficha_usuario_email'])){
@@ -6015,8 +6055,8 @@ if($etapa_actual == ''){
 					<tr>
 	                                        <td>
 	                                          <h6>
-	                                            <!--<a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>-->
-	                                            <a href='#'>
+	                                            <a href='#' onclick='ficha_usuarios(\"$email_usuario\")'>
+	                                            <!--<a href='#'>-->
 	                                              $nombre
 	                                            </a>
 	                                          </h6>

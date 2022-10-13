@@ -1,4 +1,5 @@
 $(function(){
+    load_user_picture();
     load_sidebar();
     load_headbar();
 
@@ -9,10 +10,6 @@ $(function(){
     }
 
     viewcarpeta();
-
-    load_user_picture();
-    
-
 
     $(".exportToExcel").click(function(e){
         //alert('something');
@@ -160,6 +157,12 @@ $(function(){
         //window.location.href = 'manto_usuarios.html';
     });
 
+    $('#guardar-usuario-modificado').click(function(){
+        guardar_usuario_modificado();
+        //alert('Usuario guardado!');
+        //window.location.href = 'manto_usuarios.html';
+    });
+
     $('#nuevo-rol').click(function(){
         window.location.href = 'ficha_roles.html';
         
@@ -255,6 +258,14 @@ $(function(){
         interactive_search(busqueda);
     });
 
+    $('.img-md').click(function(){
+        window.location.replace('modificar_foto.html');
+    });
+
+    $('#modificar-foto').click(function(){
+        upload_user_photo_ciudadano();
+    });
+
 });
 
 function new_function(){
@@ -278,6 +289,35 @@ function new_function(){
     });
 }
 
+function upload_user_photo_ciudadano(){
+    //alert('haciendo upload de la photo');
+    var form_data = new FormData();                  
+    var totalfiles = document.getElementById('ficha_usuario_foto').files.length;
+
+       for (var index = 0; index < totalfiles; index++) {
+          form_data.append("ficha_usuario_foto[]", document.getElementById('ficha_usuario_foto').files[index]);
+       }
+                               
+    $.ajax({
+        url: '../assets/php/upload_usuario_photo_ciudadano.php', 
+        dataType: 'text',  
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,                         
+        type: 'post',
+        success: function(php_script_response){
+            if (php_script_response == "No files") {
+                alert('No se logro guardar tu imagen!!!');
+                window.location.replace('dashboard.html');
+            }else{
+                alert('Tu foto fue modificada!');
+                window.location.replace('dashboard.html');
+            }
+        }
+    });
+}
+
 function load_user_picture(){
     
     $.ajax({
@@ -290,7 +330,34 @@ function load_user_picture(){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                /* No code */
+                $('.img-xs').attr("src",r.photo);
+                $('.rounded-circle').attr("src",r.photo);
+                $('.rounded-circle').attr("width",'50px');
+                $('.rounded-circle').attr("height",'50px');
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
+function load_user_picture(){
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'load_user_picture'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                $('.img-xs').attr("src",r.photo);
+                $('.rounded-circle').attr("src",r.photo);
+                $('.rounded-circle').attr("width",'50px');
+                $('.rounded-circle').attr("height",'50px');
             }else{
                 alert(r.error);
                 window.location.replace('../dashboard.html');
@@ -2789,6 +2856,37 @@ function guardar_usuario(){
     });
 }
 
+function guardar_usuario_modificado(){
+
+    
+    var correo          = $('#correo').val();
+    var lista_roles     = $('#lista_roles').val();
+    var lista_estatus   = $('#lista_estatus').val();
+  
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'guardar_usuario_modificado',
+            correo,
+            lista_roles,
+            lista_estatus
+       }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                alert('Usuario modificado!');
+                window.location.href = 'manto_usuarios.html';
+            }else{
+                alert(r.error);
+                window.location.replace('/');
+            }
+        }    
+    });
+}
+
 function load_ficha_usuario(){
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
@@ -2833,7 +2931,7 @@ function ficha_usuarios(email){
         dataType: "json",        
         success: function(r) {                                                   
             if(r.error == ''){
-                window.location.replace('ficha_usuarios.html');
+                window.location.replace('ficha_usuarios_modificar.html');
             }else{
                 alert(r.error);
                 window.location.replace('../index.html');
