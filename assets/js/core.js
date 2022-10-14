@@ -3148,12 +3148,12 @@ function load_sidebar1(){
                                 '</div>'+
                               '</li>'+
                               '</li>'+
-                              '<!--<li class="nav-item">'+
-                                '<a class="nav-link" href="#">'+
+                              '<li class="nav-item">'+
+                                '<a class="nav-link" href="session_killer.php">'+
                                   '<i class="mdi mdi-shield-key menu-icon"></i>'+
-                                  '<span class="menu-title">Seguridad</span>'+
+                                  '<span class="menu-title">CERRAR SESION</span>'+
                                 '</a>'+
-                              '</li>-->'+
+                              '</li>'+
                             '</ul>';
     }
    
