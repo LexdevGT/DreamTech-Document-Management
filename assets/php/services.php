@@ -594,14 +594,14 @@
 		$category 			= $_POST['category'];
 		$document_name 	= $_POST['document_name'];
 		$author 				= $_POST['author'];
-		$publish_date 		= $_POST['publish_date'];
+		//$publish_date 		= $_POST['publish_date'];
 		$search_result 	= '';
 		$filter_doc_type 	= '';
 		$filter_category 	= '';
 		$filter_doc_name 	= '';
 		$filter_publish 	= '';
 		$filter_author 	= '';
-
+/*
 		$convert_publish_date = explode(' - ',$publish_date);
 	
 		$start_date_array = explode('/', $convert_publish_date[0]);
@@ -615,7 +615,7 @@
 		$mes = $end_date_array[1];
 		$year= $end_date_array[2];
 		$end_date = $year.'-'.$mes.'-'.$dia;
-
+*/
 		if($type_doc != ''){
 			$filter_doc_type = "AND file_name LIKE '%$type_doc'";	
 		}
@@ -627,12 +627,12 @@
 		if($document_name != ''){
 			$filter_doc_name = "AND file_name LIKE '$document_name'";	
 		}
-
+/*
 		if($start_date != '' && $end_date != ''){
 			//$filter_publish = "AND publish_date BETWEEN '$start_date' AND '$end_date'";	
 			$filter_publish = "AND ((publish_date >= '$start_date' AND publish_date <= '$end_date') OR publish_date is null)";
 		}
-
+*/
 		if($author != ''){
 			$filter_author = "AND author LIKE '$author'";	
 		}
@@ -650,8 +650,9 @@
 				$filter_doc_type
 				$filter_category
 				$filter_doc_name
-				$filter_publish
 				$filter_author
+				-- $filter_publish
+				
 			";
 //error_log($query_advanced_search);
 

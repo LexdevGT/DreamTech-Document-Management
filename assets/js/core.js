@@ -411,7 +411,7 @@ function get_search_result(){
     var type_doc        = $('#select_tipo_doc').val();
     var category        = $('#select_categoria').val();
     var document_name   = $('#select_documento').val();
-    var publish_date    = $('#dtRange').val();
+    //var publish_date    = $('#dtRange').val();
     var author          = $('#select_author').val();
 
     //alert(type_doc);
@@ -429,8 +429,8 @@ function get_search_result(){
             type_doc,
             category,
             document_name,
-            author,
-            publish_date             
+            author
+            //publish_date             
         }),
         dataType: "json",        
         success: function(r) {                                                   
