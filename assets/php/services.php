@@ -7346,7 +7346,7 @@ function	mostrar_upload(){
     		</div>
 
     		<div class=\"col-md-12 sele_cat\">
-          <label for=\"inputState\" class=\"form-label\">SubCategoria1</label>
+          <label for=\"inputState\" class=\"form-label\">SubCategoria2</label>
           <select id=\"sub2\" class=\"form-select\" >
           
 
