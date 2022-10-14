@@ -6980,6 +6980,8 @@ function compartir(){
 	$link_archivo = "";
 	$compartir = '';
 	$type = "";
+	$modal ="";
+	$url_pag = $_POST['url_actual'];
 
 	if (isset($_POST['link'])) {
 		$url = $_POST['link'];
@@ -7010,17 +7012,30 @@ function compartir(){
 	}
 		if ($pandora!="") {
 			// code...
+				
+				$url_ext = explode('htmls', $url_pag);
+				$url_array = $url_ext[0];
+
+	
 			
+
+
 			
 			switch ($type) {
 				case 'archivo':
 					// code...
-				$raiz = "http://161.35.13.96/htmls/dashboard.html?share=";
+				$raiz = $url_array."htmls/dashboard.html?share=";
 				$compartir = $raiz.$pandora."&type=archivo";
 				$query = "UPDATE downloads set shared = '$shared'+1 where pandora = '$pandora'";
 				$insert_query = mysqli_query($conn, $query);
 
+				$modal .= "<div class=\"col-sm-12\">
+          <h4>copia para compartir el link del archivo</h4>
+          <input type=\"text\" readonly class=\"form-control form-control-lg\" value=\"$compartir\">
+        </div>";
+
 				insert_log("compartir|archivo|$pandora");
+
 					break;
 
 					case 'categorias':
@@ -7039,10 +7054,12 @@ function compartir(){
 					
 		}
 
+	}else{
+		$error = "El link no existe o no se puede compartir el archivo";
 	}
 
 
-
+	$jsondata['modal'] 		= $modal;
 	$jsondata['share'] 		= $compartir;
 	$jsondata['message'] 	= $message;
 	$jsondata['error']   	= $error;
@@ -7083,13 +7100,15 @@ function descargar_shared(){
 			//error_log($link_archivo);
 			$file_download_amount=$fquery['file_download_amount'];
 			$name = $fquery['file_name'];
+			$path_carpeta = $fquery['file_path_carpeta'];
+			$share = $fquery['shared'];
 
 			//$compartir .= $link_archivo;
 
 			if ($fquery) {
 			// code...
-			$query = "UPDATE downloads set file_download_amount = '$file_download_amount'+1 where pandora = '$pandora'";
-					
+			$query = "INSERT INTO downloads(file_name,file_path,file_download_amount,file_path_carpeta,pandora,shared,f_creacion) VALUES ('$name','$link_archivo','1','$path_carpeta','$pandora','$share',NOW())";
+					error_log($query);
 					$insert_query = mysqli_query($conn, $query);
 
 		if ($insert_query) {

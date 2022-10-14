@@ -3264,6 +3264,9 @@ function descargar_archivo(link){
 function compartir(link,type){
     //alert('preciono el boton de compartir');
     //alert(link);
+    var url_actual = window.location.href;
+   //alert(url_actual);
+
     $.ajax({
         contentType: "application/x-www-form-urlencoded",
         type: "POST",
@@ -3271,6 +3274,7 @@ function compartir(link,type){
         data: ({
             link,
             type,
+            url_actual,
             option: 'compartir'                   
         }),
         dataType: "json",        
@@ -3279,15 +3283,18 @@ function compartir(link,type){
             //alert(r.link);                                                   
             if(r.error == ''){
                var content = r.share;
+               //alert(content);
+               $("#modal-share").modal('show');
+               $('.share-link').html(r.modal);
 
-                navigator.clipboard.writeText(content)
+               /* navigator.clipboard.writeText(content)
                     .then(() => {
                     //console.log("link copiado al portapapel...")
                     alert('LINK COPIADO PARA COMPARTIR');
                 })
                     .catch(err => {
                     console.log('No se copio el URL', err);
-                })
+                })*/
                 
             }else{
                 alert(r.error);
@@ -3323,7 +3330,7 @@ function compartir(link,type){
             //alert(r.link);                                                   
             if(r.error == ''){
 
-                alert(r.share);
+                //alert(r.share);
                 
                 var a = document.createElement('a');
                 
