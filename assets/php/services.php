@@ -454,10 +454,10 @@
 		$jsondata 		= array();
 		$error 	  		= '';
 		$message  		= '';
-		$search 			= $_POST['b'];
+		$search 			= utf8_decode($_POST['b']);
 		$files_matrix 	= array();
 		$html 			=	'';
-
+//error_log($search);
 		$query = "
 				SELECT file_name
 					,file_path
@@ -979,6 +979,7 @@ while($row = mysqli_fetch_array($execute_query)){
 		$retorno 		= '';
 		$count 			= 0;
 		$flag 			= $_POST['flag'];
+		$flag_jpg 		= 'f';
 		
 		//unset($_SESSION['exp_path']);
 		$dir_var = $_POST['directory'];
@@ -1036,28 +1037,31 @@ while($row = mysqli_fetch_array($execute_query)){
 			";
 		
 		foreach ($data as $key => $value) {
-			if($value !== '.' && $value !== '..'){
+			if($value !== '.' && $value !== '..' && $value !== '1234' && $value !== '12345'){
 
 				if($count ==0){
 					$html .= '<div class="row mt-2">';
 				}
 
-				if($count <=3){
+				if($count <4){
 					/*
 					if(file_exists(filename))
 					 <img src="..." alt="..." class="img-thumbnail">
 					 
 					 */
-					if (strpos($value, '.png') !== false) {
-						   
+					if (strpos($value, '.png') !== false ) {
+
 					}else{
+						$evaluar = strpos($value, '.jpg');
+//error_log('evaluar'.$evaluar.'valor: '.$value);
+							
 						if (strpos($value, '.') !== false) {
 							$file = substr($value, 0,-3);
 							$file .= 'png';
 							$file = $dir.$file;
 							//$file = substr($file, 0,12);
 							//$file = str_replace('../../htmls/', '', $file);
-error_log("FILE EXPLORER: $file");
+//error_log("FILE EXPLORER: $file");
 							if(file_exists($file)){
 								$img_file = str_replace('../../htmls/', '', $file);
 								$image_line = "<img src=\"$img_file\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$value</span>";
@@ -1065,8 +1069,27 @@ error_log("FILE EXPLORER: $file");
 								$image_line = "<i class=\" mdi mdi-file-document menu-icon\"><span class=\"menu-title\">$value</span></i>";
 							}
 						}else{
-							$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>";
+							/*error_log("FLAG: $flag_jpg");
+							if($flag_jpg=='f'){*/
+								$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>";
+							/*}*/
+
+							
 						}
+
+						if(strpos($value, '.jpg') == true){
+//error_log('valor'.$value);
+								$src = $dir.$value;
+								$src = str_replace('../../htmls/', '', $src);
+								$label = "Unicamente en versió física $value";
+						   	$image_line = "<img src=\"$src\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$label</span>";
+						   	$flag_jpg = 't';
+						   }
+//error_log("bandera $flag_jpg");
+
+						//error_log($image_line);
+
+
 
 /* ------ START OF big search matrix ------------- */						
 						$lupita = $dir.$value;
