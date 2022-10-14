@@ -299,6 +299,9 @@
 			case 'guardar_usuario_modificado':
 				saveGuardarUsuarioModificadoFunction();
 				break;
+			case 'load_side_bar':
+				loadSideBarFunction();
+				break;
 		}
 		
 	}
@@ -311,6 +314,101 @@
 
 		#codigo................;
 
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function loadSideBarFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+		$rol = $_SESSION['rol_id'];
+
+		if($rol == 5){
+			$bar = '    <ul class="nav">
+                              <li class="nav-item">
+                                <a class="nav-link" href="dashboard.html">
+                                  <i class="mdi mdi-view-dashboard menu-icon"></i>
+                                  <span class="menu-title">DASHBOARD</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="quienes_somos.html">
+                                  <i class="mdi mdi-barley  menu-icon"></i>
+                                  <span class="menu-title">QUIENES SOMOS</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">
+                                  <i class="mdi mdi-folder-open menu-icon"></i>
+                                  <span class="menu-title">DOCUMENTOS</span>
+                                <i class="menu-arrow"></i> 
+                                </a>
+                                <div class="collapse" id="documents">
+                                  <ul class="nav flex-column sub-menu">
+                                    <li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="reportes.html">
+                                  <i class="mdi mdi-chart-pie menu-icon"></i>
+                                  <span class="menu-title">REPORTES</span>
+                              </li>
+                            </ul>';
+		}else{
+			$bar = '    <ul class="nav">
+                              <li class="nav-item">
+                                <a class="nav-link" href="dashboard.html">
+                                  <i class="mdi mdi-view-dashboard menu-icon"></i>
+                                  <span class="menu-title">DASHBOARD</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="quienes_somos.html">
+                                  <i class="mdi mdi-barley  menu-icon"></i>
+                                  <span class="menu-title">QUIENES SOMOS</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">
+                                  <i class="mdi mdi-folder-open menu-icon"></i>
+                                  <span class="menu-title">DOCUMENTOS</span>
+                                <i class="menu-arrow"></i> 
+                                </a>
+                                <div class="collapse" id="documents">
+                                  <ul class="nav flex-column sub-menu">
+                                    <li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="reportes.html">
+                                  <i class="mdi mdi-chart-pie menu-icon"></i>
+                                  <span class="menu-title">REPORTES</span></a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">
+                                  <i class="menu-icon mdi mdi-settings "></i>
+                                  <span class="menu-title">AJUSTES</span>
+                                  <i class="menu-arrow"></i> 
+                                </a>
+                                <div class="collapse" id="reports-menu">
+                                  <ul class="nav flex-column sub-menu">
+                                    <li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>
+                                    <li class="item"> <a class="nav-link" href="notificacion.html"><i class="mdi mdi-bell-ring menu-icon"><span class="menu-title">Notificaciones</span></i></a></li>
+                                  </ul>
+                                </div>
+                              </li>
+                            </ul>';
+		}
+
+		$jsondata['bar'] 		= $bar;
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
 		echo json_encode($jsondata);
@@ -356,10 +454,10 @@
 		$jsondata 		= array();
 		$error 	  		= '';
 		$message  		= '';
-		$search 			= $_POST['b'];
+		$search 			= utf8_decode($_POST['b']);
 		$files_matrix 	= array();
 		$html 			=	'';
-
+//error_log($search);
 		$query = "
 				SELECT file_name
 					,file_path
@@ -496,14 +594,14 @@
 		$category 			= $_POST['category'];
 		$document_name 	= $_POST['document_name'];
 		$author 				= $_POST['author'];
-		$publish_date 		= $_POST['publish_date'];
+		//$publish_date 		= $_POST['publish_date'];
 		$search_result 	= '';
 		$filter_doc_type 	= '';
 		$filter_category 	= '';
 		$filter_doc_name 	= '';
 		$filter_publish 	= '';
 		$filter_author 	= '';
-
+/*
 		$convert_publish_date = explode(' - ',$publish_date);
 	
 		$start_date_array = explode('/', $convert_publish_date[0]);
@@ -517,7 +615,7 @@
 		$mes = $end_date_array[1];
 		$year= $end_date_array[2];
 		$end_date = $year.'-'.$mes.'-'.$dia;
-
+*/
 		if($type_doc != ''){
 			$filter_doc_type = "AND file_name LIKE '%$type_doc'";	
 		}
@@ -529,12 +627,12 @@
 		if($document_name != ''){
 			$filter_doc_name = "AND file_name LIKE '$document_name'";	
 		}
-
+/*
 		if($start_date != '' && $end_date != ''){
 			//$filter_publish = "AND publish_date BETWEEN '$start_date' AND '$end_date'";	
 			$filter_publish = "AND ((publish_date >= '$start_date' AND publish_date <= '$end_date') OR publish_date is null)";
 		}
-
+*/
 		if($author != ''){
 			$filter_author = "AND author LIKE '$author'";	
 		}
@@ -552,8 +650,9 @@
 				$filter_doc_type
 				$filter_category
 				$filter_doc_name
-				$filter_publish
 				$filter_author
+				-- $filter_publish
+				
 			";
 //error_log($query_advanced_search);
 
@@ -881,6 +980,7 @@ while($row = mysqli_fetch_array($execute_query)){
 		$retorno 		= '';
 		$count 			= 0;
 		$flag 			= $_POST['flag'];
+		$flag_jpg 		= 'f';
 		
 		//unset($_SESSION['exp_path']);
 		$dir_var = $_POST['directory'];
@@ -938,28 +1038,31 @@ while($row = mysqli_fetch_array($execute_query)){
 			";
 		
 		foreach ($data as $key => $value) {
-			if($value !== '.' && $value !== '..'){
+			if($value !== '.' && $value !== '..' && $value !== '1234' && $value !== '12345'){
 
 				if($count ==0){
 					$html .= '<div class="row mt-2">';
 				}
 
-				if($count <=3){
+				if($count <4){
 					/*
 					if(file_exists(filename))
 					 <img src="..." alt="..." class="img-thumbnail">
 					 
 					 */
-					if (strpos($value, '.png') !== false) {
-						   
+					if (strpos($value, '.png') !== false ) {
+
 					}else{
+						$evaluar = strpos($value, '.jpg');
+//error_log('evaluar'.$evaluar.'valor: '.$value);
+							
 						if (strpos($value, '.') !== false) {
 							$file = substr($value, 0,-3);
 							$file .= 'png';
 							$file = $dir.$file;
 							//$file = substr($file, 0,12);
 							//$file = str_replace('../../htmls/', '', $file);
-error_log("FILE EXPLORER: $file");
+//error_log("FILE EXPLORER: $file");
 							if(file_exists($file)){
 								$img_file = str_replace('../../htmls/', '', $file);
 								$image_line = "<img src=\"$img_file\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$value</span>";
@@ -967,8 +1070,27 @@ error_log("FILE EXPLORER: $file");
 								$image_line = "<i class=\" mdi mdi-file-document menu-icon\"><span class=\"menu-title\">$value</span></i>";
 							}
 						}else{
-							$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>";
+							/*error_log("FLAG: $flag_jpg");
+							if($flag_jpg=='f'){*/
+								$image_line = "<i class=\"mdi mdi-folder-outline menu-icon\"><span class=\"menu-title\">$value</span></i>";
+							/*}*/
+
+							
 						}
+
+						if(strpos($value, '.jpg') == true){
+//error_log('valor'.$value);
+								$src = $dir.$value;
+								$src = str_replace('../../htmls/', '', $src);
+								$label = "Unicamente en versió física $value";
+						   	$image_line = "<img src=\"$src\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$label</span>";
+						   	$flag_jpg = 't';
+						   }
+//error_log("bandera $flag_jpg");
+
+						//error_log($image_line);
+
+
 
 /* ------ START OF big search matrix ------------- */						
 						$lupita = $dir.$value;
