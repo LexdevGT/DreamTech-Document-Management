@@ -625,7 +625,7 @@
 		}
 //error_log($document_name);
 		if($document_name != ''){
-			$filter_doc_name = "AND file_name LIKE '$document_name'";	
+			$filter_doc_name = "AND file_name LIKE '%$document_name%'";	
 		}
 /*
 		if($start_date != '' && $end_date != ''){
@@ -634,10 +634,10 @@
 		}
 */
 		if($author != ''){
-			$filter_author = "AND author LIKE '$author'";	
+			$filter_author = "AND author LIKE '%$author%'";	
 		}
 
-		$query_advanced_search = "
+		$query_advanced_search = utf8_decode("
 				SELECT file_name
 					,file_path
 					,publish_date
@@ -651,13 +651,12 @@
 				$filter_category
 				$filter_doc_name
 				$filter_author
-				-- $filter_publish
-				
-			";
-//error_log($query_advanced_search);
+			");
+error_log($query_advanced_search);
 
 		$execute_advanced_search = $conn->query($query_advanced_search);
 		while($row_search = $execute_advanced_search->fetch_array()){
+error_log('WHILE!!');
 			$f_name 		= utf8_encode($row_search['file_name']);
 			$f_path 		= utf8_encode($row_search['file_path']);
 			$f_publish 	= $row_search['publish_date'];
@@ -724,8 +723,9 @@
 									";
 		}
 
-//error_log($search_result);
+
 		$jsondata['search_result'] = $search_result;
+//error_log($search_result);
 		$jsondata['message'] 		= $message;
 		$jsondata['error']   		= $error;
 		echo json_encode($jsondata);
@@ -741,7 +741,7 @@
 
 		$dir = "../../htmls/documents/$category"; 
 		$data = scandir($dir);
-
+		$list_documentos .= "<option value = ''>Selecciona un archivo</option>";
 		foreach ($data as $key => $value) {
 			if($value != '.' && $value != '..'){
 				
@@ -1024,7 +1024,7 @@ while($row = mysqli_fetch_array($execute_query)){
 
 //error_log("RETORNO: $retorno");
 		$data = scandir($dir);
-//error_log(print_r($data,true));
+error_log(print_r($data,true));
 		$count = 0;
 
 		$html .= "
@@ -1092,19 +1092,7 @@ while($row = mysqli_fetch_array($execute_query)){
 
 
 
-/* ------ START OF big search matrix ------------- */						
-						$lupita = $dir.$value;
 
-						if(is_dir($lupita)){
-							$dir_check[$value] = $lupita;
-						}else{
-//error_log("IS FILE");
-							$files_matrix[$value] = $lupita;
-							
-							//array_push($files_matrix, $lupita);
-						}
-
-/* ------ FINISH OF big search matrix ------------- */
 
 						if(strpos($value, '.xls') !== false || strpos($value, '.xlsx') !== false || strpos($value, '.doc') !== false || strpos($value, '.docx') !== false || strpos($value, '.pdf') !== false){
 							$download_file = $dir.$value;
@@ -1147,16 +1135,7 @@ while($row = mysqli_fetch_array($execute_query)){
 		}
 
 //error_log($html);
-		//error_log(print_r($dir_check,true));
-		foreach ($dir_check as $key => $value) {			
-			//error_log($key);
-			if(is_dir($value)){
-//error_log('IS DIR: ');
-				$dir_sub[$key] = $value;
-			}else{
-				$files_matrix[$key] = $value;
-			}
-		}
+
 /*
 		foreach ($dir_sub as $key => $value) {
 				$data_sub = scandir($value);
@@ -7906,11 +7885,11 @@ $query_exe = mysqli_query($conn,$query);
 
 		//error_log(print_r($names,true));
 
-  $jsondata['data_names'] 			= $names;
-  $jsondata['data_info'] 			= $info;      
-  $jsondata['filtro_usuarios'] 	= $filtro_usuarios;
-  $jsondata['filtro_categorias'] = $filtro_categorias;
-  $jsondata['filtro_descargas'] 	= $filtro_descargas;
+  	$jsondata['data_names'] 			= $names;
+  	$jsondata['data_info'] 			= $info;      
+  	$jsondata['filtro_usuarios'] 	= $filtro_usuarios;
+  	$jsondata['filtro_categorias'] = $filtro_categorias;
+  	$jsondata['filtro_descargas'] 	= $filtro_descargas;
 	$jsondata['message'] 			= $message;
 	$jsondata['error']   			= $error;
 	echo json_encode($jsondata);
