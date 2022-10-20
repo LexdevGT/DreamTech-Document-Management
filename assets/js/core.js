@@ -289,6 +289,27 @@ function new_function(){
     });
 }
 
+function load_manto_documentos(){
+
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'get_manto_documentos'                   
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                /* No code */
+            }else{
+                alert(r.error);
+                window.location.replace('../dashboard.html');
+            }
+        }    
+    });
+}
+
 function upload_user_photo_ciudadano(){
     //alert('haciendo upload de la photo');
     var form_data = new FormData();                  
@@ -508,6 +529,35 @@ function load_explorer(directory='',flag=0){
             if(r.error == ''){
                 //alert(r.message);
                 $('#data_explorer').html(r.html);
+            }else{
+                alert(r.error);
+                window.location.replace('dashboard.html');
+            }
+        }    
+    });
+}
+
+function load_editar(directory='',name=''){
+    //alert("Directory: " + directory);
+    var new_name = prompt("Nombre Original:"+name, "nuevo nombre...");
+    
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded",
+        type: "POST",
+        url: "../assets/php/services.php",
+        data: ({
+            option: 'editar',
+            directory,
+            name,
+            new_name
+        }),
+        dataType: "json",        
+        success: function(r) {                                                   
+            if(r.error == ''){
+                //alert(r.message);
+                //$('#data_explorer').html(r.html);
+                alert(r.message);
+                window.location.replace('explorador.html');
             }else{
                 alert(r.error);
                 window.location.replace('dashboard.html');
@@ -3054,112 +3104,6 @@ function load_sidebar(){
             }
         }    
     });
-}
-
-
-function load_sidebar1(){
-    if(u=="ciudadano"){
-        var sidebar_text = '    <ul class="nav">'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="dashboard.html">'+
-                                  '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
-                                  '<span class="menu-title">DASHBOARD</span>'+
-                                '</a>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="quienes_somos.html">'+
-                                  '<i class="mdi mdi-barley  menu-icon"></i>'+
-                                  '<span class="menu-title">QUIENES SOMOS</span>'+
-                                '</a>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">'+
-                                  '<i class="mdi mdi-folder-open menu-icon"></i>'+
-                                  '<span class="menu-title">DOCUMENTOS</span>'+
-                                '<i class="menu-arrow"></i> '+
-                                '</a>'+
-                                '<div class="collapse" id="documents">'+
-                                  '<ul class="nav flex-column sub-menu">'+
-                                    '<!--<li class="item"><a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>-->'+
-                                    '<li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
-                                  '</ul>'+
-                                '</div>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="reportes.html">'+
-                                  '<i class="mdi mdi-chart-pie menu-icon"></i>'+
-                                  '<span class="menu-title">REPORTES</span>'+
-                              '</li>'+
-                             
-                              '<!--<li class="nav-item">'+
-                                '<a class="nav-link" href="#">'+
-                                  '<i class="mdi mdi-shield-key menu-icon"></i>'+
-                                  '<span class="menu-title">Seguridad</span>'+
-                                '</a>'+
-                              '</li>-->'+
-                            '</ul>';
-    }else{
-         var sidebar_text = '    <ul class="nav">'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="dashboard.html">'+
-                                  '<i class="mdi mdi-view-dashboard menu-icon"></i>'+
-                                  '<span class="menu-title">DASHBOARD</span>'+
-                                '</a>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="quienes_somos.html">'+
-                                  '<i class="mdi mdi-barley  menu-icon"></i>'+
-                                  '<span class="menu-title">QUIENES SOMOS</span>'+
-                                '</a>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" data-bs-toggle="collapse" href="#documents" aria-expanded="false" aria-controls="documents">'+
-                                  '<i class="mdi mdi-folder-open menu-icon"></i>'+
-                                  '<span class="menu-title">DOCUMENTOS</span>'+
-                                '<i class="menu-arrow"></i> '+
-                                '</a>'+
-                                '<div class="collapse" id="documents">'+
-                                  '<ul class="nav flex-column sub-menu">'+
-                                    '<!--<li class="item"><a class="nav-link" onclick="standar_display();"><i class="mdi mdi-folder-open menu-icon"><span class="menu-title">Explorador</span></i></a></li>-->'+
-                                    '<li class="item"> <a class="nav-link" href="explorador.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Explorador</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="biblioteca.html"><i class="mdi mdi-folder-search menu-icon"><span class="menu-title">Buscador</span></i></a></li>'+
-                                  '</ul>'+
-                                '</div>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="reportes.html">'+
-                                  '<i class="mdi mdi-chart-pie menu-icon"></i>'+
-                                  '<span class="menu-title">REPORTES</span>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" data-bs-toggle="collapse" href="#reports-menu" aria-expanded="false" aria-controls="ui-basic">'+
-                                  '<i class="menu-icon mdi mdi-settings "></i>'+
-                                  '<span class="menu-title">AJUSTES</span>'+
-                                  '<i class="menu-arrow"></i> '+
-                                '</a>'+
-                                '<div class="collapse" id="reports-menu">'+
-                                  '<ul class="nav flex-column sub-menu">'+
-                                    '<!--<li class="item"><a class="nav-link" href="#"><i class="mdi mdi-google-assistant menu-icon"><span class="menu-title">Roles</span></i></a></li>-->'+
-                                    '<li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="manto_documentos.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Edición documentos</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>'+
-                                    '<li class="item"> <a class="nav-link" href="notificacion.html"><i class="mdi mdi-bell-ring menu-icon"><span class="menu-title">Notificaciones</span></i></a></li>'+
-                                  '</ul>'+
-                                '</div>'+
-                              '</li>'+
-                              '</li>'+
-                              '<li class="nav-item">'+
-                                '<a class="nav-link" href="session_killer.php">'+
-                                  '<i class="mdi mdi-shield-key menu-icon"></i>'+
-                                  '<span class="menu-title">CERRAR SESION</span>'+
-                                '</a>'+
-                              '</li>'+
-                            '</ul>';
-    }
-   
-    $('#sidebar').html(sidebar_text);
-
 }
 
 

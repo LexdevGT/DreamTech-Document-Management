@@ -302,6 +302,12 @@
 			case 'load_side_bar':
 				loadSideBarFunction();
 				break;
+			case 'get_manto_documentos':
+				getMantoDocumentosFunction();
+				break;
+			case 'editar':
+				editarFunction();
+				break;
 		}
 		
 	}
@@ -313,6 +319,53 @@
 		$message  = '';
 
 		#codigo................;
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function editarFunction(){
+		global $conn;
+		$jsondata 	= array();
+		$error 	  	= '';
+		$message  	= '';
+		$dir 			= $_POST['directory'];
+		$name 		= $_POST['name'];
+		$new_name 	= $_POST['new_name'];
+
+		$dir = '../../htmls/'.str_replace($name, '', $dir);
+//error_log("Directorio: $dir");
+//error_log("Nombre: $name");
+//error_log("Nuevo: $new_name");
+		$extension = pathinfo($name, PATHINFO_EXTENSION);
+		$old = $dir.$name;
+		$new = $dir.$new_name.'.'.$extension;
+		
+		if(rename($old,$new)){
+			$message = 'Archivo renombrado!';
+			$old_img = str_replace($extension, 'png', $old);
+			$new_img = str_replace($extension, 'png', $new);
+			rename($old_img, $new_img);
+		}else{
+			$error = 'No se pudo cambiar el nombre del archivo!';
+		}
+
+		$jsondata['message'] = $message;
+		$jsondata['error']   = $error;
+		echo json_encode($jsondata);
+	}
+
+	function getMantoDocumentosFunction(){
+		global $conn;
+		$jsondata = array();
+		$error 	  = '';
+		$message  = '';
+//error_log('Si estamos!');
+
+		$query_manto_documentos = "
+				SELECT 
+			";
 
 		$jsondata['message'] = $message;
 		$jsondata['error']   = $error;
@@ -399,6 +452,7 @@
                                 </a>
                                 <div class="collapse" id="reports-menu">
                                   <ul class="nav flex-column sub-menu">
+                                  	<!--<li class="item"> <a class="nav-link" href="manto_documentos.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Edición documentos</span></i></a></li>-->
                                     <li class="item"> <a class="nav-link" href="manto_usuarios.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Usuarios</span></i></a></li>
                                     <li class="item"> <a class="nav-link" href="categorias.html"><i class="mdi mdi-account-multiple menu-icon"><span class="menu-title">Categoria</span></i></a></li>
                                     <li class="item"> <a class="nav-link" href="notificacion.html"><i class="mdi mdi-bell-ring menu-icon"><span class="menu-title">Notificaciones</span></i></a></li>
@@ -652,11 +706,11 @@
 				$filter_doc_name
 				$filter_author
 			");
-error_log($query_advanced_search);
+//error_log($query_advanced_search);
 
 		$execute_advanced_search = $conn->query($query_advanced_search);
 		while($row_search = $execute_advanced_search->fetch_array()){
-error_log('WHILE!!');
+//error_log('WHILE!!');
 			$f_name 		= utf8_encode($row_search['file_name']);
 			$f_path 		= utf8_encode($row_search['file_path']);
 			$f_publish 	= $row_search['publish_date'];
@@ -981,6 +1035,9 @@ while($row = mysqli_fetch_array($execute_query)){
 		$count 			= 0;
 		$flag 			= $_POST['flag'];
 		$flag_jpg 		= 'f';
+		$img_flag 		= 'f';
+		$rol_id 			= $_SESSION['rol_id'];
+
 		
 		//unset($_SESSION['exp_path']);
 		$dir_var = $_POST['directory'];
@@ -1024,7 +1081,7 @@ while($row = mysqli_fetch_array($execute_query)){
 
 //error_log("RETORNO: $retorno");
 		$data = scandir($dir);
-error_log(print_r($data,true));
+//error_log(print_r($data,true));
 		$count = 0;
 
 		$html .= "
@@ -1066,6 +1123,7 @@ error_log(print_r($data,true));
 							if(file_exists($file)){
 								$img_file = str_replace('../../htmls/', '', $file);
 								$image_line = "<img src=\"$img_file\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$value</span>";
+								$img_flag = 't';
 							}else{
 								$image_line = "<i class=\" mdi mdi-file-document menu-icon\"><span class=\"menu-title\">$value</span></i>";
 							}
@@ -1082,7 +1140,7 @@ error_log(print_r($data,true));
 //error_log('valor'.$value);
 								$src = $dir.$value;
 								$src = str_replace('../../htmls/', '', $src);
-								$label = "Unicamente en versió física $value";
+								$label = "Unicamente en versión física $value";
 						   	$image_line = "<img src=\"$src\" alt=\"NO IMAGE\" class=\"img-thumbnail\"><span class=\"menu-title\">$label</span>";
 						   	$flag_jpg = 't';
 						   }
@@ -1099,8 +1157,13 @@ error_log(print_r($data,true));
 							$download_file = str_replace('../../htmls/', '', $download_file);
 //error_log($download_file);
 							$pandora = $download_file;
+							if($img_flag=='t' && $rol_id ==1){
+								$img_flag='f';
+								$line_editar = "<a onclick=\"load_editar('$download_file','$value')\">EDITAR<a>";
+							}
 							$html .= "
 								<div class=\"col-sm-3 nav-item\">
+								$line_editar
 								<a class=\"nav-link\" href=\"$download_file\" target=\"_blank\" onclick=\"insert_download('$download_file','$value','$dir','$pandora');\">
 		              <div class=\"card\">
 		                <div class=\"card-body\">
@@ -1108,7 +1171,9 @@ error_log(print_r($data,true));
 		                </div>
 		              </div>
 		            </a>
+		            	
 		             </div>
+
 							";
 						}else{
 							$html .= "

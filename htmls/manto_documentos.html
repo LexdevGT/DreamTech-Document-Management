@@ -48,7 +48,7 @@
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
             
-            <h1 class="welcome-text"><span class="text-black fw-bold">USUARIOS</span> </h1>
+            <h1 class="welcome-text"><span class="text-black fw-bold">Edición documentos</span> </h1>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
@@ -103,7 +103,9 @@
                                
                                 <div class="row mt-3">
                                   <div class="col-sm d-flex justify-content-end">
-                                    <button class="btn btn-primary" id="nuevo-usuario" style="color: white;"><b>Nuevo usuario</b></button>
+                                    <select id="categoria_edicion">
+                                      <option>Elige una categoría</option>
+                                    </select>
                                   </div>
                                 </div>
                                 
@@ -174,8 +176,8 @@
   <script src="../assets/js/core.js"></script>
   <script src="js/autologout.js"></script>
   <script >
-    security(4,'USUARIOS');
-    load_users();
+    security(4,'MANTENIMIENTO DOCUMENTOS');
+    load_manto_documentos();
   </script>
 </body>
 
